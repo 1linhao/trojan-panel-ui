@@ -49,6 +49,14 @@
       >
         {{ $t('table.clashSubscribe') }}
       </el-button>
+      <el-button
+        class="filter-item"
+        type="success"
+        icon="el-icon-document-copy"
+        @click="handleSingBoxSubscribe"
+      >
+        {{ $t('table.singBoxSubscribe') }}
+      </el-button>
     </div>
     <el-table
       :key="tableKey"
@@ -234,7 +242,7 @@ import {
 } from '@/utils/node'
 import checkPermission from '@/utils/permission'
 import { timeStampToDate } from '@/utils'
-import { clashSubscribe } from '@/api/account'
+import { clashSubscribe, clashSubscribeForSb } from '@/api/account'
 import { selectNodeServerList } from '@/api/node-server'
 import FallbackForm from '@/views/node/list/components/FallbackForm'
 import FallbackInfo from '@/views/node/list/components/FallbackInfo'
@@ -669,6 +677,30 @@ export default {
     },
     handleClashSubscribe() {
       clashSubscribe().then((response) => {
+        if (
+          copy(
+            window.location.protocol +
+              '//' +
+              window.location.host +
+              response.data
+          )
+        ) {
+          Message({
+            showClose: true,
+            message: this.$t('confirm.urlCopySuccess').toString(),
+            type: 'success'
+          })
+        } else {
+          Message({
+            showClose: true,
+            message: this.$t('confirm.urlCopyFail').toString(),
+            type: 'error'
+          })
+        }
+      })
+    },
+    handleSingBoxSubscribe() {
+      clashSubscribeForSb().then((response) => {
         if (
           copy(
             window.location.protocol +

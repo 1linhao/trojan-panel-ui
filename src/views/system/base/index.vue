@@ -50,6 +50,8 @@ export default {
         captchaEnable: 0,
         systemName: '',
         clashRule: '',
+        singBoxRule: '',
+        singBoxRuleEntity: {},
         xrayTemplate: '',
         xrayTemplateEntity: {}
       }
@@ -62,6 +64,9 @@ export default {
     selectDate() {
       selectSystemByName().then((response) => {
         this.systemConfig = response.data
+        this.systemConfig.singBoxRuleEntity = JSON.parse(
+          this.systemConfig.singBoxRule
+        )
         this.systemConfig.xrayTemplateEntity = JSON.parse(
           this.systemConfig.xrayTemplate
         )

@@ -20,6 +20,13 @@
           clearable
         />
       </el-form-item>
+      <el-form-item :label="$t('config.singBoxRule')" prop="singBoxRule">
+        <JsonEditorVue
+          v-model="systemConfig.singBoxRuleEntity"
+          v-bind="systemConfig.singBoxRuleEntity"
+          mode="text"
+        />
+      </el-form-item>
       <el-form-item :label="$t('config.xrayTemplate')" prop="xrayTemplate">
         <JsonEditorVue
           v-model="systemConfig.xrayTemplateEntity"
@@ -74,6 +81,14 @@ export default {
             trigger: ['change', 'blur']
           }
         ],
+        singBoxRule: [
+          {
+            min: 0,
+            max: 102400,
+            message: this.$t('valid.singBoxRuleRange'),
+            trigger: ['change', 'blur']
+          }
+        ],
         xrayTemplate: [
           {
             min: 0,
@@ -87,6 +102,13 @@ export default {
   },
   methods: {
     updateData() {
+      if (typeof this.systemConfig.singBoxRuleEntity !== 'object')
+        this.systemConfig.singBoxRuleEntity = JSON.parse(
+          this.systemConfig.singBoxRuleEntity
+        )
+      this.systemConfig.singBoxRule = JSON.stringify(
+        this.systemConfig.singBoxRuleEntity
+      )
       if (typeof this.systemConfig.xrayTemplateEntity !== 'object')
         this.systemConfig.xrayTemplateEntity = JSON.parse(
           this.systemConfig.xrayTemplateEntity
