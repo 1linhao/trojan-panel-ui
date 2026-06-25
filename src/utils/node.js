@@ -161,6 +161,8 @@ export function handleNodeDetail(nodeDetail, responseData) {
   }
   if (nodeDetail.nodeTypeId === 4) {
     nodeDetail.naiveProxyUsername = responseData.naiveProxyUsername
+    nodeDetail.naiveUotEnable = responseData.naiveUotEnable
+    nodeDetail.naiveUotVersion = responseData.naiveUotVersion || 2
   }
   if (nodeDetail.nodeTypeId === 5) {
     nodeDetail.hysteria2ObfsPassword = responseData.hysteria2ObfsPassword
@@ -211,6 +213,11 @@ export function handleNodeUpdate(temp, responseData) {
     temp.hysteriaServerName = responseData.hysteriaServerName
     temp.hysteriaInsecure = responseData.hysteriaInsecure
     temp.hysteriaFastOpen = responseData.hysteriaFastOpen
+  }
+  if (temp.nodeTypeId === 4) {
+    temp.naiveProxyUsername = responseData.naiveProxyUsername
+    temp.naiveUotEnable = responseData.naiveUotEnable
+    temp.naiveUotVersion = responseData.naiveUotVersion || 2
   }
   if (temp.nodeTypeId === 5) {
     temp.hysteria2ObfsPassword = responseData.hysteria2ObfsPassword

@@ -365,6 +365,8 @@ export default {
         hysteria2DownMbps: 100,
         hysteria2ServerName: '',
         hysteria2Insecure: 0,
+        naiveUotEnable: 0,
+        naiveUotVersion: 2,
         createTime: new Date()
       },
       nodeDetail: {
@@ -454,6 +456,8 @@ export default {
         hysteria2Insecure: 0,
 
         naiveProxyUsername: '',
+        naiveUotEnable: 0,
+        naiveUotVersion: 2,
         createTime: new Date()
       },
       dialogStatus: '',
@@ -573,6 +577,8 @@ export default {
         hysteria2DownMbps: 100,
         hysteria2ServerName: '',
         hysteria2Insecure: 0,
+        naiveUotEnable: 0,
+        naiveUotVersion: 2,
         createTime: new Date()
       }
     },

@@ -87,7 +87,10 @@
           :form-visible-props="isHysteria(nodeProps)"
         />
 
-        <NaiveProxyForm :form-visible-props="isNaiveProxy(nodeProps)" />
+        <NaiveProxyForm
+          :node-props="nodeProps"
+          :form-visible-props="isNaiveProxy(nodeProps)"
+        />
 
         <Hysteria2Form
           :node-props="nodeProps"

@@ -144,8 +144,26 @@ export default {
               detour: 'PROXY'
             }
           ],
+          rules: [
+            {
+              clash_mode: 'direct',
+              action: 'route',
+              server: 'local'
+            },
+            {
+              clash_mode: 'global',
+              action: 'route',
+              server: 'remote'
+            }
+          ],
           final: 'remote'
         },
+        http_clients: [
+          {
+            tag: 'rule-set-downloader',
+            detour: 'PROXY'
+          }
+        ],
         inbounds: [
           {
             type: 'tun',
@@ -164,45 +182,54 @@ export default {
             {
               protocol: 'dns',
               action: 'hijack-dns'
+            },
+            {
+              clash_mode: 'direct',
+              action: 'route',
+              outbound: 'DIRECT'
+            },
+            {
+              clash_mode: 'global',
+              action: 'route',
+              outbound: 'PROXY'
+            },
+            {
+              ip_is_private: true,
+              action: 'route',
+              outbound: 'DIRECT'
+            },
+            {
+              rule_set: ['geoip-cn', 'geosite-cn'],
+              action: 'route',
+              outbound: 'DIRECT'
+            }
+          ],
+          rule_set: [
+            {
+              type: 'remote',
+              tag: 'geoip-cn',
+              format: 'binary',
+              url: 'https://raw.githubusercontent.com/SagerNet/sing-geoip/rule-set/geoip-cn.srs',
+              http_client: 'rule-set-downloader'
+            },
+            {
+              type: 'remote',
+              tag: 'geosite-cn',
+              format: 'binary',
+              url: 'https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-cn.srs',
+              http_client: 'rule-set-downloader'
             }
           ],
           auto_detect_interface: true,
           default_domain_resolver: 'local',
+          default_http_client: 'rule-set-downloader',
           final: 'PROXY'
+        },
+        experimental: {
+          clash_api: {
+            default_mode: mode
+          }
         }
-      }
-      if (mode === 'rule') {
-        template.route.rules.push(
-          {
-            ip_is_private: true,
-            action: 'route',
-            outbound: 'DIRECT'
-          },
-          {
-            rule_set: ['geoip-cn', 'geosite-cn'],
-            action: 'route',
-            outbound: 'DIRECT'
-          }
-        )
-        template.route.rule_set = [
-          {
-            type: 'remote',
-            tag: 'geoip-cn',
-            format: 'binary',
-            url: 'https://raw.githubusercontent.com/SagerNet/sing-geoip/rule-set/geoip-cn.srs',
-            download_detour: 'PROXY'
-          },
-          {
-            type: 'remote',
-            tag: 'geosite-cn',
-            format: 'binary',
-            url: 'https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-cn.srs',
-            download_detour: 'PROXY'
-          }
-        ]
-      } else if (mode === 'direct') {
-        template.dns.servers[1].detour = 'DIRECT'
-        template.route.final = 'DIRECT'
       }
       return template
     },

@@ -399,6 +399,18 @@
         >
           <el-tag>{{ nodeInfoProps.naiveProxyUsername }}</el-tag>
         </el-form-item>
+        <el-form-item
+          :label="$t('table.naiveUotEnable').toString()"
+          v-if="isNaiveProxy(nodeInfoProps)"
+        >
+          <el-tag>{{ enableComputed(nodeInfoProps.naiveUotEnable) }}</el-tag>
+        </el-form-item>
+        <el-form-item
+          :label="$t('table.naiveUotVersion').toString()"
+          v-if="isNaiveProxy(nodeInfoProps) && nodeInfoProps.naiveUotEnable === 1"
+        >
+          <el-tag>v{{ nodeInfoProps.naiveUotVersion }}</el-tag>
+        </el-form-item>
         <el-form-item v-if="isHysteria(nodeInfoProps)">
           <aside>
             {{ $t('table.hysteriaTip') }}
