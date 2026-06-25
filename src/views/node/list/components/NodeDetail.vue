@@ -416,11 +416,6 @@
             {{ $t('table.hysteriaTip') }}
           </aside>
         </el-form-item>
-        <el-form-item v-if="isNaiveProxy(nodeInfoProps)">
-          <aside>
-            {{ $t('table.naiveproxyTip') }}
-          </aside>
-        </el-form-item>
       </el-form>
 
       <div slot="footer" class="dialog-footer">
