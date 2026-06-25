@@ -20,25 +20,6 @@
           clearable
         />
       </el-form-item>
-      <el-form-item :label="$t('config.singBoxRouteMode')">
-        <el-select v-model="singBoxTemplateMode" class="filter-item">
-          <el-option
-            :label="$t('config.singBoxModeRule')"
-            value="rule"
-          />
-          <el-option
-            :label="$t('config.singBoxModeGlobal')"
-            value="global"
-          />
-          <el-option
-            :label="$t('config.singBoxModeDirect')"
-            value="direct"
-          />
-        </el-select>
-        <el-button class="filter-item" type="primary" @click="applySingBoxTemplate">
-          {{ $t('config.applyTemplate') }}
-        </el-button>
-      </el-form-item>
       <el-form-item :label="$t('config.singBoxTemplate')" prop="singBoxRule">
         <JsonEditorVue
           v-model="systemConfig.singBoxRuleEntity"
@@ -78,7 +59,6 @@ export default {
   },
   data() {
     return {
-      singBoxTemplateMode: 'rule',
       updateRules: {
         systemName: [
           {
@@ -121,118 +101,6 @@ export default {
     }
   },
   methods: {
-    applySingBoxTemplate() {
-      this.systemConfig.singBoxRuleEntity = this.createSingBoxTemplate(
-        this.singBoxTemplateMode
-      )
-    },
-    createSingBoxTemplate(mode) {
-      const template = {
-        log: {
-          level: 'info'
-        },
-        dns: {
-          servers: [
-            {
-              type: 'local',
-              tag: 'local'
-            },
-            {
-              type: 'tls',
-              tag: 'remote',
-              server: '1.1.1.1',
-              detour: 'PROXY'
-            }
-          ],
-          rules: [
-            {
-              clash_mode: 'direct',
-              action: 'route',
-              server: 'local'
-            },
-            {
-              clash_mode: 'global',
-              action: 'route',
-              server: 'remote'
-            }
-          ],
-          final: 'remote'
-        },
-        http_clients: [
-          {
-            tag: 'rule-set-downloader',
-            detour: 'PROXY'
-          }
-        ],
-        inbounds: [
-          {
-            type: 'tun',
-            tag: 'tun-in',
-            address: ['172.19.0.1/30', 'fdfe:dcba:9876::1/126'],
-            auto_route: true,
-            strict_route: true,
-            stack: 'mixed'
-          }
-        ],
-        route: {
-          rules: [
-            {
-              action: 'sniff'
-            },
-            {
-              protocol: 'dns',
-              action: 'hijack-dns'
-            },
-            {
-              clash_mode: 'direct',
-              action: 'route',
-              outbound: 'DIRECT'
-            },
-            {
-              clash_mode: 'global',
-              action: 'route',
-              outbound: 'PROXY'
-            },
-            {
-              ip_is_private: true,
-              action: 'route',
-              outbound: 'DIRECT'
-            },
-            {
-              rule_set: ['geoip-cn', 'geosite-cn'],
-              action: 'route',
-              outbound: 'DIRECT'
-            }
-          ],
-          rule_set: [
-            {
-              type: 'remote',
-              tag: 'geoip-cn',
-              format: 'binary',
-              url: 'https://raw.githubusercontent.com/SagerNet/sing-geoip/rule-set/geoip-cn.srs',
-              http_client: 'rule-set-downloader'
-            },
-            {
-              type: 'remote',
-              tag: 'geosite-cn',
-              format: 'binary',
-              url: 'https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-cn.srs',
-              http_client: 'rule-set-downloader'
-            }
-          ],
-          auto_detect_interface: true,
-          default_domain_resolver: 'local',
-          default_http_client: 'rule-set-downloader',
-          final: 'PROXY'
-        },
-        experimental: {
-          clash_api: {
-            default_mode: mode
-          }
-        }
-      }
-      return template
-    },
     updateData() {
       if (typeof this.systemConfig.singBoxRuleEntity !== 'object')
         this.systemConfig.singBoxRuleEntity = JSON.parse(
