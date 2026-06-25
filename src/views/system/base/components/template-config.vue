@@ -20,7 +20,26 @@
           clearable
         />
       </el-form-item>
-      <el-form-item :label="$t('config.singBoxRule')" prop="singBoxRule">
+      <el-form-item :label="$t('config.singBoxRouteMode')">
+        <el-select v-model="singBoxTemplateMode" class="filter-item">
+          <el-option
+            :label="$t('config.singBoxModeRule')"
+            value="rule"
+          />
+          <el-option
+            :label="$t('config.singBoxModeGlobal')"
+            value="global"
+          />
+          <el-option
+            :label="$t('config.singBoxModeDirect')"
+            value="direct"
+          />
+        </el-select>
+        <el-button class="filter-item" type="primary" @click="applySingBoxTemplate">
+          {{ $t('config.applyTemplate') }}
+        </el-button>
+      </el-form-item>
+      <el-form-item :label="$t('config.singBoxTemplate')" prop="singBoxRule">
         <JsonEditorVue
           v-model="systemConfig.singBoxRuleEntity"
           v-bind="systemConfig.singBoxRuleEntity"
@@ -59,6 +78,7 @@ export default {
   },
   data() {
     return {
+      singBoxTemplateMode: 'rule',
       updateRules: {
         systemName: [
           {
@@ -101,6 +121,91 @@ export default {
     }
   },
   methods: {
+    applySingBoxTemplate() {
+      this.systemConfig.singBoxRuleEntity = this.createSingBoxTemplate(
+        this.singBoxTemplateMode
+      )
+    },
+    createSingBoxTemplate(mode) {
+      const template = {
+        log: {
+          level: 'info'
+        },
+        dns: {
+          servers: [
+            {
+              type: 'local',
+              tag: 'local'
+            },
+            {
+              type: 'tls',
+              tag: 'remote',
+              server: '1.1.1.1',
+              detour: 'PROXY'
+            }
+          ],
+          final: 'remote'
+        },
+        inbounds: [
+          {
+            type: 'tun',
+            tag: 'tun-in',
+            address: ['172.19.0.1/30', 'fdfe:dcba:9876::1/126'],
+            auto_route: true,
+            strict_route: true,
+            stack: 'mixed'
+          }
+        ],
+        route: {
+          rules: [
+            {
+              action: 'sniff'
+            },
+            {
+              protocol: 'dns',
+              action: 'hijack-dns'
+            }
+          ],
+          auto_detect_interface: true,
+          default_domain_resolver: 'local',
+          final: 'PROXY'
+        }
+      }
+      if (mode === 'rule') {
+        template.route.rules.push(
+          {
+            ip_is_private: true,
+            action: 'route',
+            outbound: 'DIRECT'
+          },
+          {
+            rule_set: ['geoip-cn', 'geosite-cn'],
+            action: 'route',
+            outbound: 'DIRECT'
+          }
+        )
+        template.route.rule_set = [
+          {
+            type: 'remote',
+            tag: 'geoip-cn',
+            format: 'binary',
+            url: 'https://raw.githubusercontent.com/SagerNet/sing-geoip/rule-set/geoip-cn.srs',
+            download_detour: 'PROXY'
+          },
+          {
+            type: 'remote',
+            tag: 'geosite-cn',
+            format: 'binary',
+            url: 'https://raw.githubusercontent.com/SagerNet/sing-geosite/rule-set/geosite-cn.srs',
+            download_detour: 'PROXY'
+          }
+        ]
+      } else if (mode === 'direct') {
+        template.dns.servers[1].detour = 'DIRECT'
+        template.route.final = 'DIRECT'
+      }
+      return template
+    },
     updateData() {
       if (typeof this.systemConfig.singBoxRuleEntity !== 'object')
         this.systemConfig.singBoxRuleEntity = JSON.parse(
