@@ -33,7 +33,7 @@ jobs:
       - name: Build UI dist
         run: |
           yarn install --frozen-lockfile --ignore-engines
-          NODE_OPTIONS=--openssl-legacy-provider yarn build
+          yarn build
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
