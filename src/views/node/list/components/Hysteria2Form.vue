@@ -33,6 +33,27 @@
       <el-input v-model="nodeProps.hysteria2ServerName" />
     </el-form-item>
     <el-form-item
+      :label="$t('table.hysteria2PortHopping').toString()"
+      prop="hysteria2PortHopping"
+    >
+      <el-input
+        v-model="nodeProps.hysteria2PortHopping"
+        placeholder="30000-50000"
+      />
+    </el-form-item>
+    <el-form-item
+      :label="$t('table.hysteria2HopInterval').toString()"
+      prop="hysteria2HopInterval"
+    >
+      <el-input-number
+        v-model.number="nodeProps.hysteria2HopInterval"
+        controls-position="right"
+        type="number"
+        :min="5"
+        :max="86400"
+      />
+    </el-form-item>
+    <el-form-item
       :label="$t('table.hysteria2Insecure').toString()"
       prop="hysteria2Insecure"
     >

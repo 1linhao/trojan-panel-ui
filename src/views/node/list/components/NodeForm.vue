@@ -312,6 +312,33 @@ export default {
         callback()
       }
     }
+    const validateHysteria2PortHopping = (rule, value, callback) => {
+      if (!value) {
+        callback()
+        return
+      }
+      const parts = value.split(',')
+      for (const item of parts) {
+        const range = item.trim().split('-')
+        if (range.length > 2 || range[0].trim() === '') {
+          callback(new Error(this.$t('valid.hysteria2PortHoppingRange').toString()))
+          return
+        }
+        const start = Number(range[0].trim())
+        const end = range.length === 2 ? Number(range[1].trim()) : start
+        if (
+          !Number.isInteger(start) ||
+          !Number.isInteger(end) ||
+          start < 1 ||
+          end > 65535 ||
+          start > end
+        ) {
+          callback(new Error(this.$t('valid.hysteria2PortHoppingRange').toString()))
+          return
+        }
+      }
+      callback()
+    }
     return {
       fallback: {
         name: '',
@@ -716,6 +743,27 @@ export default {
             trigger: ['change', 'blur']
           }
         ],
+        hysteria2PortHopping: [
+          {
+            min: 0,
+            max: 128,
+            message: this.$t('valid.hysteria2PortHoppingRange'),
+            trigger: ['change', 'blur']
+          },
+          {
+            validator: validateHysteria2PortHopping,
+            trigger: ['change', 'blur']
+          }
+        ],
+        hysteria2HopInterval: [
+          {
+            type: 'number',
+            min: 5,
+            max: 86400,
+            message: this.$t('valid.hysteria2HopIntervalRange'),
+            trigger: ['change', 'blur']
+          }
+        ],
         hysteria2Insecure: [
           {
             required: true,
@@ -1069,6 +1117,27 @@ export default {
             min: 0,
             max: 64,
             message: this.$t('valid.hysteria2ServerNameRange'),
+            trigger: ['change', 'blur']
+          }
+        ],
+        hysteria2PortHopping: [
+          {
+            min: 0,
+            max: 128,
+            message: this.$t('valid.hysteria2PortHoppingRange'),
+            trigger: ['change', 'blur']
+          },
+          {
+            validator: validateHysteria2PortHopping,
+            trigger: ['change', 'blur']
+          }
+        ],
+        hysteria2HopInterval: [
+          {
+            type: 'number',
+            min: 5,
+            max: 86400,
+            message: this.$t('valid.hysteria2HopIntervalRange'),
             trigger: ['change', 'blur']
           }
         ],

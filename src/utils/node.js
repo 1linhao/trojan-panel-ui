@@ -169,6 +169,8 @@ export function handleNodeDetail(nodeDetail, responseData) {
     nodeDetail.hysteria2UpMbps = responseData.hysteria2UpMbps
     nodeDetail.hysteria2DownMbps = responseData.hysteria2DownMbps
     nodeDetail.hysteria2ServerName = responseData.hysteria2ServerName
+    nodeDetail.hysteria2PortHopping = responseData.hysteria2PortHopping
+    nodeDetail.hysteria2HopInterval = responseData.hysteria2HopInterval || undefined
     nodeDetail.hysteria2Insecure = responseData.hysteria2Insecure
   }
   return nodeDetail
@@ -224,6 +226,8 @@ export function handleNodeUpdate(temp, responseData) {
     temp.hysteria2UpMbps = responseData.hysteria2UpMbps
     temp.hysteria2DownMbps = responseData.hysteria2DownMbps
     temp.hysteria2ServerName = responseData.hysteria2ServerName
+    temp.hysteria2PortHopping = responseData.hysteria2PortHopping
+    temp.hysteria2HopInterval = responseData.hysteria2HopInterval || undefined
     temp.hysteria2Insecure = responseData.hysteria2Insecure
   }
   return temp

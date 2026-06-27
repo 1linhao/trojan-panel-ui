@@ -388,6 +388,18 @@
           <el-tag>{{ nodeInfoProps.hysteria2ServerName }}</el-tag>
         </el-form-item>
         <el-form-item
+            :label="$t('table.hysteria2PortHopping').toString()"
+            v-if="isHysteria2(nodeInfoProps)"
+        >
+          <el-tag>{{ nodeInfoProps.hysteria2PortHopping }}</el-tag>
+        </el-form-item>
+        <el-form-item
+            :label="$t('table.hysteria2HopInterval').toString()"
+            v-if="isHysteria2(nodeInfoProps)"
+        >
+          <el-tag>{{ nodeInfoProps.hysteria2HopInterval }}</el-tag>
+        </el-form-item>
+        <el-form-item
             :label="$t('table.hysteria2Insecure').toString()"
             v-if="isHysteria2(nodeInfoProps)"
         >
