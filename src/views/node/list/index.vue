@@ -44,18 +44,10 @@
       <el-button
         class="filter-item"
         type="success"
-        icon="el-icon-link"
-        @click="handleClashSubscribe"
+        icon="el-icon-upload2"
+        @click="exportDialogVisible = true"
       >
-        {{ $t('table.clashSubscribe') }}
-      </el-button>
-      <el-button
-        class="filter-item"
-        type="success"
-        icon="el-icon-document-copy"
-        @click="handleSingBoxSubscribe"
-      >
-        {{ $t('table.singBoxSubscribe') }}
+        {{ $t('exportNode.title') }}
       </el-button>
     </div>
     <el-table
@@ -165,12 +157,6 @@
           >
             {{ $t('table.edit') }}
           </el-button>
-          <el-button type="primary" size="mini" @click="handleQRCode(row)">
-            {{ $t('table.nodeQRCode') }}
-          </el-button>
-          <el-button type="success" size="mini" @click="handleCopyURL(row)">
-            {{ $t('table.nodeURL') }}
-          </el-button>
           <el-button type="success" size="mini" @click="handleDetail(row)">
             {{ $t('table.detail') }}
           </el-button>
@@ -211,9 +197,8 @@
       :node-types-props="nodeTypes"
     />
 
-    <NodeQrcode
-      :dialog-visible-props.sync="dialogQRCodeVisible"
-      :qr-code-src-props="qrCodeSrc"
+    <ExportNodeDialog
+      :dialog-visible-props.sync="exportDialogVisible"
     />
   </div>
 </template>
@@ -221,14 +206,11 @@
 <script>
 import Pagination from '@/components/Pagination'
 import NodeDetail from '@/views/node/list/components/NodeDetail'
-import NodeQrcode from '@/views/node/list/components/NodeQrcode'
-import { Message, MessageBox } from 'element-ui'
-import copy from 'copy-to-clipboard'
+import ExportNodeDialog from '@/views/node/list/components/ExportNodeDialog'
+import { MessageBox } from 'element-ui'
 import {
   deleteNodeById,
   nodeDefault,
-  nodeQRCode,
-  nodeURL,
   selectNodeById,
   selectNodeInfo,
   selectNodePage
@@ -242,7 +224,6 @@ import {
 } from '@/utils/node'
 import checkPermission from '@/utils/permission'
 import { timeStampToDate } from '@/utils'
-import { clashSubscribe, clashSubscribeForSb } from '@/api/account'
 import { selectNodeServerList } from '@/api/node-server'
 import FallbackForm from '@/views/node/list/components/FallbackForm'
 import FallbackInfo from '@/views/node/list/components/FallbackInfo'
@@ -254,7 +235,7 @@ export default {
     NodeForm,
     FallbackInfo,
     FallbackForm,
-    NodeQrcode,
+    ExportNodeDialog,
     NodeDetail,
     Pagination
   },
@@ -467,8 +448,7 @@ export default {
       dialogStatus: '',
       dialogFormVisible: false,
       dialogInfoVisible: false,
-      dialogQRCodeVisible: false,
-      qrCodeSrc: '',
+      exportDialogVisible: false,
       nodeTypes: [],
       nodeServers: [],
       textMap: {
@@ -660,79 +640,6 @@ export default {
             duration: 2000
           })
         })
-      })
-    },
-    handleQRCode(row) {
-      this.qrCodeSrc = ''
-      const tempData = Object.assign({}, row)
-      nodeQRCode(tempData).then((response) => {
-        this.qrCodeSrc = 'data:image/png;base64,' + response.data
-        this.dialogQRCodeVisible = true
-      })
-    },
-    handleCopyURL(row) {
-      nodeURL(row).then((response) => {
-        if (copy(response.data)) {
-          Message({
-            showClose: true,
-            message: this.$t('confirm.urlCopySuccess').toString(),
-            type: 'success'
-          })
-        } else {
-          Message({
-            showClose: true,
-            message: this.$t('confirm.urlCopyFail').toString(),
-            type: 'error'
-          })
-        }
-      })
-    },
-    handleClashSubscribe() {
-      clashSubscribe().then((response) => {
-        if (
-          copy(
-            window.location.protocol +
-              '//' +
-              window.location.host +
-              response.data
-          )
-        ) {
-          Message({
-            showClose: true,
-            message: this.$t('confirm.urlCopySuccess').toString(),
-            type: 'success'
-          })
-        } else {
-          Message({
-            showClose: true,
-            message: this.$t('confirm.urlCopyFail').toString(),
-            type: 'error'
-          })
-        }
-      })
-    },
-    handleSingBoxSubscribe() {
-      clashSubscribeForSb().then((response) => {
-        if (
-          copy(
-            window.location.protocol +
-              '//' +
-              window.location.host +
-              response.data
-          )
-        ) {
-          Message({
-            showClose: true,
-            message: this.$t('confirm.urlCopySuccess').toString(),
-            type: 'success'
-          })
-        } else {
-          Message({
-            showClose: true,
-            message: this.$t('confirm.urlCopyFail').toString(),
-            type: 'error'
-          })
-        }
       })
     }
   }

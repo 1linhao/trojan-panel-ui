@@ -200,6 +200,14 @@ export default {
     trafficUsed: 'Traffic Used',
     trafficRank: 'Traffic Rank(Top 15, Update every hour)'
   },
+  exportNode: {
+    title: 'Export nodes',
+    template: 'Configuration template',
+    format: 'Export format',
+    link: 'Copy link',
+    file: 'Download file',
+    qrcode: 'Show QR code'
+  },
   config: {
     accountConfig: 'Account Config',
     configWebFile: 'WebFile Config',
@@ -228,6 +236,9 @@ export default {
     clashRule: 'Clash Rule',
     singBoxRule: 'sing-box Template',
     singBoxTemplate: 'sing-box Template',
+    singBoxTunTemplate: 'TUN mode template',
+    singBoxOutboundTemplate: 'Outbound-only template',
+    templateName: 'Template name',
     xrayTemplate: 'Xray Template',
     modifyPass: 'Modify Pass',
     modifyProperty: 'Modify Info',
@@ -328,6 +339,9 @@ export default {
     clashRuleRange: 'Clash rules range from 0-100000 characters',
     singBoxRuleRange: 'sing-box templates range from 0-100000 characters',
     xrayTemplateRange: 'The range of Xray templates is between 0-10000 characters',
+    templateName: 'Please enter a template name',
+    templateNameRange: 'Template names must be between 1 and 32 characters',
+    jsonFormat: 'Invalid JSON format',
     cover: 'Please enter whether to overwrite',
     code: 'please enter verification code',
     emailAOrUsernameExist: 'E-mail and username must fill in one',

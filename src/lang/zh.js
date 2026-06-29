@@ -200,6 +200,14 @@ export default {
     trafficUsed: '已用流量',
     trafficRank: '流量排行(前15名, 一小时更新一次)'
   },
+  exportNode: {
+    title: '导出节点',
+    template: '配置模板',
+    format: '导出方式',
+    link: '复制链接',
+    file: '下载文件',
+    qrcode: '显示二维码'
+  },
   config: {
     accountConfig: '用户设置',
     configWebFile: '自定义伪装网站',
@@ -228,6 +236,9 @@ export default {
     clashRule: 'Clash规则',
     singBoxRule: 'sing-box模板',
     singBoxTemplate: 'sing-box模板',
+    singBoxTunTemplate: 'TUN模式模板',
+    singBoxOutboundTemplate: '仅出站模板',
+    templateName: '模板名称',
     xrayTemplate: 'Xray模板',
     modifyPass: '修改密码',
     modifyProperty: '修改信息',
@@ -328,6 +339,9 @@ export default {
     clashRuleRange: 'Clash规则的范围在0-100000字符之间',
     singBoxRuleRange: 'sing-box模板的范围在0-100000字符之间',
     xrayTemplateRange: 'Xray模板的范围在0-10000字符之间',
+    templateName: '请输入模板名称',
+    templateNameRange: '模板名称的范围在1-32个字符之间',
+    jsonFormat: 'JSON格式不正确',
     cover: '请输入是否覆盖',
     code: '请输入验证码',
     emailAOrUsernameExist: '邮箱和用户名必须填写一个',

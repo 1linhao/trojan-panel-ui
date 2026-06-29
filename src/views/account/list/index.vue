@@ -103,7 +103,7 @@
       <el-button
         class="filter-item"
         type="success"
-        icon="el-icon-upload2"
+        icon="el-icon-download"
         @click="handleImport"
         v-if="checkPermission(['sysadmin'])"
       >
@@ -112,7 +112,7 @@
       <el-button
         class="filter-item"
         type="success"
-        icon="el-icon-download"
+        icon="el-icon-upload2"
         @click="handleExport"
         v-if="checkPermission(['sysadmin'])"
       >
@@ -445,11 +445,11 @@
 
 <script>
 import {
-  clashSubscribeForSb,
   createAccount,
   deleteAccountById,
   exportAccount,
   exportAccountUnused,
+  exportSubscribe,
   importAccount,
   resetAccountDownloadAndUpload,
   selectAccountPage,
@@ -940,15 +940,12 @@ export default {
       })
     },
     handleClashSubscribeForSb(row) {
-      clashSubscribeForSb(row).then((response) => {
-        if (
-          copy(
-            window.location.protocol +
-              '//' +
-              window.location.host +
-              response.data
-          )
-        ) {
+      exportSubscribe({
+        id: row.id,
+        client: 'sing-box',
+        template: 'tun'
+      }).then((response) => {
+        if (copy(new URL(response.data, window.location.origin).toString())) {
           Message({
             showClose: true,
             message: this.$t('confirm.urlCopySuccess').toString(),

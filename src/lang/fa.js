@@ -200,6 +200,14 @@ export default {
     trafficUsed: 'ترافیک استفاده شده',
     trafficRank: 'رتبه بندی ترافیک (15 برتر، هر ساعت به روز می شود)'
   },
+  exportNode: {
+    title: 'Export nodes',
+    template: 'Configuration template',
+    format: 'Export format',
+    link: 'Copy link',
+    file: 'Download file',
+    qrcode: 'Show QR code'
+  },
   config: {
     accountConfig: 'تنظیمات کاربر',
     configWebFile: 'وب سایت سفارشی پوشیده شده',
@@ -228,6 +236,9 @@ export default {
     clashRule: 'قوانین برخورد',
     singBoxRule: 'sing-box Template',
     singBoxTemplate: 'sing-box Template',
+    singBoxTunTemplate: 'TUN mode template',
+    singBoxOutboundTemplate: 'Outbound-only template',
+    templateName: 'Template name',
     xrayTemplate: 'قالب Xray',
     modifyPass: 'تغییر رمز عبور',
     modifyProperty: 'اطلاعات را اصلاح کنید',
@@ -328,6 +339,9 @@ export default {
     clashRuleRange: 'قوانین کلش از 0 تا 100000 کاراکتر متغیر است',
     singBoxRuleRange: 'sing-box templates range from 0-100000 characters',
     xrayTemplateRange: 'نمای اشعه ایکس از 0 تا 10000 کاراکتر.',
+    templateName: 'Please enter a template name',
+    templateNameRange: 'Template names must be between 1 and 32 characters',
+    jsonFormat: 'Invalid JSON format',
     cover: 'لطفاً بازنویسی را وارد کنید',
     code: 'لطفا کد تایید را وارد کنید',
     emailAOrUsernameExist: 'ایمیل و نام کاربری باید یکی را پر کنند',

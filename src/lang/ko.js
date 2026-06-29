@@ -200,6 +200,14 @@ export default {
     trafficUsed: '중고 트래픽',
     trafficRank: '트래픽 순위(상위 15위, 매시간 업데이트)'
   },
+  exportNode: {
+    title: '노드 내보내기',
+    template: '구성 템플릿',
+    format: '내보내기 형식',
+    link: '링크 복사',
+    file: '파일 다운로드',
+    qrcode: 'QR 코드 표시'
+  },
   config: {
     accountConfig: '사용자 설정',
     configWebFile: '커스텀 클로킹 웹사이트',
@@ -228,6 +236,9 @@ export default {
     clashRule: 'Clash 규칙',
     singBoxRule: 'sing-box Template',
     singBoxTemplate: 'sing-box Template',
+    singBoxTunTemplate: 'TUN 모드 템플릿',
+    singBoxOutboundTemplate: '아웃바운드 전용 템플릿',
+    templateName: '템플릿 이름',
     xrayTemplate: 'Xray 템플릿',
     modifyPass: '비밀번호 변경',
     modifyProperty: '정보 수정',
@@ -328,6 +339,9 @@ export default {
     clashRuleRange: 'Clash 규칙 범위는 0-100000자입니다',
     singBoxRuleRange: 'sing-box templates range from 0-100000 characters',
     xrayTemplateRange: 'Xray 템플릿의 범위는 0-10000자 사이입니다',
+    templateName: '템플릿 이름을 입력하세요',
+    templateNameRange: '템플릿 이름은 1~32자여야 합니다',
+    jsonFormat: 'JSON 형식이 올바르지 않습니다',
     cover: '덮어쓰기 여부를 입력해주세요',
     code: '인증 코드를 입력하세요',
     emailAOrUsernameExist: '이메일과 사용자 이름은 하나만 입력해야 합니다',

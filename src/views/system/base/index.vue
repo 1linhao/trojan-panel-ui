@@ -49,9 +49,15 @@ export default {
         trafficRankEnable: 1,
         captchaEnable: 0,
         systemName: '',
+        clashTemplateName: 'Default',
         clashRule: '',
-        singBoxRule: '',
-        singBoxRuleEntity: {},
+        singBoxTunTemplateName: 'TUN',
+        singBoxTun: '',
+        singBoxTunEntity: {},
+        singBoxOutboundTemplateName: 'Outbound only',
+        singBoxOutbound: '',
+        singBoxOutboundEntity: {},
+        xrayTemplateName: 'Default',
         xrayTemplate: '',
         xrayTemplateEntity: {}
       }
@@ -64,8 +70,11 @@ export default {
     selectDate() {
       selectSystemByName().then((response) => {
         this.systemConfig = response.data
-        this.systemConfig.singBoxRuleEntity = JSON.parse(
-          this.systemConfig.singBoxRule
+        this.systemConfig.singBoxTunEntity = JSON.parse(
+          this.systemConfig.singBoxTun
+        )
+        this.systemConfig.singBoxOutboundEntity = JSON.parse(
+          this.systemConfig.singBoxOutbound
         )
         this.systemConfig.xrayTemplateEntity = JSON.parse(
           this.systemConfig.xrayTemplate

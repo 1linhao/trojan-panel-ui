@@ -141,26 +141,24 @@ export function updateAccountById(data) {
   })
 }
 
-/**
- * 获取订阅
- * @param data
- * @returns
- */
-export function clashSubscribe() {
+export function exportOptions() {
   return request({
-    url: '/account/clashSubscribe/',
+    url: '/account/exportOptions',
     method: 'get'
   })
 }
 
-/**
- * 获取指定人的订阅
- * @param data
- * @returns
- */
-export function clashSubscribeForSb(data) {
+export function exportSubscribe(data) {
   return request({
-    url: '/account/clashSubscribeForSb',
+    url: '/account/exportSubscribe',
+    method: 'get',
+    params: data
+  })
+}
+
+export function exportQRCode(data) {
+  return request({
+    url: '/account/exportQRCode',
     method: 'get',
     params: data
   })
