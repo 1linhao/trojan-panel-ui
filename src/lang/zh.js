@@ -77,6 +77,11 @@ export default {
     nodePort: '端口',
     nodePriority: '优先级',
     nodeType: '类型',
+    nodeClients: '适用客户端',
+    nodeClientsTip: '仅勾选需要发布此节点的订阅客户端；允许全部不选。',
+    nodeClientsNone: '不发布到任何客户端',
+    naiveClientWarning:
+      'NaiveProxy通常仅适用于sing-box；请确认是否取消Clash.Meta和V2Ray。',
     nodeStatus: '状态',
     nodeStatusSuccess: '正常',
     nodeStatusError: '异常',
@@ -110,8 +115,10 @@ export default {
     hysteriaInsecure: '允许不安全',
     hysteriaFastOpen: '快速打开',
     naiveProxyUsername: '用户',
-    hysteriaTip: '目前支持的Hysteria处于测试阶段，只支持用户认证不支持流量统计。',
-    naiveproxyTip: 'NaiveProxy节点可按需开启UoT，用于改善Google、Chrome等QUIC/UDP流量兼容性。',
+    hysteriaTip:
+      '目前支持的Hysteria处于测试阶段，只支持用户认证不支持流量统计。',
+    naiveproxyTip:
+      'NaiveProxy节点可按需开启UoT，用于改善Google、Chrome等QUIC/UDP流量兼容性。',
     naiveUotEnable: '启用UoT',
     naiveUotVersion: 'UoT版本',
     hysteria2ObfsPassword: '混淆密码',
@@ -241,7 +248,7 @@ export default {
     templateName: '模板名称',
     xrayTemplate: 'Xray模板',
     modifyPass: '修改密码',
-    modifyProperty: '修改信息',
+    modifyProperty: '修改信息'
   },
   valid: {
     passNotSame: '两次新密码输入不一致',
@@ -270,6 +277,8 @@ export default {
     nodePriority: '请输入优先级',
     nodePriorityRange: '优先级必须为整数',
     nodeType: '请输入节点类型',
+    naiveClashUnsupported:
+      'Clash.Meta配置无法表达NaiveProxy节点，请取消Clash.Meta',
     xrayProtocol: '请输入协议',
     xraySSMethod: '请输入加密方式',
     xraySSNetwork: '请输入网络协议',
@@ -307,7 +316,8 @@ export default {
     hysteria2UpMbps: '请输入单客户端最大上传速度/Mbps',
     hysteria2UpMbpsRange: '单客户端最大上传速度的范围在1-9999999999之间的整数',
     hysteria2DownMbps: '请输入单客户端最大下载速度/Mbps',
-    hysteria2DownMbpsRange: '单客户端最大下载速度的范围在1-9999999999之间的整数',
+    hysteria2DownMbpsRange:
+      '单客户端最大下载速度的范围在1-9999999999之间的整数',
     hysteria2ServerNameRange: 'SNI的范围在0-64字符之间',
     hysteria2PortHoppingRange: '端口跳跃格式为30000-50000或30000,30002-30100',
     hysteria2HopIntervalRange: '跳跃间隔的范围在5-86400秒之间',

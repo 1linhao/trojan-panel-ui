@@ -120,6 +120,9 @@ export function isXrayStreamSettingsSecurityReality(temp) {
 
 export function handleNodeDetail(nodeDetail, responseData) {
   nodeDetail.password = responseData.password
+  nodeDetail.clients = Array.isArray(responseData.clients)
+    ? responseData.clients
+    : ['sing-box', 'clash-meta', 'v2ray']
   if (nodeDetail.nodeTypeId === 1) {
     nodeDetail.xrayProtocol = responseData.xrayProtocol
     nodeDetail.xraySettings = responseData.xraySettings
@@ -170,13 +173,17 @@ export function handleNodeDetail(nodeDetail, responseData) {
     nodeDetail.hysteria2DownMbps = responseData.hysteria2DownMbps
     nodeDetail.hysteria2ServerName = responseData.hysteria2ServerName
     nodeDetail.hysteria2PortHopping = responseData.hysteria2PortHopping
-    nodeDetail.hysteria2HopInterval = responseData.hysteria2HopInterval || undefined
+    nodeDetail.hysteria2HopInterval =
+      responseData.hysteria2HopInterval || undefined
     nodeDetail.hysteria2Insecure = responseData.hysteria2Insecure
   }
   return nodeDetail
 }
 
 export function handleNodeUpdate(temp, responseData) {
+  temp.clients = Array.isArray(responseData.clients)
+    ? responseData.clients
+    : ['sing-box', 'clash-meta', 'v2ray']
   if (temp.nodeTypeId === 1) {
     temp.xrayProtocol = responseData.xrayProtocol
     temp.xraySettings = responseData.xraySettings

@@ -197,9 +197,7 @@
       :node-types-props="nodeTypes"
     />
 
-    <ExportNodeDialog
-      :dialog-visible-props.sync="exportDialogVisible"
-    />
+    <ExportNodeDialog :dialog-visible-props.sync="exportDialogVisible" />
   </div>
 </template>
 
@@ -274,6 +272,7 @@ export default {
         domain: '',
         port: 443,
         priority: 100,
+        clients: ['sing-box', 'clash-meta', 'v2ray'],
 
         xrayProtocol: 'vless',
         xrayFlow: '',
@@ -361,6 +360,7 @@ export default {
         domain: '',
         port: 443,
         priority: 100,
+        clients: ['sing-box', 'clash-meta', 'v2ray'],
 
         password: '',
         uuid: '',
@@ -489,6 +489,7 @@ export default {
         domain: '',
         port: 443,
         priority: 100,
+        clients: ['sing-box', 'clash-meta', 'v2ray'],
 
         xrayProtocol: 'vless',
         xrayFlow: '',

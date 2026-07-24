@@ -69,6 +69,13 @@
           </el-select>
         </el-form-item>
 
+        <el-form-item
+          :label="$t('table.nodeClients').toString()"
+          prop="clients"
+        >
+          <NodeClientSelector :node-props="nodeProps" />
+        </el-form-item>
+
         <XrayForm
           :node-props="nodeProps"
           :form-visible-props="isXray(nodeProps)"
@@ -144,10 +151,12 @@ import {
 import HysteriaForm from '@/views/node/list/components/HysteriaForm'
 import NaiveProxyForm from '@/views/node/list/components/NaiveProxyForm'
 import Hysteria2Form from '@/views/node/list/components/Hysteria2Form'
+import NodeClientSelector from '@/views/node/list/components/NodeClientSelector'
 
 export default {
   name: 'NodeForm',
   components: {
+    NodeClientSelector,
     Hysteria2Form,
     NaiveProxyForm,
     HysteriaForm,
@@ -321,7 +330,9 @@ export default {
       for (const item of parts) {
         const range = item.trim().split('-')
         if (range.length > 2 || range[0].trim() === '') {
-          callback(new Error(this.$t('valid.hysteria2PortHoppingRange').toString()))
+          callback(
+            new Error(this.$t('valid.hysteria2PortHoppingRange').toString())
+          )
           return
         }
         const start = Number(range[0].trim())
@@ -333,9 +344,19 @@ export default {
           end > 65535 ||
           start > end
         ) {
-          callback(new Error(this.$t('valid.hysteria2PortHoppingRange').toString()))
+          callback(
+            new Error(this.$t('valid.hysteria2PortHoppingRange').toString())
+          )
           return
         }
+      }
+      callback()
+    }
+    const validateNodeClients = (rule, value, callback) => {
+      const selected = Array.isArray(value) ? value : []
+      if (isNaiveProxy(this.nodeProps) && selected.includes('clash-meta')) {
+        callback(new Error(this.$t('valid.naiveClashUnsupported').toString()))
+        return
       }
       callback()
     }
@@ -417,6 +438,12 @@ export default {
             required: true,
             message: this.$t('valid.nodeType'),
             trigger: ['change', 'blur']
+          }
+        ],
+        clients: [
+          {
+            validator: validateNodeClients,
+            trigger: 'change'
           }
         ],
         xrayProtocol: [
@@ -836,6 +863,12 @@ export default {
             required: true,
             message: this.$t('valid.nodeType'),
             trigger: ['change', 'blur']
+          }
+        ],
+        clients: [
+          {
+            validator: validateNodeClients,
+            trigger: 'change'
           }
         ],
         xrayProtocol: [

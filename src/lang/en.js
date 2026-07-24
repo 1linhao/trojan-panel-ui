@@ -77,6 +77,12 @@ export default {
     nodePort: 'Port',
     nodePriority: 'Priority',
     nodeType: 'Node Type',
+    nodeClients: 'Target Clients',
+    nodeClientsTip:
+      'Select only the subscriptions that should publish this node. Leaving all unselected is allowed.',
+    nodeClientsNone: 'Not published to any client',
+    naiveClientWarning:
+      'NaiveProxy is usually sing-box only. Review the Clash.Meta and V2Ray selections.',
     nodeStatus: 'Status',
     nodeStatusSuccess: 'success',
     nodeStatusError: 'error',
@@ -110,8 +116,10 @@ export default {
     hysteriaInsecure: 'Allow insecure',
     hysteriaFastOpen: 'Fast open',
     naiveProxyUsername: 'Username',
-    hysteriaTip: 'The currently supported Hysteria is in the testing stage, and only supports user authentication and does not support traffic statistics.',
-    naiveproxyTip: 'Enable UoT on NaiveProxy nodes when QUIC/UDP traffic such as Google or Chrome needs compatibility.',
+    hysteriaTip:
+      'The currently supported Hysteria is in the testing stage, and only supports user authentication and does not support traffic statistics.',
+    naiveproxyTip:
+      'Enable UoT on NaiveProxy nodes when QUIC/UDP traffic such as Google or Chrome needs compatibility.',
     naiveUotEnable: 'Enable UoT',
     naiveUotVersion: 'UoT Version',
     hysteria2ObfsPassword: 'Obfuscated password',
@@ -215,14 +223,18 @@ export default {
     registerEnable: 'Whether to enable registration',
     registerQuota: 'Default quota for new account/MB',
     registerExpireDays: 'Default expiry days for new account',
-    resetDownloadAndUploadMonth: 'Whether to reset download and upload traffic every month',
+    resetDownloadAndUploadMonth:
+      'Whether to reset download and upload traffic every month',
     trafficRankEnable: 'Whether to enable traffic ranking',
     captchaEnable: 'Whether to enable verification code login',
     webFileBtn: 'upload to server',
     webFileSelect: 'select file',
-    webFileTip: 'The file format only supports .zip, and the size cannot exceed 10MB',
-    imageFileTip: 'The file format only supports .png, and the size cannot exceed 3MB',
-    jsonFileTip: 'The file format only supports .json, and the size cannot exceed 10MB',
+    webFileTip:
+      'The file format only supports .zip, and the size cannot exceed 10MB',
+    imageFileTip:
+      'The file format only supports .png, and the size cannot exceed 3MB',
+    jsonFileTip:
+      'The file format only supports .json, and the size cannot exceed 10MB',
     emailEnable: 'Enable Email',
     emailHost: 'Email Host',
     emailPort: 'Email Port',
@@ -241,7 +253,7 @@ export default {
     templateName: 'Template name',
     xrayTemplate: 'Xray Template',
     modifyPass: 'Modify Pass',
-    modifyProperty: 'Modify Info',
+    modifyProperty: 'Modify Info'
   },
   valid: {
     passNotSame: 'The two new passwords entered are inconsistent',
@@ -256,7 +268,8 @@ export default {
     quota: 'Please enter the total traffic',
     quotaRange: 'The range of the total flow is an integer between -1-1024000',
     emailRange: 'The range of mailbox is between 4-64 characters',
-    emailElement: 'Please enter the correct email format (only 163 126 qq gmail is supported)',
+    emailElement:
+      'Please enter the correct email format (only 163 126 qq gmail is supported)',
     deleted: 'Please enter status',
     expireTime: 'Please enter an expiration time',
     nodeName: 'Please enter a node name',
@@ -270,6 +283,8 @@ export default {
     nodePriority: 'Please enter priority',
     nodePriorityRange: 'Priority must be an integer',
     nodeType: 'Please enter node type',
+    naiveClashUnsupported:
+      'Clash.Meta cannot represent NaiveProxy nodes. Deselect Clash.Meta.',
     xrayProtocol: 'Please enter agreement',
     xraySSMethod: 'Please enter the encryption method',
     xraySSNetwork: 'Please enter network protocol',
@@ -289,41 +304,57 @@ export default {
     trojanGoMux: 'Please enter whether to enable multiplexing',
     trojanGoWs: 'Please enter whether to enable Websocket',
     trojanGoWsRange: 'Websocket paths range from 2-64 characters',
-    trojanGoWsHostRange: 'The range of Websocket Host is between 2-64 characters',
+    trojanGoWsHostRange:
+      'The range of Websocket Host is between 2-64 characters',
     trojanGoSs: 'Please enter whether to enable SS AEAD',
     trojanGoSsMethod: 'Please enter SS AEAD encryption method',
-    trojanGoSsPasswordRange: 'The range of SS AEAD password is between 2-32 characters',
+    trojanGoSsPasswordRange:
+      'The range of SS AEAD password is between 2-32 characters',
     hysteriaProtocol: 'Please enter the pattern',
     hysteriaProtocolRange: 'Patterns range from 2-16 characters',
-    hysteriaObfsRange: 'The range of the obfuscated password is between 2-64 characters',
-    hysteriaUpMbps: 'Please enter the maximum upload speed/Mbps of a single client',
-    hysteriaUpMbpsRange: 'The maximum upload speed of a single client is an integer ranging from 1 to 9999999999',
-    hysteriaDownMbps: 'Please enter the maximum download speed/Mbps of a single client',
-    hysteriaDownMbpsRange: 'The maximum download speed of a single client is an integer ranging from 1 to 9999999999',
+    hysteriaObfsRange:
+      'The range of the obfuscated password is between 2-64 characters',
+    hysteriaUpMbps:
+      'Please enter the maximum upload speed/Mbps of a single client',
+    hysteriaUpMbpsRange:
+      'The maximum upload speed of a single client is an integer ranging from 1 to 9999999999',
+    hysteriaDownMbps:
+      'Please enter the maximum download speed/Mbps of a single client',
+    hysteriaDownMbpsRange:
+      'The maximum download speed of a single client is an integer ranging from 1 to 9999999999',
     hysteriaServerNameRange: 'SNI ranges from 0-64 characters',
     hysteriaInsecure: 'Please enter whether to allow insecure',
     hysteriaFastOpen: 'Please enter whether to open quickly',
-    hysteria2ObfsPasswordRange: 'The range of the obfuscated password is between 4-64 characters',
-    hysteria2UpMbps: 'Please enter the maximum upload speed/Mbps of a single client',
-    hysteria2UpMbpsRange: 'The maximum upload speed of a single client is an integer ranging from 1 to 9999999999',
-    hysteria2DownMbps: 'Please enter the maximum download speed/Mbps of a single client',
-    hysteria2DownMbpsRange: 'The maximum download speed of a single client is an integer ranging from 1 to 9999999999',
+    hysteria2ObfsPasswordRange:
+      'The range of the obfuscated password is between 4-64 characters',
+    hysteria2UpMbps:
+      'Please enter the maximum upload speed/Mbps of a single client',
+    hysteria2UpMbpsRange:
+      'The maximum upload speed of a single client is an integer ranging from 1 to 9999999999',
+    hysteria2DownMbps:
+      'Please enter the maximum download speed/Mbps of a single client',
+    hysteria2DownMbpsRange:
+      'The maximum download speed of a single client is an integer ranging from 1 to 9999999999',
     hysteria2ServerNameRange: 'SNI ranges from 0-64 characters',
-    hysteria2PortHoppingRange: 'Port hopping must be like 30000-50000 or 30000,30002-30100',
-    hysteria2HopIntervalRange: 'Hop interval must be between 5 and 86400 seconds',
+    hysteria2PortHoppingRange:
+      'Port hopping must be like 30000-50000 or 30000,30002-30100',
+    hysteria2HopIntervalRange:
+      'Hop interval must be between 5 and 86400 seconds',
     hysteria2Insecure: 'Please enter whether to allow insecure',
     registerEnable: 'Please enter whether registration is open',
     registerQuota: 'Please enter the default traffic for new users',
     registerQuotaRange: 'The flow is between 0-1024000',
     registerExpireDays: 'Please enter the default expiry days for new users',
     registerExpireDaysRange: 'Days between 0-365',
-    resetDownloadAndUploadMonth: 'Please enter whether to reset download and upload traffic every month',
+    resetDownloadAndUploadMonth:
+      'Please enter whether to reset download and upload traffic every month',
     trafficRankEnable: 'Please enter whether to enable traffic ranking',
     emailEnable: 'Please enter whether to enable the email function',
     emailHostRange: 'The range of mailbox Host is between 3-64 characters',
     emailPort: 'Please enter the email port',
     emailPortRange: 'Please enter a legal port',
-    emailUsernameRange: 'The range of email username is between 3-32 characters',
+    emailUsernameRange:
+      'The range of email username is between 3-32 characters',
     emailPasswordRange: 'Please enter whether to enable expiration reminder',
     expireWarnEnable: 'Please enter whether to enable expiration reminder',
     expireWarnDay: 'Please enter whether to enable expiration reminder',
@@ -338,7 +369,8 @@ export default {
     systemNameRange: 'System names range from 2-32 characters',
     clashRuleRange: 'Clash rules range from 0-100000 characters',
     singBoxRuleRange: 'sing-box templates range from 0-100000 characters',
-    xrayTemplateRange: 'The range of Xray templates is between 0-10000 characters',
+    xrayTemplateRange:
+      'The range of Xray templates is between 0-10000 characters',
     templateName: 'Please enter a template name',
     templateNameRange: 'Template names must be between 1 and 32 characters',
     jsonFormat: 'Invalid JSON format',
@@ -346,19 +378,24 @@ export default {
     code: 'please enter verification code',
     emailAOrUsernameExist: 'E-mail and username must fill in one',
     xrayStreamSettingsEntityRealitySettingsDest: 'please enter dest',
-    xrayStreamSettingsEntityRealitySettingsServerNames: 'please enter serverNames',
-    xrayStreamSettingsEntityRealitySettingsPrivateKey: 'please enter privateKey',
+    xrayStreamSettingsEntityRealitySettingsServerNames:
+      'please enter serverNames',
+    xrayStreamSettingsEntityRealitySettingsPrivateKey:
+      'please enter privateKey',
     xrayStreamSettingsEntityRealitySettingsShortIds: 'please enter shortIds',
     realityPbk: 'please enter publicKey',
     xrayStreamSettingsEntityRealitySettingsXver: 'xver can only be 0, 1, 2',
     createBatchNum: 'Please enter the quantity',
     createBatchNumRange: 'The number is an integer in the range 5-200',
     createBatchQuota: 'Please enter the total traffic',
-    createBatchQuotaRange: 'The range of the total flow is an integer between -1-1024000',
+    createBatchQuotaRange:
+      'The range of the total flow is an integer between -1-1024000',
     createBatchPresetExpire: 'Please enter a default validity period',
-    createBatchPresetExpireRange: 'The default validity period is an integer in the range 1-365',
+    createBatchPresetExpireRange:
+      'The default validity period is an integer in the range 1-365',
     createBatchPresetQuota: 'Please enter the default quota',
-    createBatchPresetQuotaRange: 'The default quota is an integer in the range 1-365'
+    createBatchPresetQuotaRange:
+      'The default quota is an integer in the range 1-365'
   },
   confirm: {
     warn: 'Warn',
@@ -371,17 +408,21 @@ export default {
     urlCopySuccess: 'URL copied successfully',
     urlCopyFail: 'URL copy failed',
     uploadWebFileSuccess: 'upload successful',
-    updateAccountPass: 'The modification is successful and will take effect the next time you log in',
+    updateAccountPass:
+      'The modification is successful and will take effect the next time you log in',
     updateAccountProperty: 'Successfully modified',
-    logoutPrompt: 'You are logged out, you can cancel to stay on this page, or log in again!',
+    logoutPrompt:
+      'You are logged out, you can cancel to stay on this page, or log in again!',
     logoutConfirm: 're-register',
     authFail: 'Authentication failed, please log in again!',
     deleteUser: 'Are you sure to delete this user?',
-    handleReset: "Are you sure to reset the user's download and upload traffic?",
+    handleReset:
+      "Are you sure to reset the user's download and upload traffic?",
     deleteNode: 'Are you sure to delete this node?',
     deleteNodeServer: 'Are you sure you want to delete this server?',
     deleteBlack: 'Are you sure to delete this IP?',
-    taskSubmitSuccess: 'The task has been submitted successfully, please check it later in the task management',
+    taskSubmitSuccess:
+      'The task has been submitted successfully, please check it later in the task management',
     taskDownloadSuccess: 'Download successful',
     alreadyExists: 'Already Exists'
   },

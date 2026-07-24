@@ -77,6 +77,12 @@ export default {
     nodePort: '포트',
     nodePriority: '우선 사항',
     nodeType: '유형',
+    nodeClients: 'Target Clients',
+    nodeClientsTip:
+      'Select only the subscriptions that should publish this node. Leaving all unselected is allowed.',
+    nodeClientsNone: 'Not published to any client',
+    naiveClientWarning:
+      'NaiveProxy is usually sing-box only. Review the Clash.Meta and V2Ray selections.',
     nodeStatus: '상태',
     nodeStatusSuccess: '정상',
     nodeStatusError: '이상',
@@ -110,8 +116,10 @@ export default {
     hysteriaInsecure: '안전하지 않은 허용',
     hysteriaFastOpen: '빨리 열어',
     naiveProxyUsername: '사용자',
-    hysteriaTip: '현재 지원되는 Hysteria는 베타 단계이며 사용자 인증만 지원하고 트래픽 통계는 지원하지 않습니다',
-    naiveproxyTip: 'Enable UoT on NaiveProxy nodes when QUIC/UDP traffic such as Google or Chrome needs compatibility.',
+    hysteriaTip:
+      '현재 지원되는 Hysteria는 베타 단계이며 사용자 인증만 지원하고 트래픽 통계는 지원하지 않습니다',
+    naiveproxyTip:
+      'Enable UoT on NaiveProxy nodes when QUIC/UDP traffic such as Google or Chrome needs compatibility.',
     naiveUotEnable: 'Enable UoT',
     naiveUotVersion: 'UoT Version',
     hysteria2ObfsPassword: '난독화된 암호',
@@ -222,7 +230,8 @@ export default {
     webFileSelect: '파일 선택',
     webFileTip: '파일 형식은 .zip만 지원하며 크기는 10MB를 초과할 수 없습니다',
     imageFileTip: '파일 형식은 .png만 지원하며 크기는 3MB를 초과할 수 없습니다',
-    jsonFileTip: '파일 형식은 .json만 지원하며 크기는 10MB를 초과할 수 없습니다',
+    jsonFileTip:
+      '파일 형식은 .json만 지원하며 크기는 10MB를 초과할 수 없습니다',
     emailEnable: '사서함 기능 활성화 여부',
     emailHost: '우편Host',
     emailPort: '사서함 포트',
@@ -241,7 +250,7 @@ export default {
     templateName: '템플릿 이름',
     xrayTemplate: 'Xray 템플릿',
     modifyPass: '비밀번호 변경',
-    modifyProperty: '정보 수정',
+    modifyProperty: '정보 수정'
   },
   valid: {
     passNotSame: '입력한 두 개의 새 비밀번호가 일치하지 않습니다',
@@ -270,6 +279,8 @@ export default {
     nodePriority: '우선 순위를 입력하세요',
     nodePriorityRange: '우선 순위는 정수여야 합니다',
     nodeType: '노드 유형을 입력하십시오',
+    naiveClashUnsupported:
+      'Clash.Meta cannot represent NaiveProxy nodes. Deselect Clash.Meta.',
     xrayProtocol: '동의를 입력하십시오',
     xraySSMethod: '암호화 방법을 입력하세요',
     xraySSNetwork: '네트워크 프로토콜을 입력하십시오',
@@ -297,27 +308,36 @@ export default {
     hysteriaProtocolRange: '패턴 범위는 2-16자입니다',
     hysteriaObfsRange: '난독화된 암호의 범위는 2-64자 사이입니다',
     hysteriaUpMbps: '단일 클라이언트의 최대 업로드 속도/Mbps를 입력하십시오',
-    hysteriaUpMbpsRange: '단일 클라이언트의 최대 업로드 속도는 1~9999999999 범위의 정수입니다',
-    hysteriaDownMbps: '단일 클라이언트의 최대 다운로드 속도/Mbps를 입력하십시오',
-    hysteriaDownMbpsRange: '단일 클라이언트의 최대 다운로드 속도는 1에서 9999999999 사이의 정수입니다',
+    hysteriaUpMbpsRange:
+      '단일 클라이언트의 최대 업로드 속도는 1~9999999999 범위의 정수입니다',
+    hysteriaDownMbps:
+      '단일 클라이언트의 최대 다운로드 속도/Mbps를 입력하십시오',
+    hysteriaDownMbpsRange:
+      '단일 클라이언트의 최대 다운로드 속도는 1에서 9999999999 사이의 정수입니다',
     hysteriaServerNameRange: 'SNI 범위는 0~64자입니다.',
     hysteriaInsecure: '안전하지 않은 허용 여부를 입력하십시오',
     hysteriaFastOpen: '빨리 열지 여부를 입력하십시오',
     hysteria2ObfsPasswordRange: '난독화된 암호의 범위는 4-64자 사이입니다',
     hysteria2UpMbps: '단일 클라이언트의 최대 업로드 속도/Mbps를 입력하십시오',
-    hysteria2UpMbpsRange: '단일 클라이언트의 최대 업로드 속도는 1~9999999999 범위의 정수입니다',
-    hysteria2DownMbps: '단일 클라이언트의 최대 다운로드 속도/Mbps를 입력하십시오',
-    hysteria2DownMbpsRange: '단일 클라이언트의 최대 다운로드 속도는 1에서 9999999999 사이의 정수입니다',
+    hysteria2UpMbpsRange:
+      '단일 클라이언트의 최대 업로드 속도는 1~9999999999 범위의 정수입니다',
+    hysteria2DownMbps:
+      '단일 클라이언트의 최대 다운로드 속도/Mbps를 입력하십시오',
+    hysteria2DownMbpsRange:
+      '단일 클라이언트의 최대 다운로드 속도는 1에서 9999999999 사이의 정수입니다',
     hysteria2ServerNameRange: 'SNI 범위는 0~64자입니다.',
-    hysteria2PortHoppingRange: 'Port hopping must be like 30000-50000 or 30000,30002-30100',
-    hysteria2HopIntervalRange: 'Hop interval must be between 5 and 86400 seconds',
+    hysteria2PortHoppingRange:
+      'Port hopping must be like 30000-50000 or 30000,30002-30100',
+    hysteria2HopIntervalRange:
+      'Hop interval must be between 5 and 86400 seconds',
     hysteria2Insecure: '안전하지 않은 허용 여부를 입력하십시오',
     registerEnable: '등록 가능 여부를 입력하세요',
     registerQuota: '신규 사용자의 기본 트래픽을 입력하세요',
     registerQuotaRange: '흐름은 0-1024000 사이입니다',
     registerExpireDays: '새 사용자의 기본 만료일을 입력하세요',
     registerExpireDaysRange: '0-365 사이의 일',
-    resetDownloadAndUploadMonth: '매월 다운로드 및 업로드 트래픽 재설정 여부를 입력하십시오',
+    resetDownloadAndUploadMonth:
+      '매월 다운로드 및 업로드 트래픽 재설정 여부를 입력하십시오',
     trafficRankEnable: '트래픽 순위 활성화 여부를 입력하세요',
     emailEnable: '이메일 기능 활성화 여부를 입력해주세요',
     emailHostRange: '사서함 호스트의 범위는 3-64자 사이입니다',
@@ -346,19 +366,23 @@ export default {
     code: '인증 코드를 입력하세요',
     emailAOrUsernameExist: '이메일과 사용자 이름은 하나만 입력해야 합니다',
     xrayStreamSettingsEntityRealitySettingsDest: 'dest들어 오세요',
-    xrayStreamSettingsEntityRealitySettingsServerNames: 'serverNames들어 오세요',
+    xrayStreamSettingsEntityRealitySettingsServerNames:
+      'serverNames들어 오세요',
     xrayStreamSettingsEntityRealitySettingsPrivateKey: 'privateKey들어 오세요',
     xrayStreamSettingsEntityRealitySettingsShortIds: 'shortIds들어 오세요',
     realityPbk: 'publicKey들어 오세요',
-    xrayStreamSettingsEntityRealitySettingsXver: 'xver는 0, 1, 2만 될 수 있습니다',
+    xrayStreamSettingsEntityRealitySettingsXver:
+      'xver는 0, 1, 2만 될 수 있습니다',
     createBatchNum: '수량을 입력해주세요',
     createBatchNumRange: '숫자는 5-200 범위의 정수입니다',
     createBatchQuota: '총 트래픽을 입력하세요',
     createBatchQuotaRange: '전체 흐름의 범위는 -1-1024000 사이의 정수입니다',
     createBatchPresetExpire: '기본 만료일을 입력하세요.',
-    createBatchPresetExpireRange: '미리 설정된 유효 기간 동안 1-365 사이의 정수',
+    createBatchPresetExpireRange:
+      '미리 설정된 유효 기간 동안 1-365 사이의 정수',
     createBatchPresetQuota: '기본 총 흐름을 입력하십시오',
-    createBatchPresetQuotaRange: '미리 설정된 총 유량 범위는 -1-1024000 사이의 정수입니다.'
+    createBatchPresetQuotaRange:
+      '미리 설정된 총 유량 범위는 -1-1024000 사이의 정수입니다.'
   },
   confirm: {
     warn: '경고하다',
@@ -373,7 +397,8 @@ export default {
     uploadWebFileSuccess: '성공적으로 업로드',
     updateAccountPass: '수정이 완료되었으며 다음에 로그인할 때 적용됩니다',
     updateAccountProperty: '성공적으로 수정됨',
-    logoutPrompt: '로그아웃되었습니다. 취소하여 이 페이지에 머물거나 다시 로그인할 수 있습니다!',
+    logoutPrompt:
+      '로그아웃되었습니다. 취소하여 이 페이지에 머물거나 다시 로그인할 수 있습니다!',
     logoutConfirm: '재등록',
     authFail: '인증에 실패했습니다. 다시 로그인하세요!',
     deleteUser: '이 사용자를 삭제하시겠습니까?',
@@ -381,7 +406,8 @@ export default {
     deleteNode: '이 노드를 삭제하시겠습니까?',
     deleteNodeServer: '이 서버를 삭제하시겠습니까?',
     deleteBlack: '이 IP를 삭제하시겠습니까?',
-    taskSubmitSuccess: '작업이 성공적으로 제출되었습니다. 나중에 작업 관리에서 확인하십시오',
+    taskSubmitSuccess:
+      '작업이 성공적으로 제출되었습니다. 나중에 작업 관리에서 확인하십시오',
     taskDownloadSuccess: '다운로드 성공',
     alreadyExists: '이미 존재 함'
   },
