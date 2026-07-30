@@ -157,6 +157,17 @@ export const asyncRoutes = [
           name: 'serverDetail',
           roles: ['sysadmin', 'admin']
         }
+      },
+      {
+        path: 'kernel-upgrade',
+        name: 'kernelUpgrade',
+        component: () => import('@/views/kernel-upgrade'),
+        hidden: true,
+        meta: {
+          title: 'kernelUpgrade',
+          name: 'kernelUpgrade',
+          roles: ['sysadmin']
+        }
       }
     ]
   },

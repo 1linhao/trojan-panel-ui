@@ -8,6 +8,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
+    "lint:kernel-upgrade": "eslint --ext .js,.vue src/api/kernel-upgrade.js src/lang/en.js src/lang/index.js src/lang/zh.js src/router/index.js src/views/node-server/list/compoments/NodeServerForm.vue src/views/node-server/list/index.vue src/views/kernel-upgrade",
     "svgo": "svgo -f src/icons/svg --config=src/icons/svgo.yml",
     "lint:prettier": "prettier --write \"**/*.{js,cjs,ts,json,tsx,css,less,scss,vue,html,md}\""
   },
@@ -36,7 +37,7 @@
     "@vue/cli-plugin-eslint": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "babel-eslint": "^10.1.0",
-    "eslint": "^8.7.0",
+    "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.3.0",
     "javascript-obfuscator": "^4.0.0",
     "prettier": "^2.5.1",

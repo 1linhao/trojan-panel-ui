@@ -8,20 +8,27 @@
     <el-form
       ref="dataForm"
       :rules="dialogStatus === 'create' ? createRules : updateRules"
-      :model="nodeServer"
+      :model="form"
       label-position="left"
     >
       <el-form-item :label="$t('table.nodeServerName')" prop="name">
-        <el-input v-model="nodeServer.name" clearable />
+        <el-input v-model="form.name" clearable />
       </el-form-item>
       <el-form-item :label="$t('table.nodeServerIp')" prop="ip">
-        <el-input v-model="nodeServer.ip" clearable />
+        <el-input v-model="form.ip" clearable />
       </el-form-item>
       <el-form-item :label="$t('table.nodeServerGrpcPort')" prop="grpcPort">
         <el-input-number
-          v-model.number="nodeServer.grpcPort"
+          v-model.number="form.grpcPort"
           controls-position="right"
           type="number"
+        />
+      </el-form-item>
+      <el-form-item :label="$t('kernel.tlsServerName')" prop="grpcTlsServerName">
+        <el-input
+          v-model="form.grpcTlsServerName"
+          :placeholder="$t('kernel.tlsServerNamePlaceholder')"
+          clearable
         />
       </el-form-item>
     </el-form>
@@ -64,6 +71,7 @@ export default {
   },
   data() {
     return {
+      form: Object.assign({}, this.nodeServer),
       textMap: {
         update: this.$t('table.edit'),
         create: this.$t('table.add')
@@ -107,6 +115,13 @@ export default {
             message: this.$t('valid.nodePortRange'),
             trigger: ['change', 'blur']
           }
+        ],
+        grpcTlsServerName: [
+          {
+            required: true,
+            message: this.$t('kernel.tlsServerNameRequired'),
+            trigger: ['change', 'blur']
+          }
         ]
       },
       updateRules: {
@@ -148,7 +163,23 @@ export default {
             message: this.$t('valid.nodePortRange'),
             trigger: ['change', 'blur']
           }
+        ],
+        grpcTlsServerName: [
+          {
+            min: 4,
+            max: 253,
+            message: this.$t('kernel.tlsServerNameRequired'),
+            trigger: ['change', 'blur']
+          }
         ]
+      }
+    }
+  },
+  watch: {
+    nodeServer: {
+      deep: true,
+      handler(value) {
+        this.form = Object.assign({}, value)
       }
     }
   },
@@ -161,7 +192,7 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          createNodeServer(this.nodeServer).then(() => {
+          createNodeServer(this.form).then(() => {
             this.getList()
             this.$emit('update:dialogVisible', false)
             this.$notify({
@@ -177,7 +208,7 @@ export default {
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          const tempData = Object.assign({}, this.nodeServer)
+          const tempData = Object.assign({}, this.form)
           updateNodeServerById(tempData).then(() => {
             this.getList()
             this.$emit('update:dialogVisible', false)

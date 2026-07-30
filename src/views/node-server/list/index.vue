@@ -56,6 +56,15 @@
       >
         {{ $t('table.export') }}
       </el-button>
+      <el-button
+        v-if="checkPermission(['sysadmin'])"
+        class="filter-item"
+        type="warning"
+        icon="el-icon-upload"
+        @click="handleBatchUpgrade"
+      >
+        {{ $t('kernel.batchUpgrade') }}
+      </el-button>
     </div>
     <el-table
       :key="tableKey"
@@ -122,6 +131,28 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if="checkPermission(['sysadmin'])"
+        :label="$t('kernel.kernelSummary')"
+        min-width="220"
+        align="center"
+      >
+        <template slot-scope="{ row }">
+          <span>{{ row.kernelSummary || '-' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="checkPermission(['sysadmin'])"
+        :label="$t('kernel.transport')"
+        width="110"
+        align="center"
+      >
+        <template slot-scope="{ row }">
+          <el-tag :type="row.grpcTlsMode === 'mtls' ? 'success' : 'warning'">
+            {{ row.grpcTlsMode || 'legacy' }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
         :label="$t('table.createTime')"
         width="150"
         align="center"
@@ -151,6 +182,15 @@
             @click="handleDetail(row)"
           >
             {{ $t('table.detail') }}
+          </el-button>
+          <el-button
+            v-if="checkPermission(['sysadmin'])"
+            size="mini"
+            type="warning"
+            :disabled="row.status !== 1"
+            @click="handleKernelManage(row)"
+          >
+            {{ $t('kernel.manage') }}
           </el-button>
           <el-button
             size="mini"
@@ -226,6 +266,8 @@ export default {
         ip: '',
         name: '',
         grpcPort: 8100,
+        grpcTlsMode: 'mtls',
+        grpcTlsServerName: '',
         trojanPanelCoreVersion: '',
         createTime: new Date()
       },
@@ -278,6 +320,8 @@ export default {
         ip: '',
         name: '',
         grpcPort: 8100,
+        grpcTlsMode: 'mtls',
+        grpcTlsServerName: '',
         trojanPanelCoreVersion: '',
         createTime: new Date()
       }
@@ -323,6 +367,15 @@ export default {
     handleDetail(row) {
       Cookies.set('nodeServerId', row.id)
       this.$router.push({ path: 'server-detail' })
+    },
+    handleKernelManage(row) {
+      this.$router.push({
+        path: 'kernel-upgrade',
+        query: { serverId: row.id }
+      })
+    },
+    handleBatchUpgrade() {
+      this.$router.push({ path: 'kernel-upgrade' })
     },
     importData(params) {
       this.$refs['importTip'].$refs['dataForm'].validate((valid) => {
