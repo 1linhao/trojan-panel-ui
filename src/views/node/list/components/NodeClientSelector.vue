@@ -48,7 +48,8 @@ export default {
       clients: [
         { value: 'sing-box', label: 'sing-box', mark: 'S' },
         { value: 'clash-meta', label: 'Clash.Meta', mark: 'C' },
-        { value: 'v2ray', label: 'V2Ray', mark: 'V' }
+        { value: 'v2ray', label: 'V2Ray', mark: 'V' },
+        { value: 'shadowrocket', label: 'Shadowrocket', mark: 'R' }
       ]
     }
   },
@@ -69,7 +70,7 @@ export default {
 <style scoped>
 .client-selector__grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
 }
 

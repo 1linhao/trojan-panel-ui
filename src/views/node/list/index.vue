@@ -272,7 +272,7 @@ export default {
         domain: '',
         port: 443,
         priority: 100,
-        clients: ['sing-box', 'clash-meta', 'v2ray'],
+        clients: ['sing-box', 'clash-meta', 'v2ray', 'shadowrocket'],
 
         xrayProtocol: 'vless',
         xrayFlow: '',
@@ -360,7 +360,7 @@ export default {
         domain: '',
         port: 443,
         priority: 100,
-        clients: ['sing-box', 'clash-meta', 'v2ray'],
+        clients: ['sing-box', 'clash-meta', 'v2ray', 'shadowrocket'],
 
         password: '',
         uuid: '',
@@ -489,7 +489,7 @@ export default {
         domain: '',
         port: 443,
         priority: 100,
-        clients: ['sing-box', 'clash-meta', 'v2ray'],
+        clients: ['sing-box', 'clash-meta', 'v2ray', 'shadowrocket'],
 
         xrayProtocol: 'vless',
         xrayFlow: '',

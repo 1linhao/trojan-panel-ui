@@ -147,7 +147,7 @@
       </el-button>
     </el-card>
 
-    <el-card v-if="task" class="section">
+    <el-card v-for="task in tasks" :key="task.id" class="section">
       <div slot="header">
         {{ $t('kernel.task') }} #{{ task.id }}
         <el-tag>{{ statusLabel(task.status) }}</el-tag>
@@ -166,7 +166,7 @@
         v-if="task.status === 'failed' || task.status === 'partial'"
         type="warning"
         class="submit"
-        @click="retryTask"
+        @click="retryTask(task)"
       >
         {{ $t('kernel.retryFailed') }}
       </el-button>
@@ -219,8 +219,9 @@ export default {
       inventory: null,
       inventoryLoading: false,
       inventoryUnavailable: false,
-      task: null,
+      tasks: [],
       taskHistory: [],
+      runningTaskIds: [],
       timer: null,
       releases: {
         xray: { stable: [], prerelease: [] },
@@ -278,10 +279,7 @@ export default {
       this.loadInventory()
     }
     this.loadReleases(false)
-    this.loadTaskHistory()
-    if (this.$route.query.taskId) {
-      this.loadTask(Number(this.$route.query.taskId))
-    }
+    this.loadTaskHistory().then(() => this.loadInitialTasks())
   },
   beforeDestroy() {
     clearTimeout(this.timer)
@@ -294,16 +292,39 @@ export default {
       return this.$t(`kernel.statuses.${status}`)
     },
     loadTaskHistory() {
-      return selectKernelTaskPage({ pageNum: 1, pageSize: 20 }).then((response) => {
-        this.taskHistory = response.data.tasks || []
+      return Promise.all([
+        selectKernelTaskPage({ pageNum: 1, pageSize: 20 }),
+        selectKernelTaskPage({ pageNum: 1, pageSize: 100, status: 'queued' }),
+        selectKernelTaskPage({ pageNum: 1, pageSize: 100, status: 'running' })
+      ]).then(([historyResponse, queuedResponse, runningResponse]) => {
+        this.taskHistory = historyResponse.data.tasks || []
+        const activeTasks = [
+          ...(queuedResponse.data.tasks || []),
+          ...(runningResponse.data.tasks || [])
+        ]
+        this.runningTaskIds = [...new Set(activeTasks.map((task) => task.id))]
       })
     },
+    routeTaskIds() {
+      const value = this.$route.query.taskIds || this.$route.query.taskId || ''
+      return [...new Set(String(value).split(',').map(Number).filter((id) => id > 0))]
+    },
+    activeTaskIds() {
+      return this.runningTaskIds
+    },
+    loadInitialTasks() {
+      const ids = [...new Set([...this.routeTaskIds(), ...this.activeTaskIds()])]
+      if (ids.length) this.loadTasks(ids)
+    },
+    rememberTasks(ids) {
+      const remembered = [...new Set([...this.tasks.map((task) => task.id), ...ids])]
+      const query = Object.assign({}, this.$route.query, { taskIds: remembered.join(',') })
+      delete query.taskId
+      this.$router.replace({ path: this.$route.path, query }).catch(() => {})
+    },
     openTask(id) {
-      this.$router.replace({
-        path: this.$route.path,
-        query: Object.assign({}, this.$route.query, { taskId: id })
-      })
-      this.loadTask(id)
+      this.rememberTasks([id])
+      this.loadTasks([id])
     },
     channelName(channel) {
       return channel === 2 ? 'prerelease' : channel === 3 ? 'legacy' : 'stable'
@@ -368,30 +389,54 @@ export default {
     },
     submit(nodeServerIds, canaryNodeServerId, targets) {
       return createKernelTask({ nodeServerIds, canaryNodeServerId, targets }).then((response) => {
-        this.task = response.data
-        this.$router.replace({
-          path: this.$route.path,
-          query: Object.assign({}, this.$route.query, { taskId: this.task.id })
-        })
-        this.loadTask(this.task.id)
+        const task = response.data
+        this.upsertTask(task)
+        this.rememberTasks([task.id])
+        this.loadTasks([task.id])
       })
     },
-    loadTask(id) {
+    upsertTask(task) {
+      const index = this.tasks.findIndex((item) => item.id === task.id)
+      if (index === -1) {
+        this.tasks.push(task)
+      } else {
+        this.tasks.splice(index, 1, task)
+      }
+      this.tasks.sort((left, right) => right.id - left.id)
+    },
+    loadTasks(ids) {
       clearTimeout(this.timer)
-      selectKernelTaskById({ id }).then((response) => {
-        this.task = response.data
-        if (!terminal.includes(this.task.status)) {
-          this.timer = setTimeout(() => this.loadTask(id), 2000)
-        } else if (!this.batchMode) {
-          this.loadInventory()
-        }
-        if (terminal.includes(this.task.status)) {
+      const taskIds = [...new Set([...this.tasks.map((task) => task.id), ...ids])]
+      return Promise.all(taskIds.map((id) =>
+        selectKernelTaskById({ id }).then((response) => response.data).catch(() => null)
+      )).then((loadedTasks) => {
+        let completed = false
+        loadedTasks.filter(Boolean).forEach((task) => {
+          const previous = this.tasks.find((item) => item.id === task.id)
+          if (previous && !terminal.includes(previous.status) && terminal.includes(task.status)) {
+            completed = true
+          }
+          this.upsertTask(task)
+        })
+        if (completed) {
           this.loadTaskHistory()
+          if (!this.batchMode) this.loadInventory()
+        }
+        if (this.tasks.some((task) => !terminal.includes(task.status))) {
+          this.timer = setTimeout(() => this.loadTasks([]), 2000)
         }
       })
     },
-    retryTask() {
-      retryKernelTask({ id: this.task.id }).then(() => this.loadTask(this.task.id))
+    retryTask(task) {
+      retryKernelTask({ id: task.id }).then((response) => {
+        const retriedTask = response.data
+        if (retriedTask && retriedTask.id) {
+          this.upsertTask(retriedTask)
+          this.rememberTasks([retriedTask.id])
+          return this.loadTasks([retriedTask.id])
+        }
+        return this.loadTasks([task.id])
+      })
     },
     enableMTLS() {
       MessageBox.prompt(this.$t('kernel.tlsServerNameRequired'), this.$t('kernel.probeMTLS'), {

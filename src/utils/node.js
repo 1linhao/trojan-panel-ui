@@ -122,7 +122,7 @@ export function handleNodeDetail(nodeDetail, responseData) {
   nodeDetail.password = responseData.password
   nodeDetail.clients = Array.isArray(responseData.clients)
     ? responseData.clients
-    : ['sing-box', 'clash-meta', 'v2ray']
+    : ['sing-box', 'clash-meta', 'v2ray', 'shadowrocket']
   if (nodeDetail.nodeTypeId === 1) {
     nodeDetail.xrayProtocol = responseData.xrayProtocol
     nodeDetail.xraySettings = responseData.xraySettings
@@ -183,7 +183,7 @@ export function handleNodeDetail(nodeDetail, responseData) {
 export function handleNodeUpdate(temp, responseData) {
   temp.clients = Array.isArray(responseData.clients)
     ? responseData.clients
-    : ['sing-box', 'clash-meta', 'v2ray']
+    : ['sing-box', 'clash-meta', 'v2ray', 'shadowrocket']
   if (temp.nodeTypeId === 1) {
     temp.xrayProtocol = responseData.xrayProtocol
     temp.xraySettings = responseData.xraySettings

@@ -557,7 +557,8 @@ export default {
         {
           'sing-box': 'sing-box',
           'clash-meta': 'Clash.Meta',
-          v2ray: 'V2Ray'
+          v2ray: 'V2Ray',
+          shadowrocket: 'Shadowrocket'
         }[client] || client
       )
     },
