@@ -187,7 +187,6 @@
             v-if="checkPermission(['sysadmin'])"
             size="mini"
             type="warning"
-            :disabled="row.status !== 1"
             @click="handleKernelManage(row)"
           >
             {{ $t('kernel.manage') }}

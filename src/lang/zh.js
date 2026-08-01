@@ -28,6 +28,7 @@ export default {
     canary: '灰度节点',
     inventory: '内核清单',
     refreshInventory: '刷新清单',
+    inventoryUnavailableMTLS: '无法读取内核清单；如果节点已完成 mTLS 升级，请先检测并启用 mTLS。',
     platform: '系统架构',
     transport: '控制通道',
     probeMTLS: '检测并启用 mTLS',

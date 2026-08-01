@@ -28,6 +28,7 @@ export default {
     canary: 'Canary node',
     inventory: 'Kernel inventory',
     refreshInventory: 'Refresh inventory',
+    inventoryUnavailableMTLS: 'Kernel inventory is unavailable. If the node has been upgraded for mTLS, detect and enable mTLS first.',
     platform: 'Platform',
     transport: 'Control transport',
     probeMTLS: 'Detect and enable mTLS',

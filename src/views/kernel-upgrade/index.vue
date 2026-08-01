@@ -41,9 +41,17 @@
           {{ $t('kernel.refreshInventory') }}
         </el-button>
       </div>
-      <el-descriptions v-if="inventory" :column="2" border>
+      <el-alert
+        v-if="inventoryUnavailable"
+        :title="$t('kernel.inventoryUnavailableMTLS')"
+        type="warning"
+        :closable="false"
+        show-icon
+        class="inventory-warning"
+      />
+      <el-descriptions v-if="currentServer.id" :column="2" border>
         <el-descriptions-item :label="$t('kernel.platform')">
-          {{ inventory.os }}/{{ inventory.arch }}
+          {{ inventory ? inventory.os + '/' + inventory.arch : '-' }}
         </el-descriptions-item>
         <el-descriptions-item :label="$t('kernel.transport')">
           {{ currentServer.grpcTlsMode || 'legacy' }}
@@ -210,6 +218,7 @@ export default {
       currentServer: {},
       inventory: null,
       inventoryLoading: false,
+      inventoryUnavailable: false,
       task: null,
       taskHistory: [],
       timer: null,
@@ -301,9 +310,14 @@ export default {
     },
     loadInventory() {
       this.inventoryLoading = true
+      this.inventoryUnavailable = false
       return kernelInventory({ nodeServerId: this.serverId })
         .then((response) => {
           this.inventory = response.data
+        })
+        .catch(() => {
+          this.inventory = null
+          this.inventoryUnavailable = true
         })
         .finally(() => {
           this.inventoryLoading = false
@@ -391,6 +405,7 @@ export default {
           this.currentServer.grpcTlsMode = 'mtls'
           this.currentServer.grpcTlsServerName = value
           this.$message.success(this.$t('kernel.mtlsEnabled'))
+          return this.loadInventory()
         }))
       )
     }
@@ -401,6 +416,9 @@ export default {
 <style scoped>
 .section {
   margin-bottom: 20px;
+}
+.inventory-warning {
+  margin-bottom: 16px;
 }
 .hash {
   font-family: monospace;
