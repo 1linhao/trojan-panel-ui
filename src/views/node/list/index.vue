@@ -277,6 +277,10 @@ export default {
         xrayProtocol: 'vless',
         xrayFlow: '',
         xraySSMethod: 'aes-256-gcm',
+        xrayUotEnable: 0,
+        xrayUotVersion: 2,
+        xrayXudpEnable: 0,
+        xrayMuxEnable: 0,
         realityPbk: '',
         xraySettings: '',
         xraySettingsEntity: {
@@ -369,6 +373,10 @@ export default {
         xrayProtocol: 'vless',
         xrayFlow: '',
         xraySSMethod: 'aes-256-gcm',
+        xrayUotEnable: 0,
+        xrayUotVersion: 2,
+        xrayXudpEnable: 0,
+        xrayMuxEnable: 0,
         realityPbk: '',
         xraySettings: '',
         xraySettingsEntity: {
@@ -494,6 +502,10 @@ export default {
         xrayProtocol: 'vless',
         xrayFlow: '',
         xraySSMethod: 'aes-256-gcm',
+        xrayUotEnable: 0,
+        xrayUotVersion: 2,
+        xrayXudpEnable: 0,
+        xrayMuxEnable: 0,
         realityPbk: '',
         xraySettings: '',
         xraySettingsEntity: {

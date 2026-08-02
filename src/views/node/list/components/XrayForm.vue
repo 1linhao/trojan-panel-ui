@@ -18,6 +18,52 @@
       </el-select>
     </el-form-item>
     <el-form-item
+        :label="$t('table.xrayUotEnable').toString()"
+        v-if="isXrayShadowsocks(nodeProps)"
+    >
+      <el-switch
+          v-model="nodeProps.xrayUotEnable"
+          :active-text="$t('table.enable').toString()"
+          :inactive-text="$t('table.disable').toString()"
+          :active-value="1"
+          :inactive-value="0"
+      />
+      <div class="option-help">{{ $t('table.xrayUotHelp') }}</div>
+    </el-form-item>
+    <el-form-item
+        :label="$t('table.xrayUotVersion').toString()"
+        v-if="isXrayShadowsocks(nodeProps) && nodeProps.xrayUotEnable === 1"
+    >
+      <el-select v-model="nodeProps.xrayUotVersion">
+        <el-option :value="1" label="1" />
+        <el-option :value="2" label="2" />
+      </el-select>
+    </el-form-item>
+    <el-form-item
+        :label="$t('table.xrayXudpEnable').toString()"
+        v-if="isXrayVless(nodeProps) || isXrayVmess(nodeProps)"
+    >
+      <el-switch
+          v-model="nodeProps.xrayXudpEnable"
+          :active-text="$t('table.enable').toString()"
+          :inactive-text="$t('table.disable').toString()"
+          :active-value="1"
+          :inactive-value="0"
+      />
+    </el-form-item>
+    <el-form-item
+        :label="$t('table.xrayMuxEnable').toString()"
+        v-if="isXrayVless(nodeProps) || isXrayVmess(nodeProps) || isXrayTrojan(nodeProps)"
+    >
+      <el-switch
+          v-model="nodeProps.xrayMuxEnable"
+          :active-text="$t('table.enable').toString()"
+          :inactive-text="$t('table.disable').toString()"
+          :active-value="1"
+          :inactive-value="0"
+      />
+    </el-form-item>
+    <el-form-item
         :label="$t('table.xrayStreamSettingsNetwork').toString()"
         prop="xrayStreamSettingsEntity.network"
         v-if="
@@ -186,6 +232,7 @@ import {
   isXrayStreamSettingsSecurityReality,
   isXrayStreamSettingsSecurityTls, isXrayTrojan,
   isXrayVless,
+  isXrayVmess,
   isXrayWs,
   showFallback,
   showXrayFlow
@@ -288,6 +335,9 @@ export default {
     isXrayShadowsocks,
     isXrayShadowsocksAEAD,
     isXrayShadowsocks2022,
+    isXrayVless,
+    isXrayVmess,
+    isXrayTrojan,
     showFallback,
     showXrayFlow,
     isXrayWs,
@@ -329,5 +379,11 @@ export default {
 
 .el-button {
   margin-left: 10px;
+}
+
+.option-help {
+  color: #909399;
+  font-size: 12px;
+  line-height: 18px;
 }
 </style>

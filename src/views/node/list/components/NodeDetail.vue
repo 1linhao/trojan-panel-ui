@@ -243,6 +243,30 @@
           <el-tag>{{ nodeInfoProps.xraySettingsEntity.network }}</el-tag>
         </el-form-item>
         <el-form-item
+          :label="$t('table.xrayUotEnable').toString()"
+          v-if="isXrayShadowsocks(nodeInfoProps)"
+        >
+          <el-tag>{{ enableComputed(nodeInfoProps.xrayUotEnable) }}</el-tag>
+        </el-form-item>
+        <el-form-item
+          :label="$t('table.xrayUotVersion').toString()"
+          v-if="isXrayShadowsocks(nodeInfoProps) && nodeInfoProps.xrayUotEnable === 1"
+        >
+          <el-tag>{{ nodeInfoProps.xrayUotVersion }}</el-tag>
+        </el-form-item>
+        <el-form-item
+          :label="$t('table.xrayXudpEnable').toString()"
+          v-if="nodeInfoProps.xrayProtocol === 'vless' || nodeInfoProps.xrayProtocol === 'vmess'"
+        >
+          <el-tag>{{ enableComputed(nodeInfoProps.xrayXudpEnable) }}</el-tag>
+        </el-form-item>
+        <el-form-item
+          :label="$t('table.xrayMuxEnable').toString()"
+          v-if="['vless', 'vmess', 'trojan'].includes(nodeInfoProps.xrayProtocol)"
+        >
+          <el-tag>{{ enableComputed(nodeInfoProps.xrayMuxEnable) }}</el-tag>
+        </el-form-item>
+        <el-form-item
           :label="$t('table.xraySocksUser').toString()"
           v-if="isXraySocks(nodeInfoProps)"
         >

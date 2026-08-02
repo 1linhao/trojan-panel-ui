@@ -141,6 +141,10 @@ export function handleNodeDetail(nodeDetail, responseData) {
     nodeDetail.alterId = responseData.alterId
     nodeDetail.xrayFlow = responseData.xrayFlow
     nodeDetail.xraySSMethod = responseData.xraySSMethod
+    nodeDetail.xrayUotEnable = responseData.xrayUotEnable || 0
+    nodeDetail.xrayUotVersion = responseData.xrayUotVersion || 2
+    nodeDetail.xrayXudpEnable = responseData.xrayXudpEnable || 0
+    nodeDetail.xrayMuxEnable = responseData.xrayMuxEnable || 0
     nodeDetail.realityPbk = responseData.realityPbk
   }
   if (nodeDetail.nodeTypeId === 2) {
@@ -202,6 +206,10 @@ export function handleNodeUpdate(temp, responseData) {
     temp.alterId = responseData.alterId
     temp.xrayFlow = responseData.xrayFlow
     temp.xraySSMethod = responseData.xraySSMethod
+    temp.xrayUotEnable = responseData.xrayUotEnable || 0
+    temp.xrayUotVersion = responseData.xrayUotVersion || 2
+    temp.xrayXudpEnable = responseData.xrayXudpEnable || 0
+    temp.xrayMuxEnable = responseData.xrayMuxEnable || 0
     temp.realityPbk = responseData.realityPbk
   }
   if (temp.nodeTypeId === 2) {
