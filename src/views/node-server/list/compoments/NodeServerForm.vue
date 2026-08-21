@@ -31,6 +31,29 @@
           clearable
         />
       </el-form-item>
+      <el-divider>{{ $t('traffic.limitSettings') }}</el-divider>
+      <el-form-item :label="$t('traffic.period')">
+        <el-select v-model="form.trafficPeriod">
+          <el-option :label="$t('traffic.unlimited')" value="none" />
+          <el-option :label="$t('traffic.day')" value="day" />
+          <el-option :label="$t('traffic.month')" value="month" />
+          <el-option :label="$t('traffic.year')" value="year" />
+        </el-select>
+      </el-form-item>
+      <el-form-item v-if="form.trafficPeriod !== 'none'" :label="$t('traffic.limitMode')">
+        <el-radio-group v-model="form.trafficLimitMode">
+          <el-radio label="combined">{{ $t('traffic.combined') }}</el-radio>
+          <el-radio label="separate">{{ $t('traffic.split') }}</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item v-if="form.trafficPeriod !== 'none' && form.trafficLimitMode === 'combined'" :label="$t('traffic.totalLimitGiB')">
+        <el-input-number v-model="form.trafficTotalLimitGiB" :min="0" :max="8388607" />
+      </el-form-item>
+      <template v-if="form.trafficPeriod !== 'none' && form.trafficLimitMode === 'separate'">
+        <el-form-item :label="$t('traffic.uploadLimitGiB')"><el-input-number v-model="form.trafficUploadLimitGiB" :min="0" :max="8388607" /></el-form-item>
+        <el-form-item :label="$t('traffic.downloadLimitGiB')"><el-input-number v-model="form.trafficDownloadLimitGiB" :min="0" :max="8388607" /></el-form-item>
+      </template>
+      <el-alert v-if="form.trafficPeriod !== 'none'" :title="$t('traffic.zeroUnlimited')" type="info" :closable="false" />
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="$emit('update:dialogVisible', false)"
@@ -179,11 +202,28 @@ export default {
     nodeServer: {
       deep: true,
       handler(value) {
-        this.form = Object.assign({}, value)
+        this.form = Object.assign({}, value, {
+          trafficTotalLimitGiB: (value.trafficTotalLimit || 0) / 1024 / 1024 / 1024,
+          trafficUploadLimitGiB: (value.trafficUploadLimit || 0) / 1024 / 1024 / 1024,
+          trafficDownloadLimitGiB: (value.trafficDownloadLimit || 0) / 1024 / 1024 / 1024
+        })
       }
     }
   },
   methods: {
+    toBytes(value) {
+      return Math.round((value || 0) * 1024 * 1024 * 1024)
+    },
+    payload() {
+      const data = Object.assign({}, this.form)
+      data.trafficTotalLimit = data.trafficPeriod === 'none' ? 0 : this.toBytes(data.trafficTotalLimitGiB)
+      data.trafficUploadLimit = data.trafficPeriod === 'none' ? 0 : this.toBytes(data.trafficUploadLimitGiB)
+      data.trafficDownloadLimit = data.trafficPeriod === 'none' ? 0 : this.toBytes(data.trafficDownloadLimitGiB)
+      delete data.trafficTotalLimitGiB
+      delete data.trafficUploadLimitGiB
+      delete data.trafficDownloadLimitGiB
+      return data
+    },
     clearValidate() {
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
@@ -192,7 +232,7 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          createNodeServer(this.form).then(() => {
+          createNodeServer(this.payload()).then(() => {
             this.getList()
             this.$emit('update:dialogVisible', false)
             this.$notify({
@@ -208,7 +248,7 @@ export default {
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          const tempData = Object.assign({}, this.form)
+          const tempData = this.payload()
           updateNodeServerById(tempData).then(() => {
             this.getList()
             this.$emit('update:dialogVisible', false)

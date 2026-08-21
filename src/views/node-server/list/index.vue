@@ -130,6 +130,17 @@
           <span>{{ row.trojanPanelCoreVersion }}</span>
         </template>
       </el-table-column>
+      <el-table-column :label="$t('traffic.remaining')" min-width="220" align="center">
+        <template slot-scope="{ row }">
+          <span v-if="!row.trafficStatus || row.trafficStatus.period === 'none'">{{ $t('traffic.unlimited') }}</span>
+          <el-tag v-else-if="row.trafficStatus.reached" type="danger">{{ $t('traffic.reached') }}</el-tag>
+          <span v-else-if="row.trafficStatus.limitMode === 'separate'">
+            {{ $t('table.upload') }} {{ quotaFlow(row.trafficStatus.uploadLimit, row.trafficStatus.uploadRemaining) }} /
+            {{ $t('table.download') }} {{ quotaFlow(row.trafficStatus.downloadLimit, row.trafficStatus.downloadRemaining) }}
+          </span>
+          <span v-else>{{ getFlow(row.trafficStatus.totalRemaining) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         v-if="checkPermission(['sysadmin'])"
         :label="$t('kernel.kernelSummary')"
@@ -244,6 +255,7 @@ import {
 import Cookies from 'js-cookie'
 import NodeServerForm from '@/views/node-server/list/compoments/NodeServerForm'
 import { downloadTemplate } from '@/api/file-task'
+import { getFlow } from '@/utils/account'
 
 export default {
   name: 'NodeServer',
@@ -267,6 +279,11 @@ export default {
         grpcPort: 8100,
         grpcTlsMode: 'mtls',
         grpcTlsServerName: '',
+        trafficPeriod: 'none',
+        trafficLimitMode: 'combined',
+        trafficTotalLimit: 0,
+        trafficUploadLimit: 0,
+        trafficDownloadLimit: 0,
         trojanPanelCoreVersion: '',
         createTime: new Date()
       },
@@ -300,6 +317,10 @@ export default {
     }
   },
   methods: {
+    getFlow,
+    quotaFlow(limit, remaining) {
+      return limit > 0 ? getFlow(remaining) : this.$t('traffic.unlimited')
+    },
     checkPermission,
     timeStampToDate,
     getList() {
@@ -321,6 +342,11 @@ export default {
         grpcPort: 8100,
         grpcTlsMode: 'mtls',
         grpcTlsServerName: '',
+        trafficPeriod: 'none',
+        trafficLimitMode: 'combined',
+        trafficTotalLimit: 0,
+        trafficUploadLimit: 0,
+        trafficDownloadLimit: 0,
         trojanPanelCoreVersion: '',
         createTime: new Date()
       }

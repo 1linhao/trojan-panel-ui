@@ -277,7 +277,16 @@ export default {
     ranking: '排名',
     username: '用户名',
     trafficUsed: '已用流量',
-    trafficRank: '流量排行(前15名, 一小时更新一次)'
+    trafficRank: '流量排行（前15名）'
+  },
+  traffic: {
+    total: '累计', year: '本年', month: '本月', day: '今日',
+    allServers: '全部服务器', split: '上下行拆分', combined: '上下行合计',
+    serverUsage: '各用户服务器流量', limitSettings: '服务器流量限制', period: '限制周期',
+    limitMode: '限制方式', unlimited: '无限制', totalLimitGiB: '总额度 / GiB',
+    uploadLimitGiB: '上传额度 / GiB', downloadLimitGiB: '下载额度 / GiB',
+    zeroUnlimited: '额度为 0 表示对应口径不限制。', remaining: '额度状态',
+    serverRemaining: '服务器剩余流量', reached: '已达额度'
   },
   exportNode: {
     title: '导出节点',

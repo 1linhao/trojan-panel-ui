@@ -143,6 +143,17 @@
           <span>{{ timeStampToDate(row.createTime, false) }}</span>
         </template>
       </el-table-column>
+      <el-table-column :label="$t('traffic.serverRemaining')" min-width="220" align="center">
+        <template slot-scope="{ row }">
+          <span v-if="!row.serverTraffic || row.serverTraffic.period === 'none'">{{ $t('traffic.unlimited') }}</span>
+          <el-tag v-else-if="row.serverTraffic.reached" type="danger">{{ $t('traffic.reached') }}</el-tag>
+          <span v-else-if="row.serverTraffic.limitMode === 'separate'">
+            ↑ {{ quotaFlow(row.serverTraffic.uploadLimit, row.serverTraffic.uploadRemaining) }} /
+            ↓ {{ quotaFlow(row.serverTraffic.downloadLimit, row.serverTraffic.downloadRemaining) }}
+          </span>
+          <span v-else>{{ getFlow(row.serverTraffic.totalRemaining) }}</span>
+        </template>
+      </el-table-column>
       <el-table-column
         :label="$t('table.actions').toString()"
         align="center"
@@ -222,6 +233,7 @@ import {
 } from '@/utils/node'
 import checkPermission from '@/utils/permission'
 import { timeStampToDate } from '@/utils'
+import { getFlow } from '@/utils/account'
 import { selectNodeServerList } from '@/api/node-server'
 import FallbackForm from '@/views/node/list/components/FallbackForm'
 import FallbackInfo from '@/views/node/list/components/FallbackInfo'
@@ -471,6 +483,10 @@ export default {
     this.getList()
   },
   methods: {
+    getFlow,
+    quotaFlow(limit, remaining) {
+      return limit > 0 ? getFlow(remaining) : this.$t('traffic.unlimited')
+    },
     timeStampToDate,
     checkPermission,
     nodeServerFind,

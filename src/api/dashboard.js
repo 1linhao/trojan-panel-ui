@@ -25,3 +25,11 @@ export function trafficRank(data) {
     params: data
   })
 }
+
+export function serverTrafficUsage(data) {
+  return request({
+    url: '/dashboard/serverTrafficUsage',
+    method: 'get',
+    params: data
+  })
+}

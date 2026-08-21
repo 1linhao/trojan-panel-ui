@@ -1,5 +1,11 @@
 <template>
-  <el-table :data="list" style="width: 100%">
+  <div>
+    <el-radio-group v-model="period" size="small" @change="fetchData">
+      <el-radio-button label="total">{{ $t('traffic.total') }}</el-radio-button>
+      <el-radio-button label="month">{{ $t('traffic.month') }}</el-radio-button>
+      <el-radio-button label="day">{{ $t('traffic.day') }}</el-radio-button>
+    </el-radio-group>
+    <el-table :data="list" style="width: 100%" v-loading="loading">
     <el-table-column
       :label="$t('dashboard.ranking')"
       width="100"
@@ -24,7 +30,8 @@
         {{ getFlow(scope.row.trafficUsed) }}</template
       >
     </el-table-column>
-  </el-table>
+    </el-table>
+  </div>
 </template>
 
 <script>
@@ -35,7 +42,9 @@ export default {
   name: 'trafficTable',
   data() {
     return {
-      list: null
+      list: null,
+      period: 'total',
+      loading: false
     }
   },
   created() {
@@ -44,9 +53,14 @@ export default {
   methods: {
     getFlow,
     fetchData() {
-      trafficRank().then((response) => {
-        this.list = response.data
-      })
+      this.loading = true
+      trafficRank({ period: this.period })
+        .then((response) => {
+          this.list = response.data
+        })
+        .finally(() => {
+          this.loading = false
+        })
     }
   }
 }

@@ -278,7 +278,16 @@ export default {
     ranking: 'Ranking',
     username: 'Username',
     trafficUsed: 'Traffic Used',
-    trafficRank: 'Traffic Rank(Top 15, Update every hour)'
+    trafficRank: 'Traffic Rank (Top 15)'
+  },
+  traffic: {
+    total: 'All time', year: 'This year', month: 'This month', day: 'Today',
+    allServers: 'All servers', split: 'Split directions', combined: 'Combined',
+    serverUsage: 'Per-user server traffic', limitSettings: 'Server traffic limit', period: 'Period',
+    limitMode: 'Limit mode', unlimited: 'Unlimited', totalLimitGiB: 'Total limit / GiB',
+    uploadLimitGiB: 'Upload limit / GiB', downloadLimitGiB: 'Download limit / GiB',
+    zeroUnlimited: 'A zero limit leaves that measure unlimited.', remaining: 'Quota status',
+    serverRemaining: 'Server traffic remaining', reached: 'Quota reached'
   },
   exportNode: {
     title: 'Export nodes',

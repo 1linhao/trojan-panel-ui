@@ -35,19 +35,25 @@
       >
       </el-col>
     </el-row>
+    <el-card class="box-card server-traffic-card">
+      <div slot="header"><span>{{ $t('traffic.serverUsage') }}</span></div>
+      <server-traffic-table />
+    </el-card>
   </div>
 </template>
 
 <script>
 import PanelGroup from '@/views/dashboard/admin/compoments/PanelGroup.vue'
 import TrafficTable from '@/views/dashboard/admin/compoments/TrafficTable'
+import ServerTrafficTable from '@/views/dashboard/admin/compoments/ServerTrafficTable'
 import { panelGroup } from '@/api/dashboard'
 
 export default {
   name: 'Admin',
   components: {
     PanelGroup,
-    TrafficTable
+    TrafficTable,
+    ServerTrafficTable
   },
   data() {
     return {
@@ -91,6 +97,7 @@ export default {
     margin-bottom: 32px;
   }
 }
+.server-traffic-card { margin-top: 16px; }
 
 @media (max-width: 1024px) {
   .chart-wrapper {
