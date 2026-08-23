@@ -1,5 +1,6 @@
 <template>
   <div class="login-container">
+    <liquid-theme-toggle class="auth-theme-toggle" />
     <el-form
       ref="loginForm"
       :model="loginForm"
@@ -87,12 +88,12 @@
 
       <el-button
         type="primary"
+        class="auth-secondary-button"
         style="width: 100%; margin: 0"
         v-if="registerEnable === 1"
+        @click.native.prevent="goRegister"
       >
-        <router-link to="/register" custom v-slot="{ navigate }">
-          <span @click="navigate" role="link">{{ $t('login.register') }}</span>
-        </router-link>
+        {{ $t('login.register') }}
       </el-button>
     </el-form>
   </div>
@@ -102,10 +103,11 @@
 import LangSelect from '@/components/LangSelect'
 import { setting } from '@/api/system'
 import { generateCaptcha } from '@/api/account'
+import LiquidThemeToggle from '@/components/LiquidThemeToggle'
 
 export default {
   name: 'index',
-  components: { LangSelect },
+  components: { LangSelect, LiquidThemeToggle },
   data() {
     return {
       loginForm: {
@@ -218,6 +220,9 @@ export default {
           return false
         }
       })
+    },
+    goRegister() {
+      this.$router.push('/register').catch(() => true)
     },
     setting() {
       setting().then((response) => {

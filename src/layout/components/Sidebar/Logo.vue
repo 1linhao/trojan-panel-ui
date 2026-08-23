@@ -7,12 +7,14 @@
         class="sidebar-logo-link"
         to="/"
       >
-        <img v-if="logo" :src="logo" class="sidebar-logo" />
-        <h1 v-else class="sidebar-title">{{ title }}</h1>
+        <span class="brand-mark">T</span>
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
-        <img v-if="logo" :src="logo" class="sidebar-logo" />
-        <h1 class="sidebar-title">{{ title }}</h1>
+        <span class="brand-mark">T</span>
+        <span class="brand-copy">
+          <strong class="sidebar-title">{{ title }}</strong>
+          <small>LIQUID GLASS</small>
+        </span>
       </router-link>
     </transition>
   </div>
@@ -63,13 +65,17 @@ export default {
   width: 100%;
   height: 50px;
   line-height: 50px;
-  background: #2b2f3a;
-  text-align: center;
+  background: transparent;
+  text-align: left;
   overflow: hidden;
 
   & .sidebar-logo-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     height: 100%;
     width: 100%;
+    padding: 0 11px;
 
     & .sidebar-logo {
       width: 32px;
@@ -79,20 +85,52 @@ export default {
     }
 
     & .sidebar-title {
-      display: inline-block;
+      display: block;
       margin: 0;
-      color: #fff;
-      font-weight: 600;
-      line-height: 50px;
+      color: var(--ink);
+      font-weight: 700;
+      line-height: 1.2;
       font-size: 14px;
-      font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
-      vertical-align: middle;
+    }
+  }
+
+  .brand-mark {
+    display: grid;
+    flex: 0 0 auto;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 12px;
+    color: #fff;
+    background: linear-gradient(
+        155deg,
+        rgba(255, 255, 255, 0.48),
+        transparent 54%
+      ),
+      linear-gradient(135deg, #0a84ff, #5e5ce6);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62),
+      0 8px 20px -8px rgba(30, 60, 200, 0.62);
+    font-size: 17px;
+    font-weight: 800;
+  }
+
+  .brand-copy {
+    min-width: 0;
+
+    small {
+      display: block;
+      margin-top: 2px;
+      color: var(--ink-3);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
     }
   }
 
   &.collapse {
-    .sidebar-logo {
-      margin-right: 0px;
+    .sidebar-logo-link {
+      justify-content: center;
+      padding: 0;
     }
   }
 }

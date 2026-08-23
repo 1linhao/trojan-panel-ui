@@ -11,6 +11,7 @@ import Cookies from 'js-cookie'
 import '@/icons'
 import '@/permission'
 import i18n from '@/lang'
+import { initializeTheme } from '@/utils/theme'
 
 import VCA from '@vue/composition-api'
 import JsonEditorVue from 'json-editor-vue'
@@ -24,6 +25,8 @@ Vue.use(ElementUI, {
 })
 
 Vue.config.productionTip = false
+
+initializeTheme()
 
 new Vue({
   el: '#app',

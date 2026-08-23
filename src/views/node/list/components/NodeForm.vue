@@ -3,6 +3,7 @@
     <el-dialog
       :title="textMap[dialogStatusProps]"
       :visible="dialogFormVisibleProps"
+      custom-class="liquid-node-editor"
       @close="$emit('update:dialogFormVisibleProps', false)"
     >
       <el-form

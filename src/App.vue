@@ -1,5 +1,12 @@
 <template>
   <div id="app">
+    <div class="liquid-ambient" aria-hidden="true">
+      <i />
+      <i />
+      <i />
+      <i />
+      <i />
+    </div>
     <router-view />
   </div>
 </template>

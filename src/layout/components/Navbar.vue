@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar">
+  <div class="navbar liquid-glass liquid-raised">
     <hamburger
       :is-active="sidebar.opened"
       class="hamburger-container"
@@ -22,19 +22,16 @@
 
         <lang-select class="right-menu-item hover-effect" />
       </template>
+      <liquid-theme-toggle class="right-menu-item" />
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img src="/api/image/logo" class="user-avatar" />
+          <span class="user-avatar">{{ userInitials }}</span>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <router-link to="/modify" custom v-slot="{ navigate }">
-            <el-dropdown-item>
-              <span @click="navigate" role="link">
-                {{ $t('navbar.profile') }}
-              </span>
-            </el-dropdown-item>
-          </router-link>
+          <el-dropdown-item @click.native="goProfile">
+            {{ $t('navbar.profile') }}
+          </el-dropdown-item>
           <a
             target="_blank"
             href="https://github.com/trojanpanel"
@@ -65,6 +62,7 @@ import Hamburger from '@/components/Hamburger'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import LangSelect from '@/components/LangSelect'
+import LiquidThemeToggle from '@/components/LiquidThemeToggle'
 import checkPermission from '@/utils/permission' // 权限判断指令
 
 export default {
@@ -73,15 +71,24 @@ export default {
     Hamburger,
     Screenfull,
     SizeSelect,
-    LangSelect
+    LangSelect,
+    LiquidThemeToggle
   },
   computed: {
-    ...mapGetters(['sidebar', 'avatar', 'device'])
+    ...mapGetters(['sidebar', 'avatar', 'device', 'username']),
+    userInitials() {
+      return (this.username || 'TP').slice(0, 2).toUpperCase()
+    }
   },
   methods: {
     checkPermission,
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
+    },
+    goProfile() {
+      if (this.$route.path !== '/modify/index') {
+        this.$router.push('/modify/index').catch(() => true)
+      }
     },
     async logout() {
       await this.$store.dispatch('account/logout')
@@ -93,11 +100,12 @@ export default {
 
 <style lang="scss" scoped>
 .navbar {
-  height: 50px;
-  overflow: hidden;
+  height: 58px;
+  overflow: visible;
   position: relative;
-  background: #fff;
-  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  color: var(--ink);
+  background: transparent;
+  box-shadow: none;
 
   .hamburger-container {
     line-height: 46px;
@@ -135,7 +143,7 @@ export default {
       padding: 0 8px;
       height: 100%;
       font-size: 18px;
-      color: #5a5e66;
+      color: var(--ink-2);
       vertical-align: text-bottom;
 
       &.hover-effect {
@@ -143,30 +151,38 @@ export default {
         transition: background 0.3s;
 
         &:hover {
-          background: rgba(0, 0, 0, 0.025);
+          background: var(--glass-soft);
         }
       }
     }
 
     .avatar-container {
-      margin-right: 30px;
+      margin-right: 20px;
 
       .avatar-wrapper {
         margin-top: 5px;
         position: relative;
 
         .user-avatar {
+          display: grid;
+          place-items: center;
           cursor: pointer;
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
+          width: 38px;
+          height: 38px;
+          border-radius: 14px;
+          color: #fff;
+          background: linear-gradient(135deg, #0a84ff, #5e5ce6);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45),
+            0 8px 18px -10px #245bd7;
+          font-size: 12px;
+          font-weight: 800;
         }
 
         .el-icon-caret-bottom {
           cursor: pointer;
           position: absolute;
           right: -20px;
-          top: 25px;
+          top: 24px;
           font-size: 12px;
         }
       }
