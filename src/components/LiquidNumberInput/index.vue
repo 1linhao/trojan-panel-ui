@@ -27,7 +27,7 @@
       :disabled="disabled || decreaseDisabled"
       @click="stepValue(-1)"
     >
-      <i class="el-icon-minus" aria-hidden="true" />
+      <i class="liquid-icon--minus" aria-hidden="true" />
     </button>
     <button
       class="liquid-number-input__step"
@@ -37,7 +37,7 @@
       :disabled="disabled || increaseDisabled"
       @click="stepValue(1)"
     >
-      <i class="el-icon-plus" aria-hidden="true" />
+      <i class="liquid-icon--plus" aria-hidden="true" />
     </button>
   </div>
 </template>
@@ -115,12 +115,12 @@ export default {
     emitValue(value) {
       this.$emit('input', value)
       this.$emit('change', value)
-      this.dispatch('ElFormItem', 'el.form.change', [value])
+      this.dispatch('LiquidFormItem', 'liquid.form.change', [value])
     },
     handleInput(event) {
       const value = this.normalize(event.target.value)
       this.$emit('input', value)
-      this.dispatch('ElFormItem', 'el.form.change', [value])
+      this.dispatch('LiquidFormItem', 'liquid.form.change', [value])
     },
     handleChange(event) {
       const value = this.normalize(event.target.value, true)
@@ -135,7 +135,7 @@ export default {
       const value = this.normalize(event.target.value, true)
       if (value !== this.value) this.emitValue(value)
       this.$emit('blur', event)
-      this.dispatch('ElFormItem', 'el.form.blur', [value])
+      this.dispatch('LiquidFormItem', 'liquid.form.blur', [value])
     },
     stepValue(direction) {
       const current = Number.isFinite(Number(this.value)) ? Number(this.value) : 0
@@ -153,7 +153,7 @@ export default {
   grid-template-columns: minmax(0, 1fr) 32px 32px;
   align-items: center;
   gap: 5px;
-  width: 100%;
+  width: min(100%, var(--control-max-width));
   min-width: 0;
   min-height: 42px;
   padding: 4px;
@@ -224,5 +224,11 @@ export default {
 .liquid-number-input.is-disabled {
   cursor: not-allowed;
   opacity: 0.58;
+}
+@media (max-width: 760px) {
+  .liquid-number-input {
+    width: 100%;
+    max-width: none;
+  }
 }
 </style>

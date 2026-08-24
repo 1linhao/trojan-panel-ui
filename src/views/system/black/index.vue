@@ -3,7 +3,7 @@
     <div class="glass card">
       <div class="toolbar">
         <div class="search-box">
-          <i class="el-icon-search"></i
+          <i class="liquid-icon--search"></i
           ><input
             v-model="listQuery.ip"
             placeholder="按 IP 地址搜索"
@@ -12,7 +12,7 @@
         </div>
         <div class="spacer"></div>
         <button class="cap primary small" type="button" @click="handleCreate">
-          <i class="el-icon-plus"></i>添加黑名单
+          <i class="liquid-icon--plus"></i>添加黑名单
         </button>
       </div>
     </div>
@@ -43,7 +43,7 @@
                     title="删除"
                     @click="handleDelete(row, index)"
                   >
-                    <i class="el-icon-delete"></i>
+                    <i class="liquid-icon--delete"></i>
                   </button>
                 </div>
               </td>
@@ -223,7 +223,7 @@ export default {
 </script>
 
 <style scoped>
-.el-button {
+.liquid-button {
   margin-left: 10px;
 }
 </style>

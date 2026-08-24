@@ -37,7 +37,7 @@ export default {
       const value = this.checked ? this.inactiveValue : this.activeValue
       this.$emit('input', value)
       this.$emit('change', value)
-      this.dispatch('ElFormItem', 'el.form.change', [value])
+      this.dispatch('LiquidFormItem', 'liquid.form.change', [value])
     }
   }
 }

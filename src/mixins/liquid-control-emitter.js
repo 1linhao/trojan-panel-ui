@@ -1,5 +1,4 @@
-// Keeps Liquid controls compatible with the current form adapter without
-// coupling their implementation to ElementUI's private source modules.
+// Small parent-dispatch helper used by the native Liquid form controls.
 export default {
   methods: {
     dispatch(componentName, eventName, params = []) {

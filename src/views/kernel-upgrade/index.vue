@@ -8,7 +8,6 @@
             v-model="selectedNodeIds"
             multiple
             filterable
-            style="width: 100%"
           >
             <option
               v-for="server in servers"

@@ -2,8 +2,8 @@
   <liquid-row :gutter="40" class="panel-group">
     <liquid-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
-        <div class="card-panel-icon-wrapper icon-sysinfo">
-          <svg-icon icon-class="sysinfo" class-name="card-panel-icon" />
+        <div class="card-panel-symbol-wrapper icon-sysinfo">
+          <i class="card-panel-symbol liquid-icon--cpu" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">{{ $t('dashboard.cpuUsed') }}</div>
@@ -15,8 +15,8 @@
     </liquid-col>
     <liquid-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
-        <div class="card-panel-icon-wrapper icon-sysinfo">
-          <svg-icon icon-class="sysinfo" class-name="card-panel-icon" />
+        <div class="card-panel-symbol-wrapper icon-sysinfo">
+          <i class="card-panel-symbol liquid-icon--cpu" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">{{ $t('dashboard.memUsed') }}</div>
@@ -28,8 +28,8 @@
     </liquid-col>
     <liquid-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
-        <div class="card-panel-icon-wrapper icon-sysinfo">
-          <svg-icon icon-class="sysinfo" class-name="card-panel-icon" />
+        <div class="card-panel-symbol-wrapper icon-sysinfo">
+          <i class="card-panel-symbol liquid-icon--cpu" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">{{ $t('dashboard.diskUsed') }}</div>
@@ -82,7 +82,7 @@ export default {
     border-color: rgba(0, 0, 0, 0.05);
 
     &:hover {
-      .card-panel-icon-wrapper {
+      .card-panel-symbol-wrapper {
         color: #fff;
       }
 
@@ -127,7 +127,7 @@ export default {
       color: #d4237a;
     }
 
-    .card-panel-icon-wrapper {
+    .card-panel-symbol-wrapper {
       float: left;
       margin: 14px 0 0 14px;
       padding: 16px;
@@ -135,7 +135,7 @@ export default {
       border-radius: 6px;
     }
 
-    .card-panel-icon {
+    .card-panel-symbol {
       float: left;
       font-size: 48px;
     }
@@ -165,7 +165,7 @@ export default {
     display: none;
   }
 
-  .card-panel-icon-wrapper {
+  .card-panel-symbol-wrapper {
     float: none !important;
     width: 100%;
     height: 100%;

@@ -223,14 +223,14 @@ $light_gray: #fff;
 $cursor: #fff;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
-  .login-container .el-input input {
+  .login-container .liquid-input input {
     color: $cursor;
   }
 }
 
-/* reset element-ui css */
+/* reset legacy UI css */
 .login-container {
-  .el-input {
+  .liquid-input {
     display: inline-block;
     height: 47px;
     width: 85%;
@@ -252,7 +252,7 @@ $cursor: #fff;
     }
   }
 
-  .el-form-item {
+  .liquid-form-item {
     border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(0, 0, 0, 0.1);
     border-radius: 5px;

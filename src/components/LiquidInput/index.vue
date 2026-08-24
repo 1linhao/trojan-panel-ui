@@ -36,7 +36,7 @@
       title="清空"
       @click="clear"
     >
-      <i class="el-icon-close" aria-hidden="true" />
+      <i class="liquid-icon--close" aria-hidden="true" />
     </button>
   </div>
 </template>
@@ -61,7 +61,7 @@ export default {
   methods: {
     notify(value) {
       this.$emit('input', value)
-      this.dispatch('ElFormItem', 'el.form.change', [value])
+      this.dispatch('LiquidFormItem', 'liquid.form.change', [value])
     },
     handleInput(event) {
       this.notify(event.target.value)
@@ -76,7 +76,7 @@ export default {
     handleBlur(event) {
       this.focused = false
       this.$emit('blur', event)
-      this.dispatch('ElFormItem', 'el.form.blur', [event.target.value])
+      this.dispatch('LiquidFormItem', 'liquid.form.blur', [event.target.value])
     },
     clear() {
       this.notify('')
@@ -93,7 +93,7 @@ export default {
 .liquid-input {
   display: flex;
   align-items: center;
-  width: 100%;
+  width: min(100%, var(--control-max-width));
   min-width: 0;
   min-height: 42px;
   padding: 0 10px;
@@ -149,5 +149,11 @@ export default {
 .liquid-input.is-disabled {
   cursor: not-allowed;
   opacity: 0.58;
+}
+@media (max-width: 760px) {
+  .liquid-input {
+    width: 100%;
+    max-width: none;
+  }
 }
 </style>

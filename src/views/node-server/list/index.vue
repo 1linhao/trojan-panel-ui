@@ -3,7 +3,7 @@
     <div class="glass card">
       <div class="toolbar">
         <div class="search-box">
-          <i class="el-icon-search"></i
+          <i class="liquid-icon--search"></i
           ><input
             v-model="listQuery.name"
             placeholder="按名称搜索"
@@ -11,7 +11,7 @@
           />
         </div>
         <div class="search-box">
-          <i class="el-icon-connection"></i
+          <i class="liquid-icon--connection"></i
           ><input
             v-model="listQuery.ip"
             placeholder="按 IP 搜索"
@@ -25,7 +25,7 @@
           type="button"
           @click="downloadTemplate"
         >
-          <i class="el-icon-document"></i>模板
+          <i class="liquid-icon--document"></i>模板
         </button>
         <button
           v-if="checkPermission(['sysadmin'])"
@@ -33,7 +33,7 @@
           type="button"
           @click="handleImport"
         >
-          <i class="el-icon-upload2"></i>导入
+          <i class="liquid-icon--import"></i>导入
         </button>
         <button
           v-if="checkPermission(['sysadmin'])"
@@ -41,7 +41,7 @@
           type="button"
           @click="handleExport"
         >
-          <i class="el-icon-download"></i>导出
+          <i class="liquid-icon--export"></i>导出
         </button>
         <button
           v-if="checkPermission(['sysadmin'])"
@@ -49,7 +49,7 @@
           type="button"
           @click="handleBatchUpgrade"
         >
-          <i class="el-icon-top"></i>批量升级
+          <i class="liquid-icon--upgrade"></i>批量升级
         </button>
         <button
           v-if="checkPermission(['sysadmin'])"
@@ -57,7 +57,7 @@
           type="button"
           @click="handleCreate"
         >
-          <i class="el-icon-plus"></i>添加服务器
+          <i class="liquid-icon--plus"></i>添加服务器
         </button>
       </div>
     </div>
@@ -84,7 +84,7 @@
                     aria-label="重置所有服务器流量统计"
                     @click="handleResetAllServerTraffic"
                   >
-                    <i class="el-icon-refresh"></i>重置全部
+                    <i class="liquid-icon--refresh"></i>重置全部
                   </button>
                 </div>
               </th>
@@ -161,7 +161,7 @@
                   :aria-label="`重置服务器 ${row.name} 的流量统计`"
                   @click="handleResetServerTraffic(row)"
                 >
-                  <i class="el-icon-refresh-left"></i>重置流量
+                  <i class="liquid-icon--refresh-left"></i>重置流量
                 </button>
                 <span v-else class="faint">—</span>
               </td>
@@ -173,7 +173,7 @@
                     title="运行状态"
                     @click="handleDetail(row)"
                   >
-                    <i class="el-icon-view"></i>
+                    <i class="liquid-icon--view"></i>
                   </button>
                   <button
                     v-if="checkPermission(['sysadmin'])"
@@ -182,7 +182,7 @@
                     title="内核管理"
                     @click="handleKernelManage(row)"
                   >
-                    <i class="el-icon-top"></i>
+                    <i class="liquid-icon--top"></i>
                   </button>
                   <button
                     v-if="checkPermission(['sysadmin'])"
@@ -191,7 +191,7 @@
                     title="编辑"
                     @click="handleUpdate(row)"
                   >
-                    <i class="el-icon-edit"></i>
+                    <i class="liquid-icon--edit"></i>
                   </button>
                   <button
                     v-if="checkPermission(['sysadmin'])"
@@ -200,7 +200,7 @@
                     title="删除"
                     @click="handleDelete(row, index)"
                   >
-                    <i class="el-icon-delete"></i>
+                    <i class="liquid-icon--delete"></i>
                   </button>
                 </div>
               </td>
@@ -224,7 +224,7 @@
           <h2>{{ detailServer.name }} · 运行状态</h2>
         </div>
         <button class="icon-btn" type="button" @click="detailServer = null">
-          <i class="el-icon-close"></i>
+          <i class="liquid-icon--close"></i>
         </button>
       </div>
       <div class="server-detail-layout">
@@ -567,7 +567,7 @@ export default {
 </script>
 
 <style scoped>
-.el-button {
+.liquid-button {
   margin-left: 10px;
 }
 </style>

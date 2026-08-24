@@ -118,7 +118,7 @@
       </template>
 
       <liquid-form-item class="actions">
-        <liquid-button type="primary" icon="el-icon-check" @click="updateData">
+        <liquid-button type="primary" icon="liquid-icon--check" @click="updateData">
           {{ $t('table.confirm') }}
         </liquid-button>
       </liquid-form-item>

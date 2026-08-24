@@ -93,10 +93,10 @@ export default {
   overflow: hidden;
   width: 100%;
   ::v-deep {
-    .el-scrollbar__bar {
+    .liquid-scrollbar__bar {
       bottom: 0px;
     }
-    .el-scrollbar__wrap {
+    .liquid-scrollbar__wrap {
       height: 49px;
     }
   }

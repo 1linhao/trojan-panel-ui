@@ -8,7 +8,7 @@
       aria-label="移除"
       @click="$emit('close', $event)"
     >
-      <i class="el-icon-close" aria-hidden="true" />
+      <i class="liquid-icon--close" aria-hidden="true" />
     </button>
   </span>
 </template>

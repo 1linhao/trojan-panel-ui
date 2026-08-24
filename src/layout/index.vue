@@ -30,6 +30,16 @@
       <header class="prototype-topbar glass raised">
         <h1>{{ pageTitle }}</h1>
         <div class="prototype-topbar-actions">
+          <button
+            v-if="isLocalPreview"
+            class="cap small local-role-preview"
+            type="button"
+            :title="isAdmin ? '切换到普通用户演示' : '切换到管理员演示'"
+            @click="switchPreviewRole"
+          >
+            <i :class="isAdmin ? 'liquid-icon--user' : 'liquid-icon--setting'" aria-hidden="true" />
+            <span>{{ isAdmin ? '普通用户' : '管理员' }}</span>
+          </button>
           <liquid-palette-picker />
           <liquid-theme-toggle />
           <div class="prototype-user-pill prototype-topbar-user">
@@ -42,7 +52,7 @@
               aria-label="退出登录"
               @click="logout"
             >
-              <i class="el-icon-switch-button" aria-hidden="true" />
+              <i class="liquid-icon--switch-button" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -50,7 +60,7 @@
       <section class="prototype-content"><app-main /></section>
     </main>
 
-    <nav class="prototype-mobile-nav glass raised">
+    <nav class="prototype-mobile-nav seg">
       <button
         v-for="item in mobileItems"
         :key="item.path"
@@ -58,7 +68,7 @@
         type="button"
         @click="go(item.path)"
       >
-        <i :class="['prototype-menu-icon', item.uiIcon]" aria-hidden="true" />
+        <liquid-nav-icon :name="item.icon" class="prototype-mobile-icon" />
         <span>{{ item.mobileLabel || item.label }}</span>
       </button>
     </nav>
@@ -70,6 +80,8 @@ import { mapGetters } from 'vuex'
 import { AppMain } from './components'
 import LiquidThemeToggle from '@/components/LiquidThemeToggle'
 import LiquidPalettePicker from '@/components/LiquidPalettePicker'
+import LiquidNavIcon from '@/components/LiquidNavIcon'
+import { setToken } from '@/utils/auth'
 
 const ADMIN_GROUPS = [
   {
@@ -80,7 +92,7 @@ const ADMIN_GROUPS = [
         label: '仪表板',
         mobileLabel: '首页',
         icon: 'dashboard',
-        uiIcon: 'el-icon-data-analysis'
+        uiIcon: 'liquid-icon--data-analysis'
       }
     ]
   },
@@ -92,7 +104,7 @@ const ADMIN_GROUPS = [
         label: '账号管理',
         mobileLabel: '账号',
         icon: 'account',
-        uiIcon: 'el-icon-user',
+        uiIcon: 'liquid-icon--user',
         roles: ['sysadmin', 'admin']
       },
       {
@@ -100,14 +112,14 @@ const ADMIN_GROUPS = [
         label: '节点管理',
         mobileLabel: '节点',
         icon: 'node',
-        uiIcon: 'el-icon-connection'
+        uiIcon: 'liquid-icon--connection'
       },
       {
         path: '/server-manage/server-list',
         label: '服务器',
         mobileLabel: '服务器',
         icon: 'server',
-        uiIcon: 'el-icon-monitor',
+        uiIcon: 'liquid-icon--monitor',
         roles: ['sysadmin', 'admin']
       },
       {
@@ -115,7 +127,7 @@ const ADMIN_GROUPS = [
         label: '内核升级',
         mobileLabel: '内核',
         icon: 'sysinfo',
-        uiIcon: 'el-icon-cpu',
+        uiIcon: 'liquid-icon--cpu',
         roles: ['sysadmin']
       }
     ]
@@ -127,21 +139,21 @@ const ADMIN_GROUPS = [
         path: '/taskManage/task-list',
         label: '文件任务',
         icon: 'task',
-        uiIcon: 'el-icon-tickets',
+        uiIcon: 'liquid-icon--tickets',
         roles: ['sysadmin']
       },
       {
         path: '/emailManage/email-record',
         label: '邮件记录',
         icon: 'email',
-        uiIcon: 'el-icon-message',
+        uiIcon: 'liquid-icon--message',
         roles: ['sysadmin', 'admin']
       },
       {
         path: '/system/black-list',
         label: '黑名单',
         icon: 'pass',
-        uiIcon: 'el-icon-circle-close',
+        uiIcon: 'liquid-icon--circle-close',
         roles: ['sysadmin']
       }
     ]
@@ -153,14 +165,14 @@ const ADMIN_GROUPS = [
         path: '/system/base-config',
         label: '系统配置',
         icon: 'system',
-        uiIcon: 'el-icon-setting',
+        uiIcon: 'liquid-icon--setting',
         roles: ['sysadmin']
       },
       {
         path: '/modify/index',
         label: '个人资料',
         icon: 'username',
-        uiIcon: 'el-icon-user'
+        uiIcon: 'liquid-icon--user'
       }
     ]
   }
@@ -175,21 +187,21 @@ const USER_GROUPS = [
         label: '我的首页',
         mobileLabel: '首页',
         icon: 'dashboard',
-        uiIcon: 'el-icon-data-analysis'
+        uiIcon: 'liquid-icon--data-analysis'
       },
       {
         path: '/node-manage/node-list',
         label: '我的节点',
         mobileLabel: '节点',
         icon: 'node',
-        uiIcon: 'el-icon-connection'
+        uiIcon: 'liquid-icon--connection'
       },
       {
         path: '/modify/index',
         label: '个人资料',
         mobileLabel: '我的',
         icon: 'username',
-        uiIcon: 'el-icon-user'
+        uiIcon: 'liquid-icon--user'
       }
     ]
   }
@@ -211,11 +223,20 @@ const TITLES = {
 
 export default {
   name: 'PrototypeLayout',
-  components: { AppMain, LiquidThemeToggle, LiquidPalettePicker },
+  components: {
+    AppMain,
+    LiquidThemeToggle,
+    LiquidPalettePicker,
+    LiquidNavIcon
+  },
   computed: {
     ...mapGetters(['roles', 'username']),
     isAdmin() {
       return this.roles.some((role) => role === 'sysadmin' || role === 'admin')
+    },
+    isLocalPreview() {
+      return process.env.NODE_ENV === 'development' &&
+        ['127.0.0.1', 'localhost'].includes(window.location.hostname)
     },
     visibleGroups() {
       const groups = this.isAdmin ? ADMIN_GROUPS : USER_GROUPS
@@ -272,6 +293,13 @@ export default {
     }
   },
   methods: {
+    switchPreviewRole() {
+      const target = this.isAdmin ? 'user' : 'admin'
+      setToken(`Bearer ${target === 'user' ? 'user-token' : 'mock-token'}`)
+      window.location.assign(
+        `${window.location.origin}/?previewRole=${target}#/dashboard/index`
+      )
+    },
     go(path) {
       if (path !== this.$route.path) this.$router.push(path).catch(() => true)
     },

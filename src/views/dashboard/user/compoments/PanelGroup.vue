@@ -2,8 +2,8 @@
   <liquid-row :gutter="40" class="panel-group">
     <liquid-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
-        <div class="card-panel-icon-wrapper icon-flow">
-          <svg-icon icon-class="flow" class-name="card-panel-icon" />
+        <div class="card-panel-symbol-wrapper icon-flow">
+          <i class="card-panel-symbol liquid-icon--data-analysis" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">{{ $t('dashboard.quota') }}</div>
@@ -13,8 +13,8 @@
     </liquid-col>
     <liquid-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
-        <div class="card-panel-icon-wrapper icon-flow">
-          <svg-icon icon-class="flow" class-name="card-panel-icon" />
+        <div class="card-panel-symbol-wrapper icon-flow">
+          <i class="card-panel-symbol liquid-icon--data-analysis" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">{{ $t('dashboard.residualFlow') }}</div>
@@ -24,8 +24,8 @@
     </liquid-col>
     <liquid-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
-        <div class="card-panel-icon-wrapper icon-node">
-          <svg-icon icon-class="node" class-name="card-panel-icon" />
+        <div class="card-panel-symbol-wrapper icon-node">
+          <i class="card-panel-symbol liquid-icon--connection" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">{{ $t('dashboard.nodeCount') }}</div>
@@ -35,8 +35,8 @@
     </liquid-col>
     <liquid-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
-        <div class="card-panel-icon-wrapper icon-time">
-          <svg-icon icon-class="time" class-name="card-panel-icon" />
+        <div class="card-panel-symbol-wrapper icon-time">
+          <i class="card-panel-symbol liquid-icon--time" />
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">{{ $t('dashboard.expireTime') }}</div>
@@ -110,7 +110,7 @@ export default {
     border-color: rgba(0, 0, 0, 0.05);
 
     &:hover {
-      .card-panel-icon-wrapper {
+      .card-panel-symbol-wrapper {
         color: #fff;
       }
 
@@ -147,7 +147,7 @@ export default {
       color: #ffb6c1;
     }
 
-    .card-panel-icon-wrapper {
+    .card-panel-symbol-wrapper {
       float: left;
       margin: 14px 0 0 14px;
       padding: 16px;
@@ -155,7 +155,7 @@ export default {
       border-radius: 6px;
     }
 
-    .card-panel-icon {
+    .card-panel-symbol {
       float: left;
       font-size: 48px;
     }
@@ -185,7 +185,7 @@ export default {
     display: none;
   }
 
-  .card-panel-icon-wrapper {
+  .card-panel-symbol-wrapper {
     float: none !important;
     width: 100%;
     height: 100%;

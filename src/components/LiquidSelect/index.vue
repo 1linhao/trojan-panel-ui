@@ -39,11 +39,11 @@
         aria-label="清空"
         @click.stop="clearSelection"
       >
-        <i class="el-icon-close" aria-hidden="true" />
+        <i class="liquid-icon--close" aria-hidden="true" />
       </span>
       <i
         v-else
-        class="el-icon-arrow-down liquid-select__arrow"
+        class="liquid-icon--arrow-down liquid-select__arrow"
         :class="{ 'is-open': open }"
         aria-hidden="true"
       />
@@ -59,7 +59,7 @@
       @click.stop
     >
       <div v-if="filterable" class="liquid-select__search-wrap">
-        <i class="el-icon-search" aria-hidden="true" />
+        <i class="liquid-icon--search" aria-hidden="true" />
         <input
           ref="search"
           v-model.trim="query"
@@ -84,7 +84,7 @@
           <span>{{ option.label }}</span>
           <i
             v-if="isSelected(option.value)"
-            class="el-icon-check"
+            class="liquid-icon--check"
             aria-hidden="true"
           />
         </button>
@@ -183,7 +183,7 @@ export default {
     emitValue(value) {
       this.$emit('input', value)
       this.$emit('change', value)
-      this.dispatch('ElFormItem', 'el.form.change', [value])
+      this.dispatch('LiquidFormItem', 'liquid.form.change', [value])
     },
     choose(optionValue) {
       if (this.multiple) {
@@ -227,7 +227,7 @@ export default {
         }
       }
       this.$emit('blur')
-      this.dispatch('ElFormItem', 'el.form.blur', [this.value])
+      this.dispatch('LiquidFormItem', 'liquid.form.blur', [this.value])
     },
     updatePosition() {
       if (!this.open || !this.$refs.trigger) return

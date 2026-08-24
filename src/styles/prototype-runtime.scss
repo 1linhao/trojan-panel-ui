@@ -25,7 +25,7 @@
   --r-md: 18px;
   --r-sm: 12px;
   --list-scrollbar-size: 10px;
-  --control-max-width: 360px;
+  --control-max-width: 420px;
 
   --dur: 0.32s;
   --spring: cubic-bezier(0.32, 0.72, 0.25, 1);
@@ -425,52 +425,52 @@ h3 {
 /* 只有明确的列表容器显示统一的轻量滚动条。 */
 .tbl-wrap,
 .dd-menu,
-.el-table__body-wrapper,
-.el-select-dropdown__wrap {
+.liquid-table__scroll,
+.liquid-select-dropdown__wrap {
   scrollbar-width: thin;
   scrollbar-color: transparent transparent;
 }
 
 .tbl-wrap,
 .dd-menu,
-.el-select-dropdown__wrap {
+.liquid-select-dropdown__wrap {
   scrollbar-gutter: stable;
 }
 
-.el-table__body-wrapper {
-  scrollbar-gutter: auto;
+.liquid-table__scroll {
+  scrollbar-gutter: stable both-edges;
 }
 
 .tbl-wrap:hover,
 .dd-menu:hover,
 .tbl-wrap:focus-within,
 .dd-menu:focus-within,
-.el-table__body-wrapper:hover,
-.el-table__body-wrapper:focus-within,
-.el-select-dropdown__wrap:hover,
-.el-select-dropdown__wrap:focus-within {
+.liquid-table__scroll:hover,
+.liquid-table__scroll:focus-within,
+.liquid-select-dropdown__wrap:hover,
+.liquid-select-dropdown__wrap:focus-within {
   scrollbar-color: color-mix(in srgb, var(--accent) 48%, var(--rim)) transparent;
 }
 
 .tbl-wrap::-webkit-scrollbar,
 .dd-menu::-webkit-scrollbar,
-.el-table__body-wrapper::-webkit-scrollbar,
-.el-select-dropdown__wrap::-webkit-scrollbar {
+.liquid-table__scroll::-webkit-scrollbar,
+.liquid-select-dropdown__wrap::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 .tbl-wrap::-webkit-scrollbar-track,
 .dd-menu::-webkit-scrollbar-track,
-.el-table__body-wrapper::-webkit-scrollbar-track,
-.el-select-dropdown__wrap::-webkit-scrollbar-track {
+.liquid-table__scroll::-webkit-scrollbar-track,
+.liquid-select-dropdown__wrap::-webkit-scrollbar-track {
   background: transparent;
 }
 
 .tbl-wrap::-webkit-scrollbar-thumb,
 .dd-menu::-webkit-scrollbar-thumb,
-.el-table__body-wrapper::-webkit-scrollbar-thumb,
-.el-select-dropdown__wrap::-webkit-scrollbar-thumb {
+.liquid-table__scroll::-webkit-scrollbar-thumb,
+.liquid-select-dropdown__wrap::-webkit-scrollbar-thumb {
   border: 2px solid transparent;
   border-radius: 999px;
   background: transparent;
@@ -481,10 +481,10 @@ h3 {
 .dd-menu:hover::-webkit-scrollbar-thumb,
 .tbl-wrap:focus-within::-webkit-scrollbar-thumb,
 .dd-menu:focus-within::-webkit-scrollbar-thumb,
-.el-table__body-wrapper:hover::-webkit-scrollbar-thumb,
-.el-table__body-wrapper:focus-within::-webkit-scrollbar-thumb,
-.el-select-dropdown__wrap:hover::-webkit-scrollbar-thumb,
-.el-select-dropdown__wrap:focus-within::-webkit-scrollbar-thumb {
+.liquid-table__scroll:hover::-webkit-scrollbar-thumb,
+.liquid-table__scroll:focus-within::-webkit-scrollbar-thumb,
+.liquid-select-dropdown__wrap:hover::-webkit-scrollbar-thumb,
+.liquid-select-dropdown__wrap:focus-within::-webkit-scrollbar-thumb {
   background: color-mix(in srgb, var(--accent) 70%, var(--rim));
   background-clip: padding-box;
 }
@@ -593,6 +593,35 @@ h3 {
 .cap.small .icon {
   width: 15px;
   height: 15px;
+}
+
+.cap > [class*='liquid-icon--'],
+.cap > .svg-icon,
+.liquid-button > [class*='liquid-icon--'],
+.liquid-button > .svg-icon {
+  width: 21px;
+  height: 21px;
+  padding: 3px;
+  border-radius: 7px;
+  color: var(--accent-deep);
+  background: color-mix(in srgb, var(--accent) 11%, transparent);
+  box-shadow: inset 0 1px 0 var(--spec-soft);
+}
+
+.cap.small > [class*='liquid-icon--'],
+.cap.small > .svg-icon {
+  width: 19px;
+  height: 19px;
+  padding: 2.5px;
+  border-radius: 6px;
+}
+
+.cap.primary > [class*='liquid-icon--'],
+.cap.primary > .svg-icon,
+.liquid-button.is-primary > [class*='liquid-icon--'],
+.liquid-button.is-primary > .svg-icon {
+  color: inherit;
+  background: rgba(255, 255, 255, 0.16);
 }
 
 .icon-btn {
@@ -988,7 +1017,7 @@ h3 {
   -webkit-overflow-scrolling: touch;
 }
 
-.el-table__body-wrapper {
+.liquid-table__scroll {
   overscroll-behavior-x: contain;
   overscroll-behavior-y: auto;
   touch-action: pan-x pan-y;
@@ -2055,6 +2084,11 @@ h3 {
   gap: 8px;
   margin-left: auto;
 }
+.local-role-preview {
+  flex: 0 0 auto;
+  min-height: 36px;
+  padding: 0 12px;
+}
 .prototype-topbar-user {
   width: auto;
   max-width: min(260px, 32vw);
@@ -2082,6 +2116,8 @@ h3 {
 }
 .prototype-mobile-nav {
   @extend .mobile-nav;
+  justify-content: stretch;
+  gap: 3px;
 }
 .prototype-app-main {
   min-height: 1px;
@@ -2107,10 +2143,16 @@ h3 {
   );
 }
 .prototype-mobile-nav button {
-  color: color-mix(in srgb, var(--ink) 78%, var(--ink-2));
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 5px 6px;
+  color: var(--ink-2);
 }
 .prototype-mobile-nav button.on {
-  color: var(--accent-deep);
+  color: var(--ink);
+  background: var(--glass-strong);
+  box-shadow: inset 0 1px 0 var(--spec),
+    0 4px 12px -6px rgba(10, 20, 50, 0.4);
 }
 .prototype-mobile-nav .svg-icon {
   width: 19px;
@@ -2132,13 +2174,18 @@ h3 {
   font-weight: 500;
   text-shadow: 0 1px 1px color-mix(in srgb, var(--ink) 12%, transparent);
 }
-.prototype-mobile-nav .prototype-menu-icon {
-  font-size: 19px;
+.prototype-mobile-nav .prototype-mobile-icon {
+  width: 24px !important;
+  height: 24px !important;
+  color: currentColor;
+  filter: drop-shadow(
+    0 1px 1px color-mix(in srgb, currentColor 18%, transparent)
+  );
 }
 .prototype-mobile-nav .mobile-logout {
   color: var(--bad-fg);
 }
-.prototype-icon-btn .el-icon-switch-button {
+.prototype-icon-btn .liquid-icon--switch-button {
   font-size: 18px;
 }
 .prototype-shell .liquid-theme-toggle {
@@ -2189,13 +2236,13 @@ h3 {
   width: 100%;
   min-height: 46px;
 }
-.auth-form .el-form-item {
+.auth-form .liquid-form-item {
   margin-bottom: 0;
 }
-.auth-form .el-form-item__content {
+.auth-form .liquid-form-item__content {
   line-height: normal;
 }
-.captcha-row .el-form-item {
+.captcha-row .liquid-form-item {
   flex: 1;
 }
 .captcha-img {
@@ -2207,11 +2254,11 @@ h3 {
   object-fit: contain;
 }
 
-/* 原型原生控件与 Element UI 控件共享同一输入规范。 */
+/* 所有原生 Liquid 控件共享同一输入规范。 */
 #app input,
 #app textarea,
-#app .el-input__inner,
-#app .el-textarea__inner {
+#app .liquid-input__inner,
+#app .liquid-textarea__inner {
   font-family: var(--font);
   font-size: 13px;
   font-weight: 500;
@@ -2219,19 +2266,19 @@ h3 {
 
 #app input::placeholder,
 #app textarea::placeholder,
-#app .el-input__inner::placeholder,
-#app .el-textarea__inner::placeholder {
+#app .liquid-input__inner::placeholder,
+#app .liquid-textarea__inner::placeholder {
   color: var(--ink-3);
   font-size: 13px;
   font-weight: 500;
   opacity: 1;
 }
 
-#app .el-input__inner,
-#app .el-textarea__inner,
-#app .el-range-editor.el-input__inner,
-#app .el-input-number,
-#app .el-input-number .el-input__inner {
+#app .liquid-input__inner,
+#app .liquid-textarea__inner,
+#app .liquid-range-editor.liquid-input__inner,
+#app .liquid-input-number,
+#app .liquid-input-number .liquid-input__inner {
   border-color: var(--control-border) !important;
   color: var(--ink) !important;
   background: var(--control-fill) !important;
@@ -2239,19 +2286,19 @@ h3 {
   -webkit-text-fill-color: var(--ink);
 }
 
-#app .el-input__inner {
+#app .liquid-input__inner {
   min-height: 40px;
 }
 
-#app .el-input__prefix,
-#app .el-input__suffix,
-#app .el-select__caret,
-#app .el-input__icon {
+#app .liquid-input__prefix,
+#app .liquid-input__suffix,
+#app .liquid-select__caret,
+#app .liquid-input__icon {
   color: var(--ink-2);
 }
 
-#app .el-input.is-disabled .el-input__inner,
-#app .el-textarea.is-disabled .el-textarea__inner {
+#app .liquid-input.is-disabled .liquid-input__inner,
+#app .liquid-textarea.is-disabled .liquid-textarea__inner {
   color: var(--ink-3) !important;
   background: var(--glass-soft) !important;
   -webkit-text-fill-color: var(--ink-3);
@@ -2262,7 +2309,7 @@ h3 {
   padding: 18px 0 0;
 }
 
-.profile-form .el-form {
+.profile-form .liquid-form {
   padding: 0;
   border: 0;
   background: transparent;
@@ -2274,8 +2321,8 @@ h3 {
   padding: 18px 0 0 !important;
 }
 
-.prototype-config-card .app-container > .el-form,
-.prototype-config-card .app-container > .el-tabs {
+.prototype-config-card .app-container > .liquid-form,
+.prototype-config-card .app-container > .liquid-tabs {
   padding: 0;
   border: 0;
   background: transparent;
@@ -2328,9 +2375,9 @@ h3 {
 
 .dashboard-detail-grid,
 .dashboard-detail-grid > .card,
-.dashboard-table-block .el-table,
-.dashboard-table-block .el-table__header-wrapper,
-.dashboard-table-block .el-table__body-wrapper {
+.dashboard-table-block .liquid-table,
+.dashboard-table-block .liquid-table__header-wrapper,
+.dashboard-table-block .liquid-table__scroll {
   min-width: 0;
   max-width: 100%;
 }
@@ -2339,57 +2386,57 @@ h3 {
   grid-template-columns: minmax(0, 1fr);
 }
 
-.dashboard-table-block .el-table {
+.dashboard-table-block .liquid-table {
   width: 100% !important;
   overflow: hidden;
 }
 
-.dashboard-table-block .el-table__body-wrapper {
+.dashboard-table-block .liquid-table__scroll {
   overflow-x: auto;
 }
 
-/* ---------- 统一控件层：消除 Element UI 默认视觉 ---------- */
+/* ---------- 统一的原生 Liquid 控件层 ---------- */
 
-#app .el-form-item__label,
-.el-dialog .el-form-item__label {
+#app .liquid-form-item__label,
+.liquid-dialog .liquid-form-item__label {
   color: var(--ink-2);
   font-size: 12px;
   font-weight: 650;
 }
 
-#app .el-form-item,
-.el-dialog .el-form-item {
+#app .liquid-form-item,
+.liquid-dialog .liquid-form-item {
   margin-bottom: 18px;
 }
 
-#app .el-select,
-#app .el-date-editor,
-#app .el-input-number,
-.el-dialog .el-select,
-.el-dialog .el-date-editor,
-.el-dialog .el-input-number {
-  max-width: 100%;
+#app .liquid-select,
+#app .liquid-date-picker,
+#app .liquid-number-input,
+.liquid-dialog .liquid-select,
+.liquid-dialog .liquid-date-picker,
+.liquid-dialog .liquid-number-input {
+  width: min(100%, var(--control-max-width));
+  max-width: var(--control-max-width);
 }
 
-.uniform-dialog-form .el-form-item__label {
+.uniform-dialog-form .liquid-form-item__label {
   width: 132px !important;
   padding-right: 16px;
   line-height: 42px;
   text-align: right;
 }
 
-.uniform-dialog-form .el-form-item__content {
+.uniform-dialog-form .liquid-form-item__content {
   min-width: 0;
   margin-left: 132px !important;
 }
 
-.uniform-dialog-form .el-input,
-.uniform-dialog-form .el-select,
-.uniform-dialog-form .el-input-number,
-.uniform-dialog-form .el-textarea,
-.uniform-dialog-form .el-date-editor {
-  width: 100% !important;
-  max-width: none !important;
+.uniform-dialog-form .liquid-input,
+.uniform-dialog-form .liquid-select,
+.uniform-dialog-form .liquid-number-input,
+.uniform-dialog-form .liquid-date-picker {
+  width: min(100%, var(--control-max-width)) !important;
+  max-width: var(--control-max-width) !important;
 }
 
 .uniform-control-with-action {
@@ -2397,7 +2444,7 @@ h3 {
   grid-template-columns: minmax(0, 1fr) 42px;
   align-items: center;
   gap: 8px;
-  width: 100%;
+  width: min(100%, calc(var(--control-max-width) + 50px));
 }
 
 .uniform-control-with-action > .liquid-add-button {
@@ -2416,11 +2463,11 @@ h3 {
   border-radius: 13px !important;
 }
 
-.el-dialog .el-input__inner,
-.el-dialog .el-textarea__inner,
-.el-dialog .el-range-editor.el-input__inner,
-.el-dialog .el-input-number,
-.el-dialog .el-input-number .el-input__inner {
+.liquid-dialog .liquid-input__inner,
+.liquid-dialog .liquid-textarea__inner,
+.liquid-dialog .liquid-range-editor.liquid-input__inner,
+.liquid-dialog .liquid-input-number,
+.liquid-dialog .liquid-input-number .liquid-input__inner {
   border: 1px solid var(--control-border) !important;
   border-radius: 14px;
   color: var(--ink) !important;
@@ -2446,15 +2493,15 @@ h3 {
   line-height: 1.45;
 }
 
-.el-dialog .el-input__prefix,
-.el-dialog .el-input__suffix,
-.el-dialog .el-input__icon,
-.el-dialog .el-select__caret {
+.liquid-dialog .liquid-input__prefix,
+.liquid-dialog .liquid-input__suffix,
+.liquid-dialog .liquid-input__icon,
+.liquid-dialog .liquid-select__caret {
   color: var(--ink-2);
 }
 
-.el-dialog .el-input-number__decrease,
-.el-dialog .el-input-number__increase {
+.liquid-dialog .liquid-input-number__decrease,
+.liquid-dialog .liquid-input-number__increase {
   right: 6px;
   width: 28px;
   height: 14px;
@@ -2466,23 +2513,23 @@ h3 {
   line-height: 12px;
 }
 
-.el-dialog .el-input-number.is-controls-right .el-input__inner {
+.liquid-dialog .liquid-input-number.is-controls-right .liquid-input__inner {
   padding-right: 48px;
   text-align: left;
 }
 
-.el-dialog .el-input-number.is-controls-right .el-input-number__increase {
+.liquid-dialog .liquid-input-number.is-controls-right .liquid-input-number__increase {
   top: 5px;
   bottom: auto;
 }
 
-.el-dialog .el-input-number.is-controls-right .el-input-number__decrease {
+.liquid-dialog .liquid-input-number.is-controls-right .liquid-input-number__decrease {
   top: auto;
   bottom: 5px;
 }
 
-.el-dialog .el-input-number__decrease:hover,
-.el-dialog .el-input-number__increase:hover {
+.liquid-dialog .liquid-input-number__decrease:hover,
+.liquid-dialog .liquid-input-number__increase:hover {
   color: var(--accent);
   border-color: color-mix(in srgb, var(--accent) 48%, var(--rim)) !important;
   background: color-mix(in srgb, var(--accent) 10%, var(--glass-strong));
@@ -2507,16 +2554,16 @@ h3 {
   background: var(--hairline);
 }
 
-.el-dialog input::placeholder,
-.el-dialog textarea::placeholder {
+.liquid-dialog input::placeholder,
+.liquid-dialog textarea::placeholder {
   color: var(--ink-3);
   font-size: 13px;
   font-weight: 500;
   opacity: 1;
 }
 
-.el-dialog .el-button,
-.el-message-box .el-button {
+.liquid-dialog .liquid-button,
+.liquid-message-box .liquid-button {
   min-height: 36px;
   padding: 9px 16px;
   border: 1px solid var(--rim);
@@ -2528,15 +2575,15 @@ h3 {
   font-weight: 650;
 }
 
-.el-dialog .el-button--primary,
-.el-message-box .el-button--primary {
+.liquid-dialog .liquid-button--primary,
+.liquid-message-box .liquid-button--primary {
   color: var(--on-accent);
   border-color: transparent;
   background: linear-gradient(135deg, var(--accent), var(--accent-deep));
 }
 
-#app .el-radio-button__inner,
-.el-dialog .el-radio-button__inner {
+#app .liquid-radio-button__inner,
+.liquid-dialog .liquid-radio-button__inner {
   min-height: 36px;
   padding: 10px 14px;
   border-color: var(--hairline) !important;
@@ -2548,40 +2595,40 @@ h3 {
   font-weight: 650;
 }
 
-#app .el-radio-button:first-child .el-radio-button__inner,
-#app .el-radio-button:last-child .el-radio-button__inner,
-.el-dialog .el-radio-button:first-child .el-radio-button__inner,
-.el-dialog .el-radio-button:last-child .el-radio-button__inner {
+#app .liquid-radio-button:first-child .liquid-radio-button__inner,
+#app .liquid-radio-button:last-child .liquid-radio-button__inner,
+.liquid-dialog .liquid-radio-button:first-child .liquid-radio-button__inner,
+.liquid-dialog .liquid-radio-button:last-child .liquid-radio-button__inner {
   border-radius: 999px !important;
 }
 
-#app .el-radio-button,
-.el-dialog .el-radio-button {
+#app .liquid-radio-button,
+.liquid-dialog .liquid-radio-button {
   margin-right: 4px;
 }
 
-#app .el-radio-button__orig-radio:checked + .el-radio-button__inner,
-.el-dialog .el-radio-button__orig-radio:checked + .el-radio-button__inner {
+#app .liquid-radio-button__orig-radio:checked + .liquid-radio-button__inner,
+.liquid-dialog .liquid-radio-button__orig-radio:checked + .liquid-radio-button__inner {
   color: var(--ink);
   border-color: var(--rim) !important;
   background: var(--glass-strong);
   box-shadow: inset 0 1px 0 var(--spec), var(--shadow-soft) !important;
 }
 
-#app .el-switch__label,
-.el-dialog .el-switch__label {
+#app .liquid-switch__label,
+.liquid-dialog .liquid-switch__label {
   color: var(--ink-3);
   font-size: 11.5px;
   font-weight: 650;
 }
 
-#app .el-switch__label.is-active,
-.el-dialog .el-switch__label.is-active {
+#app .liquid-switch__label.is-active,
+.liquid-dialog .liquid-switch__label.is-active {
   color: var(--ink);
 }
 
-#app .el-switch__core,
-.el-dialog .el-switch__core {
+#app .liquid-switch__core,
+.liquid-dialog .liquid-switch__core {
   width: 46px !important;
   height: 28px;
   border-color: var(--hairline) !important;
@@ -2589,8 +2636,8 @@ h3 {
   background: var(--neutral-bg) !important;
 }
 
-#app .el-switch__core::after,
-.el-dialog .el-switch__core::after {
+#app .liquid-switch__core::after,
+.liquid-dialog .liquid-switch__core::after {
   top: 2px;
   left: 2px;
   width: 22px;
@@ -2598,36 +2645,36 @@ h3 {
   box-shadow: 0 2px 6px rgba(10, 20, 50, 0.28);
 }
 
-#app .el-switch.is-checked .el-switch__core,
-.el-dialog .el-switch.is-checked .el-switch__core {
+#app .liquid-switch.is-checked .liquid-switch__core,
+.liquid-dialog .liquid-switch.is-checked .liquid-switch__core {
   border-color: transparent !important;
   background: var(--accent) !important;
 }
 
-#app .el-switch.is-checked .el-switch__core::after,
-.el-dialog .el-switch.is-checked .el-switch__core::after {
+#app .liquid-switch.is-checked .liquid-switch__core::after,
+.liquid-dialog .liquid-switch.is-checked .liquid-switch__core::after {
   left: 100%;
   margin-left: -24px;
 }
 
-#app .el-checkbox__inner,
-#app .el-radio__inner,
-.el-dialog .el-checkbox__inner,
-.el-dialog .el-radio__inner {
+#app .liquid-checkbox__inner,
+#app .liquid-radio__inner,
+.liquid-dialog .liquid-checkbox__inner,
+.liquid-dialog .liquid-radio__inner {
   border-color: var(--rim);
   background: var(--glass-input);
   box-shadow: inset 0 1px 0 var(--spec-soft);
 }
 
-#app .el-checkbox__label,
-#app .el-radio__label,
-.el-dialog .el-checkbox__label,
-.el-dialog .el-radio__label {
+#app .liquid-checkbox__label,
+#app .liquid-radio__label,
+.liquid-dialog .liquid-checkbox__label,
+.liquid-dialog .liquid-radio__label {
   color: var(--ink-2);
   font-size: 13px;
 }
 
-#app .el-tabs__nav {
+#app .liquid-tabs__nav {
   display: inline-flex;
   gap: 4px;
   padding: 4px;
@@ -2636,12 +2683,12 @@ h3 {
   background: var(--glass-soft);
 }
 
-#app .el-tabs__nav-wrap::after,
-#app .el-tabs__active-bar {
+#app .liquid-tabs__nav-wrap::after,
+#app .liquid-tabs__active-bar {
   display: none;
 }
 
-#app .el-tabs__item {
+#app .liquid-tabs__item {
   height: 36px;
   padding: 0 16px !important;
   border-radius: 999px;
@@ -2651,23 +2698,23 @@ h3 {
   font-weight: 650;
 }
 
-#app .el-tabs__item.is-active {
+#app .liquid-tabs__item.is-active {
   color: var(--ink);
   background: var(--glass-strong);
   box-shadow: inset 0 1px 0 var(--spec), var(--shadow-soft);
 }
 
-#app .el-tabs__content {
+#app .liquid-tabs__content {
   padding-top: 4px;
 }
 
-#app .el-divider,
-.el-dialog .el-divider {
+#app .liquid-divider,
+.liquid-dialog .liquid-divider {
   background: var(--hairline);
 }
 
-#app .el-divider__text,
-.el-dialog .el-divider__text {
+#app .liquid-divider__text,
+.liquid-dialog .liquid-divider__text {
   color: var(--ink-3);
   background: var(--glass-popover);
   font-size: 11px;
@@ -2675,37 +2722,37 @@ h3 {
   letter-spacing: 0.08em;
 }
 
-#app .el-descriptions,
-#app .el-descriptions__body,
-#app .el-descriptions .el-descriptions-item__cell {
+#app .liquid-descriptions,
+#app .liquid-descriptions__body,
+#app .liquid-descriptions .liquid-descriptions-item__cell {
   color: var(--ink);
   background: transparent;
 }
 
-#app .el-descriptions-item__label {
+#app .liquid-descriptions-item__label {
   color: var(--ink-3);
   font-size: 11.5px;
   font-weight: 700;
 }
 
-#app .el-card {
+#app .liquid-card {
   border-color: var(--rim);
   color: var(--ink);
   background: var(--glass);
 }
 
-#app .el-card__header {
+#app .liquid-card__header {
   border-bottom-color: var(--hairline);
 }
 
-#app .el-color-picker__trigger {
+#app .liquid-color-picker__trigger {
   border-color: var(--rim);
   border-radius: 12px;
   background: var(--glass-input);
 }
 
-.el-dialog__wrapper,
-.el-message-box__wrapper {
+.liquid-dialog__wrapper,
+.liquid-message-box__wrapper {
   backdrop-filter: none;
 }
 
@@ -2724,8 +2771,8 @@ h3 {
   transform: none !important;
 }
 
-.el-message,
-.el-notification {
+.liquid-message,
+.liquid-notification {
   border: 1px solid var(--rim);
   border-radius: var(--r-md);
   color: var(--ink);
@@ -2734,14 +2781,14 @@ h3 {
   backdrop-filter: blur(28px) saturate(170%);
 }
 
-.el-message__content,
-.el-notification__title,
-.el-notification__content {
+.liquid-message__content,
+.liquid-notification__title,
+.liquid-notification__content {
   color: var(--ink);
 }
 
-.el-tooltip__popper,
-.el-popover {
+.liquid-tooltip__popper,
+.liquid-popover {
   border-color: var(--rim) !important;
   border-radius: 12px;
   color: var(--ink) !important;
@@ -2749,36 +2796,36 @@ h3 {
   box-shadow: var(--shadow-soft);
 }
 
-.el-picker-panel,
-.el-color-dropdown {
+.liquid-picker-panel,
+.liquid-color-dropdown {
   border-color: var(--rim);
   color: var(--ink);
   background: var(--glass-popover);
 }
 
-.el-picker-panel__icon-btn,
-.el-date-picker__header-label,
-.el-date-table th,
-.el-date-table td.available,
-.el-month-table td .cell,
-.el-year-table td .cell {
+.liquid-picker-panel__icon-btn,
+.liquid-date-picker__header-label,
+.liquid-date-table th,
+.liquid-date-table td.available,
+.liquid-month-table td .cell,
+.liquid-year-table td .cell {
   color: var(--ink-2);
 }
 
-.el-date-table td.current:not(.disabled) span,
-.el-month-table td.current:not(.disabled) .cell,
-.el-year-table td.current:not(.disabled) .cell {
+.liquid-date-table td.current:not(.disabled) span,
+.liquid-month-table td.current:not(.disabled) .cell,
+.liquid-year-table td.current:not(.disabled) .cell {
   color: var(--on-accent);
   background: var(--accent);
 }
 
-.el-select-dropdown__item,
-.el-dropdown-menu__item {
+.liquid-select-dropdown__item,
+.liquid-dropdown-menu__item {
   font-size: 13px;
   font-weight: 550;
 }
 
-.el-pagination .el-input__inner {
+.liquid-pagination .liquid-input__inner {
   border-color: var(--control-border) !important;
   color: var(--ink) !important;
   background: var(--control-fill) !important;
@@ -2794,16 +2841,16 @@ h3 {
   background: var(--control-fill);
 }
 
-#app .el-select .el-input__inner,
-.el-dialog .el-select .el-input__inner {
+#app .liquid-select .liquid-input__inner,
+.liquid-dialog .liquid-select .liquid-input__inner {
   border-color: var(--control-border) !important;
   background: var(--control-fill) !important;
 }
 
-#app .el-select .el-input.is-focus .el-input__inner,
-#app .el-select:hover .el-input__inner,
-.el-dialog .el-select .el-input.is-focus .el-input__inner,
-.el-dialog .el-select:hover .el-input__inner {
+#app .liquid-select .liquid-input.is-focus .liquid-input__inner,
+#app .liquid-select:hover .liquid-input__inner,
+.liquid-dialog .liquid-select .liquid-input.is-focus .liquid-input__inner,
+.liquid-dialog .liquid-select:hover .liquid-input__inner {
   border-color: color-mix(
     in srgb,
     var(--accent) 56%,
@@ -2812,7 +2859,7 @@ h3 {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 13%, transparent) !important;
 }
 
-.el-select-dropdown {
+.liquid-select-dropdown {
   padding: 6px;
   border: 1px solid var(--control-border);
   border-radius: 16px;
@@ -2821,11 +2868,11 @@ h3 {
   box-shadow: var(--shadow), inset 0 1px 0 var(--spec-soft);
 }
 
-.el-select-dropdown__list {
+.liquid-select-dropdown__list {
   padding: 0;
 }
 
-.el-select-dropdown__item {
+.liquid-select-dropdown__item {
   height: 38px;
   margin: 2px 0;
   padding: 0 12px;
@@ -2834,13 +2881,13 @@ h3 {
   line-height: 38px;
 }
 
-.el-select-dropdown__item.hover,
-.el-select-dropdown__item:hover {
+.liquid-select-dropdown__item.hover,
+.liquid-select-dropdown__item:hover {
   color: var(--ink);
   background: var(--glass-soft);
 }
 
-.el-select-dropdown__item.selected {
+.liquid-select-dropdown__item.selected {
   color: var(--accent-deep);
   background: color-mix(in srgb, var(--accent) 13%, transparent);
   font-weight: 700;
@@ -2848,13 +2895,13 @@ h3 {
 
 @media (hover: none), (pointer: coarse) {
   .tbl-wrap,
-  .el-table__body-wrapper {
+  .liquid-table__scroll {
     scrollbar-color: color-mix(in srgb, var(--accent) 62%, var(--rim))
       transparent;
   }
 
   .tbl-wrap::-webkit-scrollbar-thumb,
-  .el-table__body-wrapper::-webkit-scrollbar-thumb {
+  .liquid-table__scroll::-webkit-scrollbar-thumb {
     background: color-mix(in srgb, var(--accent) 72%, var(--rim));
     background-clip: padding-box;
   }
@@ -2961,12 +3008,12 @@ h3 {
 }
 @media (max-width: 760px) {
   .tbl-wrap,
-  .el-table__body-wrapper {
+  .liquid-table__scroll {
     scrollbar-color: color-mix(in srgb, var(--accent) 62%, var(--rim))
       transparent;
   }
   .tbl-wrap::-webkit-scrollbar-thumb,
-  .el-table__body-wrapper::-webkit-scrollbar-thumb {
+  .liquid-table__scroll::-webkit-scrollbar-thumb {
     background: color-mix(in srgb, var(--accent) 72%, var(--rim));
     background-clip: padding-box;
   }
@@ -2981,7 +3028,7 @@ h3 {
     width: min(420px, calc(100vw - 20px));
     padding: 28px 20px 22px;
   }
-  .uniform-dialog-form .el-form-item__label {
+  .uniform-dialog-form .liquid-form-item__label {
     float: none;
     display: block;
     width: 100% !important;
@@ -2989,7 +3036,7 @@ h3 {
     line-height: 20px;
     text-align: left;
   }
-  .uniform-dialog-form .el-form-item__content {
+  .uniform-dialog-form .liquid-form-item__content {
     margin-left: 0 !important;
   }
   .main {
@@ -3003,6 +3050,14 @@ h3 {
   }
   .prototype-topbar-actions {
     gap: 5px;
+  }
+  .local-role-preview {
+    width: 36px;
+    min-width: 36px;
+    padding: 0;
+  }
+  .local-role-preview span {
+    display: none;
   }
   .prototype-topbar-user {
     max-width: min(190px, 48vw);
@@ -3055,8 +3110,8 @@ h3 {
   .split-toggle {
     justify-content: center;
   }
-  .pagination-container .el-pagination__sizes,
-  .pagination-container .el-pagination__jump {
+  .pagination-container .liquid-pagination__sizes,
+  .pagination-container .liquid-pagination__jump {
     display: none !important;
   }
   .pagination-container {

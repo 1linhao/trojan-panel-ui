@@ -7,7 +7,7 @@
         :style="{ top: buttonTop + 'px', 'background-color': theme }"
         @click="show = !show"
       >
-        <i :class="show ? 'el-icon-close' : 'el-icon-setting'" />
+        <i :class="show ? 'liquid-icon--close' : 'liquid-icon--setting'" />
       </div>
       <div class="rightPanel-items">
         <slot />

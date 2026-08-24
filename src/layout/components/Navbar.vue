@@ -26,7 +26,7 @@
       <liquid-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <span class="user-avatar">{{ userInitials }}</span>
-          <i class="el-icon-caret-bottom" />
+          <i class="liquid-icon--caret-bottom" />
         </div>
         <liquid-dropdown-menu slot="dropdown" class="user-dropdown">
           <liquid-dropdown-item @click.native="goProfile">
@@ -178,7 +178,7 @@ export default {
           font-weight: 800;
         }
 
-        .el-icon-caret-bottom {
+        .liquid-icon--caret-bottom {
           cursor: pointer;
           position: absolute;
           right: -20px;

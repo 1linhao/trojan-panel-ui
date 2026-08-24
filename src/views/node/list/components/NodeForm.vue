@@ -38,7 +38,7 @@
               class="liquid-add-button"
               type="primary"
               size="mini"
-              icon="el-icon-plus"
+              icon="liquid-icon--plus"
               aria-label="添加服务器"
               @click="toAddNodeServer"
             ></liquid-button>
@@ -1279,7 +1279,7 @@ export default {
 </script>
 
 <style scoped>
-.el-button {
+.liquid-button {
   margin-left: 10px;
 }
 </style>

@@ -7,7 +7,7 @@
     v-bind="$attrs"
     @click="$emit('click', $event)"
   >
-    <i v-if="loading" class="el-icon-loading" aria-hidden="true" />
+    <i v-if="loading" class="liquid-icon--loading" aria-hidden="true" />
     <i v-else-if="icon" :class="icon" aria-hidden="true" />
     <span v-if="$slots.default"><slot /></span>
   </button>

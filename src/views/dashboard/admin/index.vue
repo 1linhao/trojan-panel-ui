@@ -2,12 +2,12 @@
   <div class="prototype-page grid">
     <div class="grid cols-4">
       <div class="glass stat-tile">
-        <span class="icon-wrap tone-blue"><i class="el-icon-user-solid" /></span>
+        <span class="icon-wrap tone-blue"><i class="liquid-icon--user-solid" /></span>
         <b class="num">{{ panelGroupData.accountCount }}</b
         ><span>账号总数</span>
       </div>
       <div class="glass stat-tile">
-        <span class="icon-wrap tone-violet"><i class="el-icon-connection" /></span>
+        <span class="icon-wrap tone-violet"><i class="liquid-icon--connection" /></span>
         <b class="num">{{
           panelGroupData.nodeCount || panelGroupData.nodeNum
         }}</b

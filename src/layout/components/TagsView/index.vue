@@ -19,7 +19,7 @@
         {{ generateTitle(tag.title) }}
         <span
           v-if="!isAffix(tag)"
-          class="el-icon-close"
+          class="liquid-icon--close"
           @click.prevent.stop="closeSelectedTag(tag)"
         />
       </router-link>
@@ -294,10 +294,10 @@ export default {
 </style>
 
 <style lang="scss">
-//reset element css of el-icon-close
+//reset element css of liquid-icon--close
 .tags-view-wrapper {
   .tags-view-item {
-    .el-icon-close {
+    .liquid-icon--close {
       width: 16px;
       height: 16px;
       vertical-align: 2px;

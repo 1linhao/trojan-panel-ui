@@ -29,7 +29,7 @@
       >
         <span :data-palette-swatch="option.value" />
         {{ option.label }}
-        <i v-if="palette === option.value" class="el-icon-check" />
+        <i v-if="palette === option.value" class="liquid-icon--check" />
       </button>
     </div>
   </div>

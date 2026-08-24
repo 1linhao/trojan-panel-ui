@@ -3,7 +3,7 @@
     <div class="glass card">
       <div class="toolbar">
         <div class="search-box">
-          <i class="el-icon-search"></i
+          <i class="liquid-icon--search"></i
           ><input
             v-model="listQuery.name"
             placeholder="按节点名搜索"
@@ -30,7 +30,7 @@
           type="button"
           @click="exportDialogVisible = true"
         >
-          <i class="el-icon-upload2"></i>订阅导出
+          <i class="liquid-icon--export"></i>订阅导出
         </button>
         <button
           v-if="checkPermission(['sysadmin', 'admin'])"
@@ -38,7 +38,7 @@
           type="button"
           @click="handleCreate"
         >
-          <i class="el-icon-plus"></i>新建节点
+          <i class="liquid-icon--plus"></i>新建节点
         </button>
       </div>
     </div>
@@ -112,7 +112,7 @@
               type="button"
               @click="handlePrototypeDetail(row)"
             >
-              <i class="el-icon-view"></i
+              <i class="liquid-icon--view"></i
               >{{ detailId === row.id ? '收起' : '详情' }}
             </button>
             <template v-if="checkPermission(['sysadmin', 'admin'])">
@@ -122,7 +122,7 @@
                 title="编辑"
                 @click="handleUpdate(row)"
               >
-                <i class="el-icon-edit"></i>
+                <i class="liquid-icon--edit"></i>
               </button>
               <button
                 class="icon-btn danger"
@@ -130,7 +130,7 @@
                 title="删除"
                 @click="handleDelete(row, index)"
               >
-                <i class="el-icon-delete"></i>
+                <i class="liquid-icon--delete"></i>
               </button>
             </template>
           </div>
@@ -146,7 +146,7 @@
               <h2>{{ row.name }} · 连接参数</h2>
             </div>
             <button class="icon-btn" type="button" @click="detailId = 0">
-              <i class="el-icon-close"></i>
+              <i class="liquid-icon--close"></i>
             </button>
           </div>
           <div class="kv-grid">
@@ -674,7 +674,7 @@ export default {
 </script>
 
 <style scoped>
-.el-button {
+.liquid-button {
   margin-left: 10px;
 }
 </style>

@@ -3,7 +3,7 @@
     <div class="glass card">
       <div class="toolbar">
         <div class="search-box">
-          <i class="el-icon-search"></i
+          <i class="liquid-icon--search"></i
           ><input
             v-model="listQuery.toEmail"
             placeholder="按收件邮箱搜索"
@@ -156,7 +156,7 @@ export default {
 </script>
 
 <style scoped>
-.el-button {
+.liquid-button {
   margin-left: 10px;
 }
 </style>

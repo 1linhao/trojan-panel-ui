@@ -192,7 +192,7 @@
           class="liquid-add-button"
           type="primary"
           size="mini"
-          icon="el-icon-plus"
+          icon="liquid-icon--plus"
           @click="handleCreateFallbackProps"
       ></liquid-button>
     </liquid-form-item>
@@ -367,11 +367,11 @@ export default {
 </script>
 
 <style scoped>
-.el-tag + .el-tag {
+.liquid-tag + .liquid-tag {
   margin-left: 10px;
 }
 
-.el-button {
+.liquid-button {
   margin-left: 10px;
 }
 

@@ -109,9 +109,9 @@ export default {
     },
     formatIcon(format) {
       return {
-        link: 'el-icon-document-copy',
-        file: 'el-icon-download',
-        qrcode: 'el-icon-full-screen'
+        link: 'liquid-icon--document-copy',
+        file: 'liquid-icon--download',
+        qrcode: 'liquid-icon--full-screen'
       }[format]
     },
     absoluteUrl(path) {
@@ -179,13 +179,13 @@ export default {
   height: 256px;
 }
 
-.format-actions ::v-deep .el-form-item__content {
+.format-actions ::v-deep .liquid-form-item__content {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-.format-actions .el-button {
+.format-actions .liquid-button {
   margin-left: 0;
 }
 
@@ -201,5 +201,17 @@ export default {
 <style>
 .export-node-dialog {
   max-width: 560px;
+}
+
+@media (max-width: 640px) {
+  .liquid-dialog.export-node-dialog {
+    align-self: flex-start;
+    max-height: calc(100dvh - 20px);
+    margin-top: max(10px, env(safe-area-inset-top));
+  }
+
+  .liquid-dialog.export-node-dialog .liquid-dialog__body {
+    max-height: calc(100dvh - 152px);
+  }
 }
 </style>

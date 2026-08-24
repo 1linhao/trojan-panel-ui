@@ -58,6 +58,64 @@ const node = {
   }
 }
 
+const nodes = [
+  node,
+  {
+    ...node,
+    id: 2,
+    nodeServerId: 2,
+    nodeSubId: 2,
+    name: 'Singapore WebSocket',
+    domain: 'sg.example.com',
+    port: 8443,
+    priority: 90,
+    clients: ['sing-box', 'clash-meta', 'v2ray']
+  },
+  {
+    ...node,
+    id: 3,
+    nodeServerId: 3,
+    nodeSubId: 3,
+    nodeTypeId: 5,
+    name: 'Frankfurt Hysteria2 High Performance',
+    domain: 'de.example.com',
+    port: 2443,
+    priority: 80,
+    clients: ['sing-box', 'shadowrocket']
+  },
+  {
+    ...node,
+    id: 4,
+    nodeServerId: 4,
+    nodeSubId: 4,
+    nodeTypeId: 4,
+    name: 'San Francisco NaiveProxy',
+    domain: 'us.example.com',
+    port: 443,
+    priority: 70,
+    clients: ['sing-box', 'v2ray']
+  },
+  {
+    ...node,
+    id: 5,
+    nodeServerId: 5,
+    nodeSubId: 5,
+    name: 'Hong Kong VLESS Reality',
+    domain: 'hk.example.com',
+    port: 10443,
+    priority: 60,
+    clients: ['sing-box', 'clash-meta', 'shadowrocket']
+  }
+]
+
+const nodeServers = [
+  { id: 1, name: 'Tokyo', ip: 'jp.example.com', grpcPort: 8100, grpcTLSMode: 'mtls', grpcTLSServerName: 'core-jp.example.com', trafficPeriod: 'month', trafficLimitMode: 'combined', trafficTotalLimit: 1099511627776, trafficUploadLimit: 0, trafficDownloadLimit: 0, status: 1, trojanPanelCoreVersion: '2.3.0', kernelSummary: 'xray 25.8.3' },
+  { id: 2, name: 'Singapore', ip: 'sg.example.com', grpcPort: 8101, grpcTLSMode: 'tls', grpcTLSServerName: 'core-sg.example.com', trafficPeriod: 'day', trafficLimitMode: 'separate', trafficTotalLimit: 0, trafficUploadLimit: 322122547200, trafficDownloadLimit: 536870912000, status: 1, trojanPanelCoreVersion: '2.3.0', kernelSummary: 'xray 25.8.3' },
+  { id: 3, name: 'Frankfurt', ip: 'de.example.com', grpcPort: 8102, grpcTLSMode: 'mtls', grpcTLSServerName: 'core-de.example.com', trafficPeriod: 'year', trafficLimitMode: 'combined', trafficTotalLimit: 2199023255552, trafficUploadLimit: 0, trafficDownloadLimit: 0, status: 1, trojanPanelCoreVersion: '2.2.9', kernelSummary: 'hysteria2 2.6.3' },
+  { id: 4, name: 'San Francisco', ip: 'us.example.com', grpcPort: 8103, grpcTLSMode: 'legacy', grpcTLSServerName: '', trafficPeriod: 'month', trafficLimitMode: 'combined', trafficTotalLimit: 879609302220, trafficUploadLimit: 0, trafficDownloadLimit: 0, status: 0, trojanPanelCoreVersion: '2.2.8', kernelSummary: 'naiveproxy 132.0' },
+  { id: 5, name: 'Hong Kong', ip: 'hk.example.com', grpcPort: 8104, grpcTLSMode: 'mtls', grpcTLSServerName: 'core-hk.example.com', trafficPeriod: 'month', trafficLimitMode: 'combined', trafficTotalLimit: 1649267441664, trafficUploadLimit: 0, trafficDownloadLimit: 0, status: 1, trojanPanelCoreVersion: '2.3.0', kernelSummary: 'xray 25.8.3' }
+]
+
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, 'http://127.0.0.1')
   const path = url.pathname.replace(/^\/api/, '')
@@ -108,7 +166,7 @@ const server = http.createServer((req, res) => {
     '/dashboard/panelGroup': {
       quota: -1,
       residualFlow: -1,
-      nodeCount: 1,
+      nodeCount: nodes.length,
       expireTime: 4078656000000,
       accountCount: accounts.length,
       cpuUsed: 28,
@@ -124,24 +182,20 @@ const server = http.createServer((req, res) => {
       }
     ],
     '/dashboard/serverTrafficUsage': {
-      rows: [
-        {
+      rows: nodeServers.map((item, index) => ({
           accountId: 2,
           username: 'glassdemo',
-          nodeServerId: 1,
-          nodeServerName: 'Tokyo',
-          upload: 4294967296,
-          download: 12884901888,
-          total: 17179869184
-        }
-      ],
+          nodeServerId: item.id,
+          nodeServerName: item.name,
+          upload: 4294967296 + index * 1073741824,
+          download: 12884901888 + index * 2147483648,
+          total: 17179869184 + index * 3221225472
+        })),
       pageNum: 1,
       pageSize: 20,
-      total: 1
+      total: nodeServers.length
     },
-    '/node/selectNodePage': page('nodes', [
-      isUserSession ? { ...node, status: 0 } : node
-    ]),
+    '/node/selectNodePage': page('nodes', nodes),
     '/node/selectNodeById': Object.assign({}, node, {
       password: 'demo',
       uuid: '00000000-0000-0000-0000-000000000000',
@@ -195,38 +249,9 @@ const server = http.createServer((req, res) => {
       { id: 4, name: 'naiveproxy' },
       { id: 5, name: 'hysteria2' }
     ],
-    '/nodeServer/selectNodeServerList': [{ id: 1, name: 'Tokyo' }],
-    '/nodeServer/selectNodeServerPage': page('nodeServers', [
-      {
-        id: 1,
-        name: 'Tokyo',
-        ip: 'jp.example.com',
-        grpcPort: 8100,
-        grpcTLSMode: 'mtls',
-        grpcTLSServerName: 'core.example.com',
-        trafficPeriod: 'month',
-        trafficLimitMode: 'combined',
-        trafficTotalLimit: 1099511627776,
-        trafficUploadLimit: 0,
-        trafficDownloadLimit: 0,
-        status: 1,
-        trojanPanelCoreVersion: '2.3.0',
-        kernelSummary: 'xray 25.8.3'
-      }
-    ]),
-    '/nodeServer/selectNodeServerById': {
-      id: 1,
-      name: 'Tokyo',
-      ip: 'jp.example.com',
-      grpcPort: 8100,
-      grpcTLSMode: 'mtls',
-      grpcTLSServerName: 'core.example.com',
-      trafficPeriod: 'month',
-      trafficLimitMode: 'combined',
-      trafficTotalLimit: 1099511627776,
-      trafficUploadLimit: 0,
-      trafficDownloadLimit: 0
-    },
+    '/nodeServer/selectNodeServerList': nodeServers.map(({ id, name }) => ({ id, name })),
+    '/nodeServer/selectNodeServerPage': page('nodeServers', nodeServers),
+    '/nodeServer/selectNodeServerById': nodeServers[0],
     '/nodeServer/nodeServerState': { cpuUsed: 28, memUsed: 43, diskUsed: 37 },
     '/nodeServer/resetNodeServerTraffic': { deletedRows: 24 },
     '/kernel/releases': {

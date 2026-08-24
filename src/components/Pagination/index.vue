@@ -17,7 +17,7 @@
       :disabled="currentPage <= 1"
       @click="handleCurrentChange(currentPage - 1)"
     >
-      <i class="el-icon-arrow-left" aria-hidden="true" />
+      <i class="liquid-icon--arrow-left" aria-hidden="true" />
     </button>
     <button
       v-for="pageNumber in visiblePages"
@@ -37,7 +37,7 @@
       :disabled="currentPage >= pageCount"
       @click="handleCurrentChange(currentPage + 1)"
     >
-      <i class="el-icon-arrow-right" aria-hidden="true" />
+      <i class="liquid-icon--arrow-right" aria-hidden="true" />
     </button>
   </div>
 </template>

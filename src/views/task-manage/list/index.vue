@@ -3,7 +3,7 @@
     <div class="glass card">
       <div class="toolbar">
         <div class="search-box">
-          <i class="el-icon-search"></i
+          <i class="liquid-icon--search"></i
           ><input
             v-model="listQuery.accountUsername"
             placeholder="按账号搜索"
@@ -64,7 +64,7 @@
                     "
                     @click="handleDownload(row, index)"
                   >
-                    <i class="el-icon-download"></i>下载
+                    <i class="liquid-icon--download"></i>下载
                   </button>
                 </div>
               </td>
@@ -209,7 +209,7 @@ export default {
 </script>
 
 <style scoped>
-.el-button {
+.liquid-button {
   margin-left: 10px;
 }
 </style>

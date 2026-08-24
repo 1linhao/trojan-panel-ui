@@ -604,11 +604,11 @@ export default {
 </script>
 
 <style scoped>
-.el-tag + .el-tag {
+.liquid-tag + .liquid-tag {
   margin-left: 10px;
 }
 
-.el-button {
+.liquid-button {
   margin-left: 10px;
 }
 </style>

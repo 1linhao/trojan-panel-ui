@@ -19,7 +19,7 @@
     z-index: 1001;
     overflow: hidden;
 
-    // reset element-ui css
+    // reset legacy UI css
     .horizontal-collapse-transition {
       transition: 0s width ease-in-out, 0s padding-left ease-in-out,
         0s padding-right ease-in-out;
@@ -29,16 +29,16 @@
       overflow-x: hidden !important;
     }
 
-    .el-scrollbar__bar.is-vertical {
+    .liquid-scrollbar__bar.is-vertical {
       right: 0px;
     }
 
-    .el-scrollbar {
+    .liquid-scrollbar {
       height: 100%;
     }
 
     &.has-logo {
-      .el-scrollbar {
+      .liquid-scrollbar {
         height: calc(100% - 50px);
       }
     }
@@ -57,12 +57,12 @@
       margin-right: 16px;
     }
 
-    .sub-el-icon {
+    .sub-liquid-icon {
       margin-right: 12px;
       margin-left: -2px;
     }
 
-    .el-menu {
+    .liquid-menu {
       border: none;
       height: 100%;
       width: 100% !important;
@@ -70,18 +70,18 @@
 
     // menu hover
     .submenu-title-noDropdown,
-    .el-submenu__title {
+    .liquid-submenu__title {
       &:hover {
         background-color: $menuHover !important;
       }
     }
 
-    .is-active > .el-submenu__title {
+    .is-active > .liquid-submenu__title {
       color: $subMenuActiveText !important;
     }
 
-    & .nest-menu .el-submenu > .el-submenu__title,
-    & .el-submenu .el-menu-item {
+    & .nest-menu .liquid-submenu > .liquid-submenu__title,
+    & .liquid-submenu .liquid-menu-item {
       min-width: $sideBarWidth !important;
       background-color: $subMenuBg !important;
 
@@ -104,42 +104,42 @@
       padding: 0 !important;
       position: relative;
 
-      .el-tooltip {
+      .liquid-tooltip {
         padding: 0 !important;
 
         .svg-icon {
           margin-left: 20px;
         }
 
-        .sub-el-icon {
+        .sub-liquid-icon {
           margin-left: 19px;
         }
       }
     }
 
-    .el-submenu {
+    .liquid-submenu {
       overflow: hidden;
 
-      & > .el-submenu__title {
+      & > .liquid-submenu__title {
         padding: 0 !important;
 
         .svg-icon {
           margin-left: 20px;
         }
 
-        .sub-el-icon {
+        .sub-liquid-icon {
           margin-left: 19px;
         }
 
-        .el-submenu__icon-arrow {
+        .liquid-submenu__icon-arrow {
           display: none;
         }
       }
     }
 
-    .el-menu--collapse {
-      .el-submenu {
-        & > .el-submenu__title {
+    .liquid-menu--collapse {
+      .liquid-submenu {
+        & > .liquid-submenu__title {
           & > span {
             height: 0;
             width: 0;
@@ -152,7 +152,7 @@
     }
   }
 
-  .el-menu--collapse .el-menu .el-submenu {
+  .liquid-menu--collapse .liquid-menu .liquid-submenu {
     min-width: $sideBarWidth !important;
   }
 
@@ -185,19 +185,19 @@
 }
 
 // when menu collapsed
-.el-menu--vertical {
-  & > .el-menu {
+.liquid-menu--vertical {
+  & > .liquid-menu {
     .svg-icon {
       margin-right: 16px;
     }
-    .sub-el-icon {
+    .sub-liquid-icon {
       margin-right: 12px;
       margin-left: -2px;
     }
   }
 
-  .nest-menu .el-submenu > .el-submenu__title,
-  .el-menu-item {
+  .nest-menu .liquid-submenu > .liquid-submenu__title,
+  .liquid-menu-item {
     &:hover {
       // you can use $subMenuHover
       background-color: $menuHover !important;
@@ -205,7 +205,7 @@
   }
 
   // the scroll bar appears when the subMenu is too long
-  > .el-menu--popup {
+  > .liquid-menu--popup {
     max-height: 100vh;
     overflow-y: auto;
 

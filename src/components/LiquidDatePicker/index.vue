@@ -1,10 +1,10 @@
 <template>
   <div class="liquid-date-picker" :class="{ 'is-focused': open, 'is-disabled': disabled }">
     <button ref="trigger" class="liquid-date-picker__trigger" type="button" :disabled="disabled" :aria-expanded="String(open)" aria-haspopup="dialog" @click="togglePopover" @keydown.esc.prevent="closePopover">
-      <i class="el-icon-date" aria-hidden="true" />
+      <i class="liquid-icon--date" aria-hidden="true" />
       <span :class="{ 'is-placeholder': !displayValue }">{{ displayValue || placeholder || defaultPlaceholder }}</span>
-      <span v-if="clearable && displayValue" class="liquid-date-picker__clear" role="button" aria-label="清空日期" @click.stop="clearValue"><i class="el-icon-close" aria-hidden="true" /></span>
-      <i v-else class="el-icon-arrow-down liquid-date-picker__arrow" />
+      <span v-if="clearable && displayValue" class="liquid-date-picker__clear" role="button" aria-label="清空日期" @click.stop="clearValue"><i class="liquid-icon--close" aria-hidden="true" /></span>
+      <i v-else class="liquid-icon--arrow-down liquid-date-picker__arrow" />
     </button>
 
     <div ref="popover" class="liquid-date-picker__popover" popover="manual" role="dialog" aria-label="日期选择器" :style="popoverStyle" @click.stop>
@@ -15,11 +15,11 @@
       </label>
       <div class="liquid-date-picker__calendar" :class="{ 'is-month': type === 'month' }">
         <header>
-          <button type="button" aria-label="上一年" @click="moveYear(-1)"><i class="el-icon-d-arrow-left" /></button>
-          <button v-if="type !== 'month'" type="button" aria-label="上个月" @click="moveMonth(-1)"><i class="el-icon-arrow-left" /></button>
+          <button type="button" aria-label="上一年" @click="moveYear(-1)"><i class="liquid-icon--d-arrow-left" /></button>
+          <button v-if="type !== 'month'" type="button" aria-label="上个月" @click="moveMonth(-1)"><i class="liquid-icon--arrow-left" /></button>
           <strong>{{ calendarTitle }}</strong>
-          <button v-if="type !== 'month'" type="button" aria-label="下个月" @click="moveMonth(1)"><i class="el-icon-arrow-right" /></button>
-          <button type="button" aria-label="下一年" @click="moveYear(1)"><i class="el-icon-d-arrow-right" /></button>
+          <button v-if="type !== 'month'" type="button" aria-label="下个月" @click="moveMonth(1)"><i class="liquid-icon--arrow-right" /></button>
+          <button type="button" aria-label="下一年" @click="moveYear(1)"><i class="liquid-icon--d-arrow-right" /></button>
         </header>
         <div v-if="type === 'month'" class="liquid-date-picker__months">
           <button v-for="month in 12" :key="month" type="button" :class="{ 'is-selected': isSelectedMonth(month - 1) }" @click="pickMonth(month - 1)">{{ month }}月</button>
@@ -128,7 +128,7 @@ export default {
           // The browser may already have dismissed the popover.
         }
       }
-      this.$emit('blur'); this.dispatch('ElFormItem', 'el.form.blur', [this.value])
+      this.$emit('blur'); this.dispatch('LiquidFormItem', 'liquid.form.blur', [this.value])
     },
     updatePosition() {
       if (!this.open || !this.$refs.trigger) return
@@ -165,7 +165,7 @@ export default {
       return true
     },
     outputValue(date) { return this.valueFormat === 'timestamp' ? date.getTime() : this.formatDate(date) },
-    emitValue(value) { this.$emit('input', value); this.$emit('change', value); this.dispatch('ElFormItem', 'el.form.change', [value]) },
+    emitValue(value) { this.$emit('input', value); this.$emit('change', value); this.dispatch('LiquidFormItem', 'liquid.form.change', [value]) },
     confirmSelection() {
       const parsed = this.parseText(this.manualText)
       if (!parsed) { this.manualError = true; this.$nextTick(() => this.$refs.manualInput && this.$refs.manualInput.focus()); return }

@@ -3,7 +3,7 @@
     <div v-if="fileList.length" class="liquid-logo-picker__preview">
       <img :src="fileList[0].url" alt="系统 Logo" />
       <button type="button" aria-label="移除 Logo" @click="handleRemove">
-        <i class="el-icon-delete" aria-hidden="true" />
+        <i class="liquid-icon--delete" aria-hidden="true" />
       </button>
     </div>
     <template v-else>
@@ -14,7 +14,7 @@
         accept=".png"
         @change="handleNativeFile"
       />
-      <liquid-button icon="el-icon-plus" @click="$refs.upload.click()">
+      <liquid-button icon="liquid-icon--plus" @click="$refs.upload.click()">
         选择 Logo
       </liquid-button>
     </template>
