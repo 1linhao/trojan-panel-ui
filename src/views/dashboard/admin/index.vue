@@ -1,107 +1,106 @@
 <template>
-  <div class="dashboard-editor-container">
-    <panel-group :group-data="panelGroupData" />
-    <el-row :gutter="8">
-      <el-col
-        :xs="{ span: 24 }"
-        :sm="{ span: 24 }"
-        :md="{ span: 24 }"
-        :lg="{ span: 12 }"
-        :xl="{ span: 12 }"
-      >
-        <el-card class="box-card">
-          <div slot="header" class="clearfix">
-            <span>{{ $t('dashboard.trafficRank') }}</span>
+  <div class="prototype-page grid">
+    <div class="grid cols-4">
+      <div class="glass stat-tile">
+        <span class="icon-wrap tone-blue"><i class="el-icon-user-solid" /></span>
+        <b class="num">{{ panelGroupData.accountCount }}</b
+        ><span>账号总数</span>
+      </div>
+      <div class="glass stat-tile">
+        <span class="icon-wrap tone-violet"><i class="el-icon-connection" /></span>
+        <b class="num">{{
+          panelGroupData.nodeCount || panelGroupData.nodeNum
+        }}</b
+        ><span>节点数量</span>
+      </div>
+      <div class="glass card span-2">
+        <span class="kicker">面板服务器资源</span>
+        <div class="rings-row">
+          <div v-for="ring in rings" :key="ring.label">
+            <div
+              class="ring"
+              :style="{ '--p': ring.value, '--ring-color': ring.color }"
+            >
+              <b>{{ ring.value }}<em>%</em></b>
+            </div>
+            <div class="ring-label">{{ ring.label }}</div>
           </div>
-          <div class="component-item">
-            <traffic-table />
+        </div>
+      </div>
+    </div>
+    <div class="grid cols-2 dashboard-detail-grid">
+      <div class="glass card">
+        <div class="card-head">
+          <div>
+            <span class="kicker">Traffic Rank</span>
+            <h2>账号流量排行</h2>
           </div>
-        </el-card>
-      </el-col>
-      <el-col
-        :xs="{ span: 24 }"
-        :sm="{ span: 12 }"
-        :md="{ span: 12 }"
-        :lg="{ span: 6 }"
-        :xl="{ span: 6 }"
-      >
-      </el-col>
-      <el-col
-        :xs="{ span: 24 }"
-        :sm="{ span: 12 }"
-        :md="{ span: 12 }"
-        :lg="{ span: 6 }"
-        :xl="{ span: 6 }"
-      >
-      </el-col>
-    </el-row>
-    <el-card class="box-card server-traffic-card">
-      <div slot="header"><span>{{ $t('traffic.serverUsage') }}</span></div>
-      <server-traffic-table />
-    </el-card>
+        </div>
+        <traffic-table />
+      </div>
+      <div class="glass card">
+        <div class="card-head">
+          <div>
+            <span class="kicker">Per-Server Usage</span>
+            <h2>服务器流量明细</h2>
+          </div>
+        </div>
+        <server-traffic-table />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import PanelGroup from '@/views/dashboard/admin/compoments/PanelGroup.vue'
 import TrafficTable from '@/views/dashboard/admin/compoments/TrafficTable'
 import ServerTrafficTable from '@/views/dashboard/admin/compoments/ServerTrafficTable'
 import { panelGroup } from '@/api/dashboard'
 
 export default {
-  name: 'Admin',
-  components: {
-    PanelGroup,
-    TrafficTable,
-    ServerTrafficTable
-  },
+  name: 'AdminDashboard',
+  components: { TrafficTable, ServerTrafficTable },
   data() {
     return {
       panelGroupData: {
-        totalFlow: 0,
-        residualFlow: 0,
-        nodeNum: 0,
-        expireTime: new Date(),
         accountCount: 0,
+        nodeCount: 0,
+        nodeNum: 0,
         cpuUsed: 0,
         memUsed: 0,
         diskUsed: 0
       }
     }
   },
+  computed: {
+    rings() {
+      return [
+        {
+          label: 'CPU',
+          value: this.percent(this.panelGroupData.cpuUsed),
+          color: '#0a84ff'
+        },
+        {
+          label: '内存',
+          value: this.percent(this.panelGroupData.memUsed),
+          color: '#af52de'
+        },
+        {
+          label: '磁盘',
+          value: this.percent(this.panelGroupData.diskUsed),
+          color: '#30c76e'
+        }
+      ]
+    }
+  },
   created() {
-    panelGroup().then((response) => {
-      const { data } = response
+    panelGroup().then(({ data }) => {
       this.panelGroupData = data
     })
+  },
+  methods: {
+    percent(value) {
+      return Math.max(0, Math.min(100, Math.round(Number(value) || 0)))
+    }
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.dashboard-editor-container {
-  padding: 32px;
-  background-color: rgb(240, 242, 245);
-  position: relative;
-
-  .github-corner {
-    position: absolute;
-    top: 0px;
-    border: 0;
-    right: 0;
-  }
-
-  .chart-wrapper {
-    background: #fff;
-    padding: 16px 16px 0;
-    margin-bottom: 32px;
-  }
-}
-.server-traffic-card { margin-top: 16px; }
-
-@media (max-width: 1024px) {
-  .chart-wrapper {
-    padding: 8px;
-  }
-}
-</style>

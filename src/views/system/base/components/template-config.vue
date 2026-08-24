@@ -11,44 +11,57 @@
           <upload-logo />
         </el-form-item>
         <el-form-item :label="$t('config.systemName')" prop="systemName">
-          <el-input v-model="systemConfig.systemName" clearable />
+          <liquid-input v-model="systemConfig.systemName" clearable />
         </el-form-item>
       </div>
 
-      <el-tabs v-model="activeClient">
-        <el-tab-pane label="Clash.Meta" name="clash-meta">
+      <div class="seg liquid-tabs" role="tablist" aria-label="订阅模板客户端">
+        <button v-for="client in clients" :key="client.name" type="button"
+          :class="{ on: activeClient === client.name }" @click="activeClient = client.name">
+          {{ client.label }}
+        </button>
+      </div>
+      <template v-if="activeClient === 'clash-meta'">
           <el-form-item
             :label="$t('config.templateName')"
             prop="clashTemplateName"
           >
-            <el-input v-model="systemConfig.clashTemplateName" clearable />
+            <liquid-input v-model="systemConfig.clashTemplateName" clearable />
           </el-form-item>
           <el-form-item :label="$t('config.clashRule')" prop="clashRule">
-            <el-input
+            <liquid-input
               v-model="systemConfig.clashRule"
               type="textarea"
               :autosize="{ minRows: 10, maxRows: 24 }"
               clearable
             />
           </el-form-item>
-        </el-tab-pane>
+      </template>
 
-        <el-tab-pane label="sing-box" name="sing-box">
-          <el-radio-group v-model="activeSingBoxTemplate" class="mode-switch">
-            <el-radio-button label="tun">
+      <template v-else-if="activeClient === 'sing-box'">
+          <div class="seg mode-switch" role="group">
+            <button
+              type="button"
+              :class="{ on: activeSingBoxTemplate === 'tun' }"
+              @click="activeSingBoxTemplate = 'tun'"
+            >
               {{ systemConfig.singBoxTunTemplateName || 'TUN' }}
-            </el-radio-button>
-            <el-radio-button label="outbound">
+            </button>
+            <button
+              type="button"
+              :class="{ on: activeSingBoxTemplate === 'outbound' }"
+              @click="activeSingBoxTemplate = 'outbound'"
+            >
               {{ systemConfig.singBoxOutboundTemplateName || 'Outbound only' }}
-            </el-radio-button>
-          </el-radio-group>
+            </button>
+          </div>
 
           <template v-if="activeSingBoxTemplate === 'tun'">
             <el-form-item
               :label="$t('config.templateName')"
               prop="singBoxTunTemplateName"
             >
-              <el-input
+              <liquid-input
                 v-model="systemConfig.singBoxTunTemplateName"
                 clearable
               />
@@ -70,7 +83,7 @@
               :label="$t('config.templateName')"
               prop="singBoxOutboundTemplateName"
             >
-              <el-input
+              <liquid-input
                 v-model="systemConfig.singBoxOutboundTemplateName"
                 clearable
               />
@@ -86,14 +99,14 @@
               />
             </el-form-item>
           </template>
-        </el-tab-pane>
+      </template>
 
-        <el-tab-pane label="Xray" name="xray">
+      <template v-else>
           <el-form-item
             :label="$t('config.templateName')"
             prop="xrayTemplateName"
           >
-            <el-input v-model="systemConfig.xrayTemplateName" clearable />
+            <liquid-input v-model="systemConfig.xrayTemplateName" clearable />
           </el-form-item>
           <el-form-item :label="$t('config.xrayTemplate')" prop="xrayTemplate">
             <JsonEditorVue
@@ -102,13 +115,12 @@
               mode="text"
             />
           </el-form-item>
-        </el-tab-pane>
-      </el-tabs>
+      </template>
 
       <el-form-item class="actions">
-        <el-button type="primary" icon="el-icon-check" @click="updateData">
+        <liquid-button type="primary" icon="el-icon-check" @click="updateData">
           {{ $t('table.confirm') }}
-        </el-button>
+        </liquid-button>
       </el-form-item>
     </el-form>
   </div>
@@ -144,6 +156,11 @@ export default {
     ]
     return {
       activeClient: 'clash-meta',
+      clients: [
+        { name: 'clash-meta', label: 'Clash.Meta' },
+        { name: 'sing-box', label: 'sing-box' },
+        { name: 'xray', label: 'Xray' }
+      ],
       activeSingBoxTemplate: 'tun',
       updateRules: {
         systemName: [

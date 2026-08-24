@@ -1,34 +1,33 @@
 <template>
   <div class="client-selector">
-    <el-checkbox-group
-      v-model="nodeProps.clients"
+    <div
       class="client-selector__grid"
+      role="group"
       :aria-label="$t('table.nodeClients').toString()"
     >
-      <el-checkbox
+      <button
         v-for="client in clients"
         :key="client.value"
-        :label="client.value"
-        border
-        class="client-selector__option"
+        class="client-choice"
+        :class="{ 'is-selected': isClientSelected(client.value) }"
+        type="button"
+        :aria-pressed="isClientSelected(client.value).toString()"
+        @click="toggleClient(client.value)"
       >
-        <span class="client-selector__mark">{{ client.mark }}</span>
-        <span>{{ client.label }}</span>
-      </el-checkbox>
-    </el-checkbox-group>
+        <span class="client-choice__mark">{{ client.mark }}</span>
+        <span class="client-choice__label">{{ client.label }}</span>
+        <i class="el-icon-check client-choice__check" aria-hidden="true" />
+      </button>
+    </div>
 
     <p class="client-selector__hint">
       {{ $t('table.nodeClientsTip') }}
     </p>
 
-    <el-alert
-      v-if="showNaiveWarning"
-      class="client-selector__warning"
-      type="warning"
-      :title="$t('table.naiveClientWarning').toString()"
-      :closable="false"
-      show-icon
-    />
+    <div v-if="showNaiveWarning" class="client-selector__warning" role="alert">
+      <i class="el-icon-warning-outline" aria-hidden="true" />
+      <span>{{ $t('table.naiveClientWarning') }}</span>
+    </div>
   </div>
 </template>
 
@@ -63,6 +62,27 @@ export default {
         (selected.includes('clash-meta') || selected.includes('v2ray'))
       )
     }
+  },
+  methods: {
+    isClientSelected(value) {
+      return Array.isArray(this.nodeProps.clients)
+        ? this.nodeProps.clients.includes(value)
+        : false
+    },
+    toggleClient(value) {
+      const selected = new Set(
+        Array.isArray(this.nodeProps.clients) ? this.nodeProps.clients : []
+      )
+      if (selected.has(value)) selected.delete(value)
+      else selected.add(value)
+      this.$set(
+        this.nodeProps,
+        'clients',
+        this.clients
+          .map((client) => client.value)
+          .filter((client) => selected.has(client))
+      )
+    }
   }
 }
 </script>
@@ -70,56 +90,124 @@ export default {
 <style scoped>
 .client-selector__grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
+  width: 100%;
 }
 
-.client-selector__option {
-  display: flex;
+.client-choice {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) 20px;
   align-items: center;
-  min-height: 46px;
+  width: 100%;
+  min-width: 0;
+  min-height: 50px;
   margin: 0;
-  padding: 0 14px;
-  border-radius: 6px;
-  transition: border-color 160ms ease, background-color 160ms ease;
+  padding: 8px 12px;
+  border: 1px solid var(--control-border);
+  border-radius: 16px;
+  color: var(--ink-2);
+  background: var(--control-fill);
+  box-shadow: inset 0 1px 0 var(--spec-soft);
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 650;
+  text-align: left;
+  cursor: pointer;
+  appearance: none;
+  transition: border-color 160ms ease, background-color 160ms ease,
+    box-shadow 160ms ease, transform 160ms ease;
 }
 
-.client-selector__option.is-checked {
-  background: #f0f7ff;
-  border-color: #409eff;
+.client-choice:hover {
+  color: var(--ink);
+  border-color: var(--rim);
+  background: var(--glass-strong);
+  transform: translateY(-1px);
 }
 
-.client-selector__mark {
+.client-choice:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent),
+    inset 0 1px 0 var(--spec-soft);
+}
+
+.client-choice.is-selected {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 62%, var(--rim));
+  background: color-mix(in srgb, var(--accent) 12%, var(--control-fill));
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 13%, transparent),
+    inset 0 1px 0 var(--spec-soft);
+}
+
+.client-choice__mark {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
-  margin-right: 8px;
-  color: #405166;
+  width: 26px;
+  height: 26px;
+  color: var(--ink-2);
   font-size: 12px;
   font-weight: 700;
-  background: #edf1f5;
-  border-radius: 4px;
+  background: var(--glass-soft);
+  border-radius: 9px;
 }
 
-.client-selector__option.is-checked .client-selector__mark {
-  color: #fff;
-  background: #409eff;
+.client-choice.is-selected .client-choice__mark {
+  color: var(--on-accent);
+  background: var(--accent);
+}
+
+.client-choice__label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.client-choice__check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  color: var(--on-accent);
+  background: var(--accent);
+  font-size: 11px;
+  opacity: 0;
+  transform: scale(0.72);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.client-choice.is-selected .client-choice__check {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .client-selector__hint {
   margin: 9px 0 0;
-  color: #7b8794;
+  color: var(--ink-3);
   font-size: 12px;
   line-height: 1.6;
 }
 
 .client-selector__warning {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
   margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--warn-fg) 28%, var(--rim));
+  border-radius: 14px;
+  color: var(--warn-fg);
+  background: var(--warn-bg);
+  font-size: 12px;
+  line-height: 1.55;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 520px) {
   .client-selector__grid {
     grid-template-columns: 1fr;
   }

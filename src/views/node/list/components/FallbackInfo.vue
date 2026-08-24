@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    append-to-body
     :title="$t('table.detail').toString()"
     :visible="dialogVisibleProps"
     @close="$emit('update:dialogVisibleProps', false)"
@@ -7,27 +8,27 @@
   >
     <el-form :model="fallbackPrpops" label-position="left">
       <el-form-item label="name">
-        <el-tag>{{ fallbackPrpops.name }}</el-tag>
+        <liquid-tag>{{ fallbackPrpops.name }}</liquid-tag>
       </el-form-item>
       <el-form-item label="alpn">
-        <el-tag>{{ fallbackPrpops.alpn }}</el-tag>
+        <liquid-tag>{{ fallbackPrpops.alpn }}</liquid-tag>
       </el-form-item>
       <el-form-item label="path">
-        <el-tag>{{ fallbackPrpops.path }}</el-tag>
+        <liquid-tag>{{ fallbackPrpops.path }}</liquid-tag>
       </el-form-item>
       <el-form-item label="dest">
-        <el-tag>{{ fallbackPrpops.dest }}</el-tag>
+        <liquid-tag>{{ fallbackPrpops.dest }}</liquid-tag>
       </el-form-item>
       <el-form-item label="xver">
-        <el-tag>{{ fallbackPrpops.xver }}</el-tag>
+        <liquid-tag>{{ fallbackPrpops.xver }}</liquid-tag>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button
+      <liquid-button
         type="primary"
         @click="$emit('update:dialogVisibleProps', false)"
         >{{ $t('table.confirm') }}
-      </el-button>
+      </liquid-button>
     </div>
   </el-dialog>
 </template>

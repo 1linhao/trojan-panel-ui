@@ -1,19 +1,12 @@
 <template>
-  <el-color-picker
-    v-model="theme"
-    :predefine="[
-      '#409EFF',
-      '#1890ff',
-      '#304156',
-      '#212121',
-      '#11a983',
-      '#13c2c2',
-      '#6959CD',
-      '#f5222d'
-    ]"
-    class="theme-picker"
-    popper-class="theme-picker-dropdown"
-  />
+  <label class="liquid-color-picker" title="主题颜色">
+    <input
+      v-model="theme"
+      type="color"
+      aria-label="主题颜色"
+    />
+    <span>{{ theme || defaultTheme }}</span>
+  </label>
 </template>
 
 <script>
@@ -34,7 +27,7 @@ export default {
   },
   watch: {
     defaultTheme: {
-      handler: function (val, oldVal) {
+      handler: function (val) {
         this.theme = val
       },
       immediate: true
@@ -179,6 +172,32 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.liquid-color-picker {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 40px;
+  padding: 5px 12px 5px 6px;
+  border: 1px solid var(--rim);
+  border-radius: 999px;
+  color: var(--ink-2);
+  background: var(--glass-input);
+  box-shadow: inset 0 1px 0 var(--spec-soft);
+  font-size: 12px;
+  cursor: pointer;
+}
+.liquid-color-picker input {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+}
+</style>
 
 <style>
 .theme-message,

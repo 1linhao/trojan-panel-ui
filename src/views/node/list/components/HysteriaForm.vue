@@ -4,30 +4,30 @@
       :label="$t('table.hysteriaProtocol').toString()"
       prop="hysteriaProtocol"
     >
-      <el-select
+      <liquid-select
         v-model="nodeProps.hysteriaProtocol"
         :placeholder="$t('table.hysteriaProtocol').toString()"
         controls-position="right"
       >
-        <el-option
+        <option
           :label="item"
           :value="item"
           :key="item"
           v-for="item in hysteriaProtocols"
-        ></el-option>
-      </el-select>
+        ></option>
+      </liquid-select>
     </el-form-item>
     <el-form-item
       :label="$t('table.hysteriaObfs').toString()"
       prop="hysteriaObfs"
     >
-      <el-input v-model="nodeProps.hysteriaObfs" />
+      <liquid-input v-model="nodeProps.hysteriaObfs" />
     </el-form-item>
     <el-form-item
       :label="$t('table.hysteriaUpMbps').toString()"
       prop="hysteriaUpMbps"
     >
-      <el-input-number
+      <liquid-number-input
         v-model.number="nodeProps.hysteriaUpMbps"
         controls-position="right"
         type="number"
@@ -37,7 +37,7 @@
       :label="$t('table.hysteriaDownMbps').toString()"
       prop="hysteriaDownMbps"
     >
-      <el-input-number
+      <liquid-number-input
         v-model.number="nodeProps.hysteriaDownMbps"
         controls-position="right"
         type="number"
@@ -47,13 +47,13 @@
       :label="$t('table.hysteriaServerName').toString()"
       prop="hysteriaServerName"
     >
-      <el-input v-model="nodeProps.hysteriaServerName" />
+      <liquid-input v-model="nodeProps.hysteriaServerName" />
     </el-form-item>
     <el-form-item
       :label="$t('table.hysteriaInsecure').toString()"
       prop="hysteriaInsecure"
     >
-      <el-switch
+      <liquid-switch
         v-model="nodeProps.hysteriaInsecure"
         active-color="#13ce66"
         inactive-color="#ff4949"
@@ -62,13 +62,13 @@
         :active-value="1"
         :inactive-value="0"
       >
-      </el-switch>
+      </liquid-switch>
     </el-form-item>
     <el-form-item
       :label="$t('table.hysteriaFastOpen').toString()"
       prop="hysteriaFastOpen"
     >
-      <el-switch
+      <liquid-switch
         v-model="nodeProps.hysteriaFastOpen"
         active-color="#13ce66"
         inactive-color="#ff4949"
@@ -77,7 +77,7 @@
         :active-value="1"
         :inactive-value="0"
       >
-      </el-switch>
+      </liquid-switch>
     </el-form-item>
     <el-form-item>
       <aside>

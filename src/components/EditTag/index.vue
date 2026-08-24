@@ -1,36 +1,32 @@
 <template>
-  <div>
-    <el-tag
+  <div class="edit-tag-list">
+    <liquid-tag
       :key="tag"
       v-for="tag in dynamicTagsProps"
-      effect="dark"
-      type="success"
-      size="medium"
+      class="edit-tag-item"
       closable
-      :disable-transitions="false"
       @close="handleClose(tag)"
     >
       {{ tag }}
-    </el-tag>
-    <el-input
-      class="input-new-tag"
+    </liquid-tag>
+    <liquid-input
+      class="edit-tag-input"
       v-if="inputVisible"
       v-model="inputValue"
       ref="saveTagInput"
-      size="small"
+      compact
       @keyup.enter.native="handleInputConfirm"
       @blur="handleInputConfirm"
-    >
-    </el-input>
-    <el-button
+    />
+    <liquid-button
       icon="el-icon-plus"
       v-else
-      class="button-new-tag"
-      size="mini"
+      class="edit-tag-add liquid-add-button"
       type="primary"
+      aria-label="添加"
+      title="添加"
       @click="showInput"
-    >
-    </el-button>
+    />
   </div>
 </template>
 
@@ -62,8 +58,8 @@ export default {
 
     showInput() {
       this.inputVisible = true
-      this.$nextTick((_) => {
-        this.$refs.saveTagInput.$refs.input.focus()
+      this.$nextTick(() => {
+        this.$refs.saveTagInput.focus()
       })
     },
 
@@ -88,21 +84,24 @@ export default {
 </script>
 
 <style scoped>
-.el-tag + .el-tag {
-  margin-left: 10px;
+.edit-tag-list {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
-.button-new-tag {
-  margin-left: 10px;
-  height: 32px;
-  line-height: 30px;
-  padding-top: 0;
-  padding-bottom: 0;
+.edit-tag-item,
+.edit-tag-add {
+  min-height: 34px;
+  height: 34px;
 }
 
-.input-new-tag {
-  width: 120px;
-  margin-left: 10px;
-  vertical-align: bottom;
+.edit-tag-add {
+  padding: 0;
+}
+
+.edit-tag-input {
+  width: 160px;
 }
 </style>

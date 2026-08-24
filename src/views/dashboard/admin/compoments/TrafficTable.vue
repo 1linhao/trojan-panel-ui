@@ -1,22 +1,30 @@
 <template>
-  <div>
-    <el-radio-group v-model="period" size="small" @change="fetchData">
-      <el-radio-button label="total">{{ $t('traffic.rankAll') }}</el-radio-button>
-      <el-radio-button label="month">{{ $t('traffic.rankMonth') }}</el-radio-button>
-      <el-radio-button label="day">{{ $t('traffic.rankDay') }}</el-radio-button>
-    </el-radio-group>
-    <el-date-picker
+  <div class="dashboard-table-block">
+    <div class="seg dashboard-segment dashboard-segment-3" role="group">
+      <button
+        v-for="option in periodOptions"
+        :key="option.value"
+        type="button"
+        :class="{ on: period === option.value }"
+        @click="setPeriod(option.value)"
+      >
+        {{ option.label }}
+      </button>
+    </div>
+    <liquid-date-picker
       v-if="period === 'month'"
       v-model="selectedMonth"
+      class="traffic-rank-date"
       type="month"
       value-format="yyyy-MM"
       :clearable="false"
       :placeholder="$t('traffic.selectMonth')"
       @change="fetchData"
     />
-    <el-date-picker
+    <liquid-date-picker
       v-if="period === 'day'"
       v-model="selectedDay"
+      class="traffic-rank-date"
       type="date"
       value-format="yyyy-MM-dd"
       :clearable="false"
@@ -24,30 +32,30 @@
       @change="fetchData"
     />
     <el-table :data="list" style="width: 100%" v-loading="loading">
-    <el-table-column
-      :label="$t('dashboard.ranking')"
-      width="100"
-      align="center"
-      type="index"
-    />
-    <el-table-column
-      :label="$t('dashboard.username')"
-      width="200"
-      align="center"
-    >
-      <template slot-scope="scope">
-        {{ scope.row.username }}
-      </template>
-    </el-table-column>
-    <el-table-column
-      :label="$t('dashboard.trafficUsed')"
-      min-width="200"
-      align="center"
-    >
-      <template slot-scope="scope">
-        {{ getFlow(scope.row.trafficUsed) }}</template
+      <el-table-column
+        :label="$t('dashboard.ranking')"
+        width="100"
+        align="center"
+        type="index"
+      />
+      <el-table-column
+        :label="$t('dashboard.username')"
+        width="200"
+        align="center"
       >
-    </el-table-column>
+        <template slot-scope="scope">
+          {{ scope.row.username }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        :label="$t('dashboard.trafficUsed')"
+        min-width="200"
+        align="center"
+      >
+        <template slot-scope="scope">
+          {{ getFlow(scope.row.trafficUsed) }}</template
+        >
+      </el-table-column>
     </el-table>
   </div>
 </template>
@@ -57,7 +65,7 @@ import { trafficRank } from '@/api/dashboard'
 import { getFlow } from '@/utils/account'
 
 export default {
-  name: 'trafficTable',
+  name: 'TrafficTable',
   data() {
     const now = new Date()
     const year = now.getFullYear()
@@ -72,11 +80,25 @@ export default {
       loading: false
     }
   },
+  computed: {
+    periodOptions() {
+      return [
+        { value: 'total', label: this.$t('traffic.rankAll') },
+        { value: 'month', label: this.$t('traffic.rankMonth') },
+        { value: 'day', label: this.$t('traffic.rankDay') }
+      ]
+    }
+  },
   created() {
     this.fetchData()
   },
   methods: {
     getFlow,
+    setPeriod(period) {
+      if (period === this.period) return
+      this.period = period
+      this.fetchData()
+    },
     fetchData() {
       const requestSerial = ++this.requestSerial
       this.loading = true
@@ -98,3 +120,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.traffic-rank-date {
+  width: 100%;
+  margin-bottom: 12px;
+}
+</style>

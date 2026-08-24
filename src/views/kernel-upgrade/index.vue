@@ -1,35 +1,32 @@
 <template>
   <div class="app-container">
-    <el-alert
-      :title="$t('kernel.manualOnly')"
-      type="info"
-      :closable="false"
-      show-icon
-      class="section"
-    />
-
     <el-card v-if="batchMode" class="section">
       <div slot="header">{{ $t('kernel.batchUpgrade') }}</div>
       <el-form label-width="150px">
         <el-form-item :label="$t('kernel.nodes')">
-          <el-select v-model="selectedNodeIds" multiple filterable style="width: 100%">
-            <el-option
+          <liquid-select
+            v-model="selectedNodeIds"
+            multiple
+            filterable
+            style="width: 100%"
+          >
+            <option
               v-for="server in servers"
               :key="server.id"
               :label="server.name"
               :value="server.id"
             />
-          </el-select>
+          </liquid-select>
         </el-form-item>
         <el-form-item :label="$t('kernel.canary')">
-          <el-select v-model="canaryNodeId" clearable>
-            <el-option
+          <liquid-select v-model="canaryNodeId" clearable>
+            <option
               v-for="server in selectedServers"
               :key="server.id"
               :label="server.name"
               :value="server.id"
             />
-          </el-select>
+          </liquid-select>
         </el-form-item>
       </el-form>
     </el-card>
@@ -37,32 +34,24 @@
     <el-card v-if="!batchMode" v-loading="inventoryLoading" class="section">
       <div slot="header">
         {{ $t('kernel.inventory') }}
-        <el-button size="mini" style="float: right" @click="loadInventory">
+        <liquid-button size="mini" style="float: right" @click="loadInventory">
           {{ $t('kernel.refreshInventory') }}
-        </el-button>
+        </liquid-button>
       </div>
-      <el-alert
-        v-if="inventoryUnavailable"
-        :title="$t('kernel.inventoryUnavailableMTLS')"
-        type="warning"
-        :closable="false"
-        show-icon
-        class="inventory-warning"
-      />
       <el-descriptions v-if="currentServer.id" :column="2" border>
         <el-descriptions-item :label="$t('kernel.platform')">
           {{ inventory ? inventory.os + '/' + inventory.arch : '-' }}
         </el-descriptions-item>
         <el-descriptions-item :label="$t('kernel.transport')">
           {{ currentServer.grpcTlsMode || 'legacy' }}
-          <el-button
+          <liquid-button
             v-if="currentServer.grpcTlsMode !== 'mtls'"
             type="warning"
             size="mini"
             @click="enableMTLS"
           >
             {{ $t('kernel.probeMTLS') }}
-          </el-button>
+          </liquid-button>
         </el-descriptions-item>
       </el-descriptions>
     </el-card>
@@ -70,33 +59,39 @@
     <el-card class="section">
       <div slot="header">
         {{ $t('kernel.managedKernels') }}
-        <el-button size="mini" style="float: right" @click="loadReleases(true)">
+        <liquid-button size="mini" style="float: right" @click="loadReleases(true)">
           {{ $t('kernel.refreshReleases') }}
-        </el-button>
+        </liquid-button>
       </div>
       <el-table :data="kernelRows" border>
         <el-table-column prop="name" :label="$t('kernel.kernel')" width="130" />
         <el-table-column :label="$t('kernel.currentVersion')" min-width="140">
-          <template slot-scope="{ row }">{{ row.currentVersion || '-' }}</template>
+          <template slot-scope="{ row }">{{
+            row.currentVersion || '-'
+          }}</template>
         </el-table-column>
         <el-table-column :label="$t('kernel.channel')" width="150">
           <template slot-scope="{ row }">
-            <el-select v-model="row.targetChannel" size="mini" @change="row.targetVersion = ''">
-              <el-option :label="$t('kernel.stable')" value="stable" />
-              <el-option :label="$t('kernel.prerelease')" value="prerelease" />
-            </el-select>
+            <liquid-select
+              v-model="row.targetChannel"
+              size="mini"
+              @change="row.targetVersion = ''"
+            >
+              <option :label="$t('kernel.stable')" value="stable" />
+              <option :label="$t('kernel.prerelease')" value="prerelease" />
+            </liquid-select>
           </template>
         </el-table-column>
         <el-table-column :label="$t('kernel.targetVersion')" min-width="180">
           <template slot-scope="{ row }">
-            <el-select v-model="row.targetVersion" size="mini" filterable>
-              <el-option
+            <liquid-select v-model="row.targetVersion" size="mini" filterable>
+              <option
                 v-for="release in releases[row.key][row.targetChannel]"
                 :key="release.version"
                 :label="release.version"
                 :value="release.version"
               />
-            </el-select>
+            </liquid-select>
           </template>
         </el-table-column>
         <el-table-column :label="$t('kernel.sha256')" min-width="220">
@@ -106,37 +101,61 @@
         </el-table-column>
         <el-table-column :label="$t('kernel.usage')" width="100">
           <template slot-scope="{ row }">
-            <el-tag :type="row.inUse ? 'success' : 'info'">
+            <liquid-tag :type="row.inUse ? 'success' : 'info'">
               {{ row.inUse ? $t('kernel.inUse') : $t('kernel.notInUse') }}
-            </el-tag>
+            </liquid-tag>
           </template>
         </el-table-column>
-        <el-table-column v-if="!batchMode" :label="$t('kernel.rollback')" min-width="220">
+        <el-table-column
+          v-if="!batchMode"
+          :label="$t('kernel.rollback')"
+          min-width="220"
+        >
           <template slot-scope="{ row }">
-            <el-button
+            <liquid-button
               v-for="version in row.rollbackVersions"
               :key="version.version"
               size="mini"
-              @click="submitSingle(row, version.version, version.channelName, 'rollback')"
+              @click="
+                submitSingle(
+                  row,
+                  version.version,
+                  version.channelName,
+                  'rollback'
+                )
+              "
             >
               {{ version.version }}
-            </el-button>
+            </liquid-button>
           </template>
         </el-table-column>
         <el-table-column :label="$t('table.actions')" width="120">
           <template slot-scope="{ row }">
-            <el-button
+            <liquid-button
               type="primary"
               size="mini"
               :disabled="!row.targetVersion || !row.supported"
-              @click="batchMode ? toggleTarget(row) : submitSingle(row, row.targetVersion, row.targetChannel, 'install')"
+              @click="
+                batchMode
+                  ? toggleTarget(row)
+                  : submitSingle(
+                      row,
+                      row.targetVersion,
+                      row.targetChannel,
+                      'install'
+                    )
+              "
             >
-              {{ batchMode && row.selected ? $t('kernel.selected') : $t('kernel.upgrade') }}
-            </el-button>
+              {{
+                batchMode && row.selected
+                  ? $t('kernel.selected')
+                  : $t('kernel.upgrade')
+              }}
+            </liquid-button>
           </template>
         </el-table-column>
       </el-table>
-      <el-button
+      <liquid-button
         v-if="batchMode"
         type="primary"
         class="submit"
@@ -144,32 +163,39 @@
         @click="submitBatch"
       >
         {{ $t('kernel.createBatchTask') }}
-      </el-button>
+      </liquid-button>
     </el-card>
 
     <el-card v-for="task in tasks" :key="task.id" class="section">
       <div slot="header">
         {{ $t('kernel.task') }} #{{ task.id }}
-        <el-tag>{{ statusLabel(task.status) }}</el-tag>
+        <liquid-tag>{{ statusLabel(task.status) }}</liquid-tag>
       </div>
       <el-table :data="task.items || []" border>
         <el-table-column prop="nodeServerName" :label="$t('kernel.node')" />
         <el-table-column prop="kernel" :label="$t('kernel.kernel')" />
         <el-table-column prop="fromVersion" :label="$t('kernel.fromVersion')" />
-        <el-table-column prop="targetVersion" :label="$t('kernel.targetVersion')" />
+        <el-table-column
+          prop="targetVersion"
+          :label="$t('kernel.targetVersion')"
+        />
         <el-table-column :label="$t('kernel.stage')">
           <template slot-scope="{ row }">{{ stageLabel(row.stage) }}</template>
         </el-table-column>
-        <el-table-column prop="error" :label="$t('kernel.error')" min-width="220" />
+        <el-table-column
+          prop="error"
+          :label="$t('kernel.error')"
+          min-width="220"
+        />
       </el-table>
-      <el-button
+      <liquid-button
         v-if="task.status === 'failed' || task.status === 'partial'"
         type="warning"
         class="submit"
         @click="retryTask(task)"
       >
         {{ $t('kernel.retryFailed') }}
-      </el-button>
+      </liquid-button>
     </el-card>
 
     <el-card class="section">
@@ -178,14 +204,16 @@
         <el-table-column prop="id" label="ID" width="90" />
         <el-table-column prop="operatorName" :label="$t('kernel.operator')" />
         <el-table-column :label="$t('table.status')">
-          <template slot-scope="{ row }">{{ statusLabel(row.status) }}</template>
+          <template slot-scope="{ row }">{{
+            statusLabel(row.status)
+          }}</template>
         </el-table-column>
         <el-table-column prop="createdAt" :label="$t('table.createTime')" />
         <el-table-column :label="$t('table.actions')" width="100">
           <template slot-scope="{ row }">
-            <el-button size="mini" @click="openTask(row.id)">
+            <liquid-button size="mini" @click="openTask(row.id)">
               {{ $t('kernel.viewTask') }}
-            </el-button>
+            </liquid-button>
           </template>
         </el-table-column>
       </el-table>
@@ -228,8 +256,20 @@ export default {
         hysteria2: { stable: [], prerelease: [] }
       },
       rows: [
-        { key: 'xray', name: 'Xray', targetChannel: 'stable', targetVersion: '', selected: false },
-        { key: 'hysteria2', name: 'Hysteria2', targetChannel: 'stable', targetVersion: '', selected: false }
+        {
+          key: 'xray',
+          name: 'Xray',
+          targetChannel: 'stable',
+          targetVersion: '',
+          selected: false
+        },
+        {
+          key: 'hysteria2',
+          name: 'Hysteria2',
+          targetChannel: 'stable',
+          targetVersion: '',
+          selected: false
+        }
       ]
     }
   },
@@ -241,28 +281,44 @@ export default {
       return this.serverId === 0
     },
     selectedServers() {
-      return this.servers.filter((server) => this.selectedNodeIds.includes(server.id))
+      return this.servers.filter((server) =>
+        this.selectedNodeIds.includes(server.id)
+      )
     },
     kernelRows() {
       return this.rows.map((row) => {
         const inventoryItem = this.inventory
-          ? (this.inventory.kernels || []).find((item) => item.kernel === (row.key === 'xray' ? 1 : 2))
+          ? (this.inventory.kernels || []).find(
+              (item) => item.kernel === (row.key === 'xray' ? 1 : 2)
+            )
           : null
         const versions = inventoryItem ? inventoryItem.versions || [] : []
         return Object.assign(row, {
-          supported: this.batchMode || (inventoryItem && inventoryItem.supported),
+          supported:
+            this.batchMode || (inventoryItem && inventoryItem.supported),
           currentVersion: inventoryItem ? inventoryItem.currentVersion : '',
           currentSha256: inventoryItem ? inventoryItem.currentSha256 : '',
           inUse: inventoryItem ? inventoryItem.inUse : false,
           rollbackVersions: versions
-            .filter((version) => version.successful && version.version !== inventoryItem.currentVersion)
+            .filter(
+              (version) =>
+                version.successful &&
+                version.version !== inventoryItem.currentVersion
+            )
             .slice(0, 2)
-            .map((version) => Object.assign(version, { channelName: this.channelName(version.channel) }))
+            .map((version) =>
+              Object.assign(version, {
+                channelName: this.channelName(version.channel)
+              })
+            )
         })
       })
     },
     canSubmitBatch() {
-      return this.selectedNodeIds.length > 0 && this.rows.some((row) => row.selected && row.targetVersion)
+      return (
+        this.selectedNodeIds.length > 0 &&
+        this.rows.some((row) => row.selected && row.targetVersion)
+      )
     }
   },
   created() {
@@ -307,18 +363,31 @@ export default {
     },
     routeTaskIds() {
       const value = this.$route.query.taskIds || this.$route.query.taskId || ''
-      return [...new Set(String(value).split(',').map(Number).filter((id) => id > 0))]
+      return [
+        ...new Set(
+          String(value)
+            .split(',')
+            .map(Number)
+            .filter((id) => id > 0)
+        )
+      ]
     },
     activeTaskIds() {
       return this.runningTaskIds
     },
     loadInitialTasks() {
-      const ids = [...new Set([...this.routeTaskIds(), ...this.activeTaskIds()])]
+      const ids = [
+        ...new Set([...this.routeTaskIds(), ...this.activeTaskIds()])
+      ]
       if (ids.length) this.loadTasks(ids)
     },
     rememberTasks(ids) {
-      const remembered = [...new Set([...this.tasks.map((task) => task.id), ...ids])]
-      const query = Object.assign({}, this.$route.query, { taskIds: remembered.join(',') })
+      const remembered = [
+        ...new Set([...this.tasks.map((task) => task.id), ...ids])
+      ]
+      const query = Object.assign({}, this.$route.query, {
+        taskIds: remembered.join(',')
+      })
       delete query.taskId
       this.$router.replace({ path: this.$route.path, query }).catch(() => {})
     },
@@ -347,7 +416,7 @@ export default {
     loadReleases(refresh) {
       const calls = []
       ;['xray', 'hysteria2'].forEach((kernel) => {
-        ['stable', 'prerelease'].forEach((channel) => {
+        ;['stable', 'prerelease'].forEach((channel) => {
           calls.push(
             kernelReleases({ kernel, channel, refresh }).then((response) => {
               this.releases[kernel][channel] = response.data.releases || []
@@ -361,18 +430,29 @@ export default {
       row.selected = !row.selected
     },
     confirmPrerelease(targets) {
-      if (!targets.some((target) => target.channel === 'prerelease')) return Promise.resolve()
-      return MessageBox.confirm(this.$t('kernel.prereleaseWarning'), this.$t('confirm.warn'), {
-        type: 'warning'
-      }).then(() =>
-        MessageBox.confirm(this.$t('kernel.prereleaseSecondWarning'), this.$t('confirm.warn'), {
-          type: 'error'
-        })
+      if (!targets.some((target) => target.channel === 'prerelease'))
+        return Promise.resolve()
+      return MessageBox.confirm(
+        this.$t('kernel.prereleaseWarning'),
+        this.$t('confirm.warn'),
+        {
+          type: 'warning'
+        }
+      ).then(() =>
+        MessageBox.confirm(
+          this.$t('kernel.prereleaseSecondWarning'),
+          this.$t('confirm.warn'),
+          {
+            type: 'error'
+          }
+        )
       )
     },
     submitSingle(row, version, channel, action) {
       const targets = [{ kernel: row.key, version, channel, action }]
-      this.confirmPrerelease(targets).then(() => this.submit([this.serverId], 0, targets))
+      this.confirmPrerelease(targets).then(() =>
+        this.submit([this.serverId], 0, targets)
+      )
     },
     submitBatch() {
       const targets = this.rows
@@ -388,7 +468,11 @@ export default {
       )
     },
     submit(nodeServerIds, canaryNodeServerId, targets) {
-      return createKernelTask({ nodeServerIds, canaryNodeServerId, targets }).then((response) => {
+      return createKernelTask({
+        nodeServerIds,
+        canaryNodeServerId,
+        targets
+      }).then((response) => {
         const task = response.data
         this.upsertTask(task)
         this.rememberTasks([task.id])
@@ -406,14 +490,24 @@ export default {
     },
     loadTasks(ids) {
       clearTimeout(this.timer)
-      const taskIds = [...new Set([...this.tasks.map((task) => task.id), ...ids])]
-      return Promise.all(taskIds.map((id) =>
-        selectKernelTaskById({ id }).then((response) => response.data).catch(() => null)
-      )).then((loadedTasks) => {
+      const taskIds = [
+        ...new Set([...this.tasks.map((task) => task.id), ...ids])
+      ]
+      return Promise.all(
+        taskIds.map((id) =>
+          selectKernelTaskById({ id })
+            .then((response) => response.data)
+            .catch(() => null)
+        )
+      ).then((loadedTasks) => {
         let completed = false
         loadedTasks.filter(Boolean).forEach((task) => {
           const previous = this.tasks.find((item) => item.id === task.id)
-          if (previous && !terminal.includes(previous.status) && terminal.includes(task.status)) {
+          if (
+            previous &&
+            !terminal.includes(previous.status) &&
+            terminal.includes(task.status)
+          ) {
             completed = true
           }
           this.upsertTask(task)
@@ -439,19 +533,32 @@ export default {
       })
     },
     enableMTLS() {
-      MessageBox.prompt(this.$t('kernel.tlsServerNameRequired'), this.$t('kernel.probeMTLS'), {
-        inputValue: this.currentServer.grpcTlsServerName || '',
-        inputPattern: /^[A-Za-z0-9.-]{4,253}$/,
-        inputErrorMessage: this.$t('kernel.tlsServerNameRequired')
-      }).then(({ value }) =>
-        MessageBox.confirm(this.$t('kernel.mtlsNoFallback'), this.$t('confirm.warn'), {
-          type: 'warning'
-        }).then(() => probeKernelMTLS({ nodeServerId: this.serverId, serverName: value }).then(() => {
-          this.currentServer.grpcTlsMode = 'mtls'
-          this.currentServer.grpcTlsServerName = value
-          this.$message.success(this.$t('kernel.mtlsEnabled'))
-          return this.loadInventory()
-        }))
+      MessageBox.prompt(
+        this.$t('kernel.tlsServerNameRequired'),
+        this.$t('kernel.probeMTLS'),
+        {
+          inputValue: this.currentServer.grpcTlsServerName || '',
+          inputPattern: /^[A-Za-z0-9.-]{4,253}$/,
+          inputErrorMessage: this.$t('kernel.tlsServerNameRequired')
+        }
+      ).then(({ value }) =>
+        MessageBox.confirm(
+          this.$t('kernel.mtlsNoFallback'),
+          this.$t('confirm.warn'),
+          {
+            type: 'warning'
+          }
+        ).then(() =>
+          probeKernelMTLS({
+            nodeServerId: this.serverId,
+            serverName: value
+          }).then(() => {
+            this.currentServer.grpcTlsMode = 'mtls'
+            this.currentServer.grpcTlsServerName = value
+            this.$message.success(this.$t('kernel.mtlsEnabled'))
+            return this.loadInventory()
+          })
+        )
       )
     }
   }

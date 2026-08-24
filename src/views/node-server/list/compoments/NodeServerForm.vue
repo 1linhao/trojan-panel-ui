@@ -1,70 +1,118 @@
 <template>
   <el-dialog
+    append-to-body
     :title="textMap[dialogStatus]"
     :visible="dialogVisible"
+    custom-class="liquid-node-server-editor"
     @close="$emit('update:dialogVisible', false)"
-    width="150"
   >
     <el-form
       ref="dataForm"
       :rules="dialogStatus === 'create' ? createRules : updateRules"
       :model="form"
+      class="uniform-dialog-form"
+      label-width="132px"
       label-position="left"
     >
       <el-form-item :label="$t('table.nodeServerName')" prop="name">
-        <el-input v-model="form.name" clearable />
+        <liquid-input v-model="form.name" clearable />
       </el-form-item>
       <el-form-item :label="$t('table.nodeServerIp')" prop="ip">
-        <el-input v-model="form.ip" clearable />
+        <liquid-input v-model="form.ip" clearable />
       </el-form-item>
       <el-form-item :label="$t('table.nodeServerGrpcPort')" prop="grpcPort">
-        <el-input-number
+        <liquid-number-input
           v-model.number="form.grpcPort"
           controls-position="right"
           type="number"
         />
       </el-form-item>
-      <el-form-item :label="$t('kernel.tlsServerName')" prop="grpcTlsServerName">
-        <el-input
+      <el-form-item
+        :label="$t('kernel.tlsServerName')"
+        prop="grpcTlsServerName"
+      >
+        <liquid-input
           v-model="form.grpcTlsServerName"
           :placeholder="$t('kernel.tlsServerNamePlaceholder')"
           clearable
         />
       </el-form-item>
-      <el-divider>{{ $t('traffic.limitSettings') }}</el-divider>
+      <div class="dialog-section-title">
+        <span>{{ $t('traffic.limitSettings') }}</span>
+      </div>
       <el-form-item :label="$t('traffic.period')">
-        <el-select v-model="form.trafficPeriod">
-          <el-option :label="$t('traffic.unlimited')" value="none" />
-          <el-option :label="$t('traffic.day')" value="day" />
-          <el-option :label="$t('traffic.month')" value="month" />
-          <el-option :label="$t('traffic.year')" value="year" />
-        </el-select>
+        <liquid-select v-model="form.trafficPeriod">
+          <option :label="$t('traffic.unlimited')" value="none" />
+          <option :label="$t('traffic.day')" value="day" />
+          <option :label="$t('traffic.month')" value="month" />
+          <option :label="$t('traffic.year')" value="year" />
+        </liquid-select>
       </el-form-item>
-      <el-form-item v-if="form.trafficPeriod !== 'none'" :label="$t('traffic.limitMode')">
-        <el-radio-group v-model="form.trafficLimitMode">
-          <el-radio label="combined">{{ $t('traffic.combined') }}</el-radio>
-          <el-radio label="separate">{{ $t('traffic.split') }}</el-radio>
-        </el-radio-group>
+      <el-form-item
+        v-if="form.trafficPeriod !== 'none'"
+        :label="$t('traffic.limitMode')"
+      >
+        <div class="seg dialog-mode-switch" role="group">
+          <button
+            type="button"
+            :class="{ on: form.trafficLimitMode === 'combined' }"
+            @click="form.trafficLimitMode = 'combined'"
+          >
+            {{ $t('traffic.combined') }}
+          </button>
+          <button
+            type="button"
+            :class="{ on: form.trafficLimitMode === 'separate' }"
+            @click="form.trafficLimitMode = 'separate'"
+          >
+            {{ $t('traffic.split') }}
+          </button>
+        </div>
       </el-form-item>
-      <el-form-item v-if="form.trafficPeriod !== 'none' && form.trafficLimitMode === 'combined'" :label="$t('traffic.totalLimitGiB')">
-        <el-input-number v-model="form.trafficTotalLimitGiB" :min="0" :max="8388607" />
+      <el-form-item
+        v-if="
+          form.trafficPeriod !== 'none' && form.trafficLimitMode === 'combined'
+        "
+        :label="$t('traffic.totalLimitGiB')"
+      >
+        <liquid-number-input
+          v-model="form.trafficTotalLimitGiB"
+          controls-position="right"
+          :min="0"
+          :max="8388607"
+        />
       </el-form-item>
-      <template v-if="form.trafficPeriod !== 'none' && form.trafficLimitMode === 'separate'">
-        <el-form-item :label="$t('traffic.uploadLimitGiB')"><el-input-number v-model="form.trafficUploadLimitGiB" :min="0" :max="8388607" /></el-form-item>
-        <el-form-item :label="$t('traffic.downloadLimitGiB')"><el-input-number v-model="form.trafficDownloadLimitGiB" :min="0" :max="8388607" /></el-form-item>
+      <template
+        v-if="
+          form.trafficPeriod !== 'none' && form.trafficLimitMode === 'separate'
+        "
+      >
+        <el-form-item :label="$t('traffic.uploadLimitGiB')"
+          ><liquid-number-input
+            v-model="form.trafficUploadLimitGiB"
+            controls-position="right"
+            :min="0"
+            :max="8388607"
+        /></el-form-item>
+        <el-form-item :label="$t('traffic.downloadLimitGiB')"
+          ><liquid-number-input
+            v-model="form.trafficDownloadLimitGiB"
+            controls-position="right"
+            :min="0"
+            :max="8388607"
+        /></el-form-item>
       </template>
-      <el-alert v-if="form.trafficPeriod !== 'none'" :title="$t('traffic.zeroUnlimited')" type="info" :closable="false" />
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="$emit('update:dialogVisible', false)"
+      <liquid-button @click="$emit('update:dialogVisible', false)"
         >{{ $t('table.cancel') }}
-      </el-button>
-      <el-button
+      </liquid-button>
+      <liquid-button
         type="primary"
         @click="dialogStatus === 'create' ? createData() : updateData()"
       >
         {{ $t('table.confirm') }}
-      </el-button>
+      </liquid-button>
     </div>
   </el-dialog>
 </template>
@@ -203,9 +251,12 @@ export default {
       deep: true,
       handler(value) {
         this.form = Object.assign({}, value, {
-          trafficTotalLimitGiB: (value.trafficTotalLimit || 0) / 1024 / 1024 / 1024,
-          trafficUploadLimitGiB: (value.trafficUploadLimit || 0) / 1024 / 1024 / 1024,
-          trafficDownloadLimitGiB: (value.trafficDownloadLimit || 0) / 1024 / 1024 / 1024
+          trafficTotalLimitGiB:
+            (value.trafficTotalLimit || 0) / 1024 / 1024 / 1024,
+          trafficUploadLimitGiB:
+            (value.trafficUploadLimit || 0) / 1024 / 1024 / 1024,
+          trafficDownloadLimitGiB:
+            (value.trafficDownloadLimit || 0) / 1024 / 1024 / 1024
         })
       }
     }
@@ -216,9 +267,18 @@ export default {
     },
     payload() {
       const data = Object.assign({}, this.form)
-      data.trafficTotalLimit = data.trafficPeriod === 'none' ? 0 : this.toBytes(data.trafficTotalLimitGiB)
-      data.trafficUploadLimit = data.trafficPeriod === 'none' ? 0 : this.toBytes(data.trafficUploadLimitGiB)
-      data.trafficDownloadLimit = data.trafficPeriod === 'none' ? 0 : this.toBytes(data.trafficDownloadLimitGiB)
+      data.trafficTotalLimit =
+        data.trafficPeriod === 'none'
+          ? 0
+          : this.toBytes(data.trafficTotalLimitGiB)
+      data.trafficUploadLimit =
+        data.trafficPeriod === 'none'
+          ? 0
+          : this.toBytes(data.trafficUploadLimitGiB)
+      data.trafficDownloadLimit =
+        data.trafficPeriod === 'none'
+          ? 0
+          : this.toBytes(data.trafficDownloadLimitGiB)
       delete data.trafficTotalLimitGiB
       delete data.trafficUploadLimitGiB
       delete data.trafficDownloadLimitGiB

@@ -1,7 +1,7 @@
 <template>
   <div v-if="formVisibleProps">
     <el-form-item :label="$t('table.naiveUotEnable').toString()">
-      <el-switch
+      <liquid-switch
         v-model="nodeProps.naiveUotEnable"
         :active-value="1"
         :inactive-value="0"
@@ -11,10 +11,10 @@
       :label="$t('table.naiveUotVersion').toString()"
       v-if="nodeProps.naiveUotEnable === 1"
     >
-      <el-select v-model="nodeProps.naiveUotVersion">
-        <el-option label="v2" :value="2" />
-        <el-option label="v1" :value="1" />
-      </el-select>
+      <liquid-select v-model="nodeProps.naiveUotVersion">
+        <option label="v2" :value="2" />
+        <option label="v1" :value="1" />
+      </liquid-select>
     </el-form-item>
     <el-form-item>
       <aside>

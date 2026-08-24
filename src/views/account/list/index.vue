@@ -1,361 +1,212 @@
 <template>
-  <div class="app-container">
-    <div class="filter-container">
-      <el-input
-        v-model="listQuery.username"
-        :placeholder="$t('table.username')"
-        style="width: 200px"
-        class="filter-item"
-        clearable
-        @keyup.enter.native="handleFilter"
-        @clear="handleFilter"
-        maxlength="20"
-      />
-      <el-select
-        v-model="listQuery.deleted"
-        :placeholder="$t('table.deleted').toString()"
-        style="width: 200px"
-        class="filter-item"
-        clearable
-        @clear="
-          () => {
-            listQuery.deleted = undefined
-          }
-        "
-      >
-        <el-option
-          :label="item.label"
-          :value="item.value"
-          :key="item.value"
-          v-for="item in deletedList"
-        ></el-option>
-      </el-select>
-      <el-select
-        v-model="listQuery.lastLoginTime"
-        :placeholder="$t('table.lastLoginTimeUnused').toString()"
-        style="width: 200px"
-        class="filter-item"
-        clearable
-        @clear="
-          () => {
-            listQuery.lastLoginTime = undefined
-          }
-        "
-      >
-        <el-option
-          :label="item.label"
-          :value="item.value"
-          :key="item.value"
-          v-for="item in lastLoginTimeList"
-        ></el-option>
-      </el-select>
-      <el-select
-        v-model="orderFieldArr"
-        :placeholder="$t('table.orderFields').toString()"
-        style="width: 200px"
-        class="filter-item"
-        clearable
-        multiple
-      >
-        <el-option
-          :label="item.label"
-          :value="item.value"
-          :key="item.value"
-          v-for="item in orderFieldList"
-        ></el-option>
-      </el-select>
-      <el-select
-        v-model="listQuery.orderBy"
-        :placeholder="$t('table.orderBy').toString()"
-        style="width: 200px"
-        class="filter-item"
-        clearable
-        @clear="
-          () => {
-            listQuery.orderBy = undefined
-          }
-        "
-      >
-        <el-option
-          :label="item.label"
-          :value="item.value"
-          :key="item.value"
-          v-for="item in orderByList"
-        ></el-option>
-      </el-select>
-      <el-button
-        class="filter-item"
-        type="primary"
-        icon="el-icon-search"
-        @click="handleFilter"
-      >
-        {{ $t('table.search') }}
-      </el-button>
-      <el-button
-        class="filter-item"
-        type="primary"
-        icon="el-icon-edit"
-        @click="handleCreate"
-        v-if="checkPermission(['sysadmin'])"
-      >
-        {{ $t('table.add') }}
-      </el-button>
-      <el-button
-        class="filter-item"
-        type="success"
-        icon="el-icon-download"
-        @click="handleImport"
-        v-if="checkPermission(['sysadmin'])"
-      >
-        {{ $t('table.import') }}
-      </el-button>
-      <el-button
-        class="filter-item"
-        type="success"
-        icon="el-icon-upload2"
-        @click="handleExport"
-        v-if="checkPermission(['sysadmin'])"
-      >
-        {{ $t('table.export') }}
-      </el-button>
-      <el-button
-        class="filter-item"
-        type="success"
-        icon="el-icon-document-copy"
-        @click="handleCreateBatch"
-        v-if="checkPermission(['sysadmin'])"
-      >
-        {{ $t('table.createBatch') }}
-      </el-button>
-      <el-button
-        class="filter-item"
-        type="success"
-        icon="el-icon-download"
-        @click="exportAccountUnused"
-        v-if="checkPermission(['sysadmin'])"
-      >
-        {{ $t('table.exportAccountUnused') }}
-      </el-button>
+  <div class="prototype-page grid">
+    <div class="glass card">
+      <div class="toolbar">
+        <div class="search-box">
+          <i class="el-icon-search"></i>
+          <input
+            v-model="listQuery.username"
+            placeholder="按用户名搜索"
+            @keyup.enter="handleFilter"
+          />
+        </div>
+        <liquid-select
+          v-model="listQuery.deleted"
+          clearable
+          placeholder="账号状态"
+          class="prototype-select"
+        >
+          <option
+            v-for="item in deletedList"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </liquid-select>
+        <div class="spacer"></div>
+        <button
+          v-if="checkPermission(['sysadmin'])"
+          class="cap small"
+          type="button"
+          @click="handleCreateBatch"
+        >
+          <svg-icon icon-class="account" />批量创建
+        </button>
+        <button
+          v-if="checkPermission(['sysadmin'])"
+          class="cap small"
+          type="button"
+          @click="handleImport"
+        >
+          <i class="el-icon-upload2"></i>导入
+        </button>
+        <button
+          v-if="checkPermission(['sysadmin'])"
+          class="cap small"
+          type="button"
+          @click="handleExport"
+        >
+          <i class="el-icon-download"></i>导出
+        </button>
+        <button
+          v-if="checkPermission(['sysadmin'])"
+          class="cap small"
+          type="button"
+          @click="exportAccountUnused"
+        >
+          导出未使用
+        </button>
+        <button
+          v-if="checkPermission(['sysadmin'])"
+          class="cap primary small"
+          type="button"
+          @click="handleCreate"
+        >
+          <i class="el-icon-plus"></i>新建账号
+        </button>
+      </div>
     </div>
-    <el-table
-      :key="tableKey"
-      v-loading="listLoading"
-      :data="list"
-      border
-      fit
-      highlight-current-row
-      style="width: 100%"
-    >
-      <el-table-column
-        :label="$t('table.id').toString()"
-        sortable="custom"
-        align="center"
-        width="80"
-        type="index"
+
+    <div class="glass card">
+      <div class="tbl-wrap" v-loading="listLoading">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>账号</th>
+              <th>角色</th>
+              <th class="traffic-reset-column">
+                <div class="traffic-reset-column-head">
+                  <span>流量（已用 / 配额）</span>
+                  <button
+                    v-if="checkPermission(['sysadmin'])"
+                    class="cap small traffic-reset-button"
+                    type="button"
+                    title="重置所有用户流量统计"
+                    aria-label="重置所有用户流量统计"
+                    @click="handleResetAllAccountTraffic"
+                  >
+                    <i class="el-icon-refresh"></i>重置全部
+                  </button>
+                </div>
+              </th>
+              <th class="account-expiry-column">到期时间</th>
+              <th>最近登录</th>
+              <th>状态</th>
+              <th style="text-align: right">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(row, index) in list" :key="row.id">
+              <td class="primary-cell">
+                <strong>{{ row.username }}</strong
+                ><small>{{ row.email || '未绑定邮箱' }}</small>
+              </td>
+              <td>
+                <span
+                  class="chip"
+                  :class="row.roleId === 1 ? 'violet' : 'info'"
+                  >{{ roleFilter(row.roleId) }}</span
+                >
+              </td>
+              <td style="min-width: 180px">
+                <div class="traffic-label">
+                  <span class="muted num">{{
+                    getFlow(Number(row.upload || 0) + Number(row.download || 0))
+                  }}</span
+                  ><span class="faint num">{{
+                    row.quota < 0 ? '不限' : getFlow(row.quota)
+                  }}</span>
+                </div>
+                <div
+                  class="meter"
+                  :class="{
+                    warn: accountUsagePct(row) > 70,
+                    bad: accountUsagePct(row) > 92
+                  }"
+                >
+                  <i :style="{ width: accountUsagePct(row) + '%' }"></i>
+                </div>
+              </td>
+              <td class="muted account-expiry-column">
+                <span v-if="row.lastLoginTime === 0">首次登录后计算</span>
+                <time v-else class="account-expiry-value">
+                  <span>{{ timePart(row.expireTime, 0) }}</span>
+                  <span>{{ timePart(row.expireTime, 1) }}</span>
+                </time>
+              </td>
+              <td class="muted">
+                {{
+                  row.lastLoginTime
+                    ? timeStampToDate(row.lastLoginTime, false)
+                    : '从未登录'
+                }}
+              </td>
+              <td>
+                <span class="chip" :class="row.deleted === 0 ? 'ok' : 'bad'"
+                  ><span class="dot"></span
+                  >{{ row.deleted === 0 ? '正常' : '停用' }}</span
+                >
+              </td>
+              <td>
+                <div class="row-actions">
+                  <button
+                    v-if="checkPermission(['sysadmin'])"
+                    class="icon-btn"
+                    type="button"
+                    title="编辑"
+                    @click="handleUpdate(row)"
+                  >
+                    <i class="el-icon-edit"></i>
+                  </button>
+                  <button
+                    v-if="checkPermission(['sysadmin'])"
+                    class="icon-btn"
+                    type="button"
+                    title="重置流量"
+                    @click="handleReset(row)"
+                  >
+                    <i class="el-icon-refresh"></i>
+                  </button>
+                  <button
+                    v-if="
+                      checkPermission(['sysadmin', 'admin']) &&
+                      row.lastLoginTime !== 0
+                    "
+                    class="icon-btn"
+                    type="button"
+                    title="复制订阅"
+                    @click="handleClashSubscribeForSb(row)"
+                  >
+                    <i class="el-icon-document-copy"></i>
+                  </button>
+                  <button
+                    v-if="checkPermission(['sysadmin'])"
+                    class="icon-btn danger"
+                    type="button"
+                    title="删除"
+                    @click="handleDelete(row, index)"
+                  >
+                    <i class="el-icon-delete"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <pagination
+        v-if="total > 0"
+        :total="total"
+        :page.sync="listQuery.pageNum"
+        :limit.sync="listQuery.pageSize"
+        @pagination="getList"
       />
-      <el-table-column
-        :label="$t('table.username').toString()"
-        width="100"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span>{{ row.username }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.role').toString()"
-        width="100"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span>{{ roleFilter(row.roleId) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.download').toString()"
-        width="100"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span>{{ getFlow(row.download) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.upload').toString()"
-        width="100"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span>{{ getFlow(row.upload) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.flow').toString()"
-        width="100"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span
-            :style="
-              row.quota >= 0 && row.quota - row.upload - row.download <= 0
-                ? 'color: #FF0000;'
-                : ''
-            "
-            >{{
-              row.quota < 0
-                ? $t('dashboard.unlimited')
-                : getFlow(row.quota - row.upload - row.download)
-            }}
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.quota').toString()"
-        width="100"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span>{{
-            row.lastLoginTime === 0
-              ? '-'
-              : row.quota < 0
-              ? $t('dashboard.unlimited')
-              : getFlow(row.quota)
-          }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.expireTime').toString()"
-        width="150"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span
-            :style="
-              row.lastLoginTime !== 0 && row.expireTime <= new Date().getTime()
-                ? 'color: #FF0000;'
-                : ''
-            "
-            >{{
-              row.lastLoginTime === 0
-                ? '-'
-                : timeStampToDate(row.expireTime, false)
-            }}
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.presetQuota').toString()"
-        width="100"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span>{{
-            row.presetExpire === 0
-              ? '-'
-              : row.presetQuota < 0
-              ? $t('dashboard.unlimited')
-              : getFlow(row.presetQuota)
-          }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.presetExpire').toString()"
-        width="80"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span>{{ row.presetExpire === 0 ? '-' : row.presetExpire }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.status').toString()"
-        width="80"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <el-tag :type="row.deleted | deletedFilter">
-            {{ row.deleted === 1 ? $t('table.disable') : $t('table.enable') }}
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.lastLoginTime').toString()"
-        width="150"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span
-            >{{
-              row.lastLoginTime === 0
-                ? '-'
-                : timeStampToDate(row.lastLoginTime, false)
-            }}
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.createTime').toString()"
-        width="150"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span>{{ timeStampToDate(row.createTime, false) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.actions').toString()"
-        align="center"
-        class-name="small-padding fixed-width"
-      >
-        <template slot-scope="{ row, $index }">
-          <el-button
-            type="primary"
-            size="mini"
-            @click="handleReset(row)"
-            v-if="checkPermission(['sysadmin'])"
-          >
-            {{ $t('table.reset') }}
-          </el-button>
-          <el-button
-            type="primary"
-            size="mini"
-            @click="handleClashSubscribeForSb(row)"
-            v-if="
-              checkPermission(['sysadmin', 'admin']) && row.lastLoginTime !== 0
-            "
-          >
-            {{ $t('table.clashSubscribeForSb') }}
-          </el-button>
-          <el-button
-            type="primary"
-            size="mini"
-            @click="handleUpdate(row)"
-            v-if="checkPermission(['sysadmin'])"
-          >
-            {{ $t('table.edit') }}
-          </el-button>
-          <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(row, $index)"
-            v-if="checkPermission(['sysadmin'])"
-          >
-            {{ $t('table.delete') }}
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <pagination
-      v-if="total > 0"
-      :total="total"
-      :page.sync="listQuery.pageNum"
-      :limit.sync="listQuery.pageSize"
-      @pagination="getList"
-    />
-
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
+    </div>
+    <el-dialog
+      append-to-body
+      :title="textMap[dialogStatus]"
+      :visible.sync="dialogFormVisible"
+    >
       <el-form
         ref="dataForm"
         :rules="dialogStatus === 'create' ? createRules : updateRules"
@@ -367,14 +218,14 @@
           :label="$t('table.username')"
           prop="username"
         >
-          <el-input
+          <liquid-input
             v-model="temp.username"
             :placeholder="$t('table.username')"
             clearable
           />
         </el-form-item>
         <el-form-item :label="$t('table.pass')" prop="pass">
-          <el-input
+          <liquid-input
             v-model="temp.pass"
             type="password"
             :placeholder="$t('table.pass')"
@@ -382,21 +233,21 @@
           />
         </el-form-item>
         <el-form-item :label="$t('table.editQuota')" prop="quota">
-          <el-input-number
+          <liquid-number-input
             v-model.number="temp.quota"
             controls-position="right"
             type="number"
           />
         </el-form-item>
         <el-form-item :label="$t('table.email')" prop="email">
-          <el-input
+          <liquid-input
             v-model="temp.email"
             :placeholder="$t('table.email')"
             clearable
           />
         </el-form-item>
         <el-form-item :label="$t('table.status')" prop="deleted">
-          <el-switch
+          <liquid-switch
             v-model="temp.deleted"
             active-color="#13ce66"
             inactive-color="#ff4949"
@@ -405,10 +256,10 @@
             :active-value="0"
             :inactive-value="1"
           >
-          </el-switch>
+          </liquid-switch>
         </el-form-item>
         <el-form-item :label="$t('table.expireTime')" prop="expireTime">
-          <el-date-picker
+          <liquid-date-picker
             v-model="temp.expireTime"
             type="datetime"
             value-format="timestamp"
@@ -417,15 +268,15 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false"
+        <liquid-button @click="dialogFormVisible = false"
           >{{ $t('table.cancel') }}
-        </el-button>
-        <el-button
+        </liquid-button>
+        <liquid-button
           type="primary"
           @click="dialogStatus === 'create' ? createData() : updateData()"
         >
           {{ $t('table.confirm') }}
-        </el-button>
+        </liquid-button>
       </div>
     </el-dialog>
     <import-tip
@@ -607,8 +458,7 @@ export default {
             trigger: ['change', 'blur']
           },
           {
-            pattern:
-              /^([A-Za-z0-9_\-\.])+\@(163.com|126.com|qq.com|gmail.com)$/,
+            pattern: /^([A-Za-z0-9_.-])+@(163.com|126.com|qq.com|gmail.com)$/,
             message: this.$t('valid.emailElement'),
             trigger: ['change', 'blur']
           }
@@ -686,8 +536,7 @@ export default {
             trigger: ['change', 'blur']
           },
           {
-            pattern:
-              /^([A-Za-z0-9_\-\.])+\@(163.com|126.com|qq.com|gmail.com)$/,
+            pattern: /^([A-Za-z0-9_.-])+@(163.com|126.com|qq.com|gmail.com)$/,
             message: this.$t('valid.emailElement'),
             trigger: ['change', 'blur']
           }
@@ -716,6 +565,31 @@ export default {
     this.getList()
   },
   methods: {
+    handleResetAllAccountTraffic() {
+      this.$message({
+        type: 'info',
+        showClose: true,
+        message: '全部用户流量统计重置接口待接入，当前未修改任何数据'
+      })
+    },
+    timePart(timestamp, index) {
+      return timeStampToDate(timestamp, false).split(' ')[index] || '—'
+    },
+    accountUsagePct(row) {
+      if (row.quota < 0) return 0
+      if (!row.quota) return 100
+      return Math.max(
+        0,
+        Math.min(
+          100,
+          Math.round(
+            ((Number(row.upload || 0) + Number(row.download || 0)) /
+              Number(row.quota)) *
+              100
+          )
+        )
+      )
+    },
     checkPermission,
     getFlow,
     timeStampToDate,

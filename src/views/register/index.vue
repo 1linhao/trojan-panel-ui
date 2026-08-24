@@ -1,111 +1,87 @@
 <template>
-  <div class="login-container">
+  <div class="auth">
     <liquid-theme-toggle class="auth-theme-toggle" />
-    <el-form
-      ref="registerForm"
-      :model="registerForm"
-      :rules="registerRules"
-      class="login-form"
-      auto-complete="on"
-      label-position="left"
-    >
-      <div class="title-container">
-        <h3 class="title">{{ $t('register.title') }}</h3>
+    <div class="auth-card glass raised">
+      <div class="auth-brand">
+        <span class="brand-mark">T</span>
+        <h1>创建账号</h1>
       </div>
-
-      <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="username" />
-        </span>
-        <el-input
-          ref="username"
-          v-model="registerForm.username"
-          :placeholder="$t('register.username')"
-          name="username"
-          type="text"
-          tabindex="1"
-          auto-complete="on"
-          clearable
-        />
-      </el-form-item>
-
-      <el-form-item prop="pass">
-        <span class="svg-container">
-          <svg-icon icon-class="pass" />
-        </span>
-        <el-input
-          ref="pass"
-          v-model="registerForm.passOne"
-          :type="passwordType"
-          :placeholder="$t('register.passOne')"
-          name="password"
-          tabindex="2"
-          auto-complete="on"
-          clearable
-        />
-        <span class="show-pwd" @click="showPwd">
-          <svg-icon
-            :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
-          />
-        </span>
-      </el-form-item>
-
-      <el-form-item prop="pass">
-        <span class="svg-container">
-          <svg-icon icon-class="pass" />
-        </span>
-        <el-input
-          ref="pass"
-          v-model="registerForm.pass"
-          :type="passwordType"
-          :placeholder="$t('register.pass')"
-          name="password"
-          tabindex="3"
-          auto-complete="on"
-          clearable
-          @keyup.enter.native="handleRegister"
-        />
-        <span class="show-pwd" @click="showPwd">
-          <svg-icon
-            :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
-          />
-        </span>
-      </el-form-item>
-
-      <!-- 验证码 -->
-      <el-form-item prop="captchaCode" v-if="captchaEnable">
-        <span class="svg-container">
-          <svg-icon icon-class="valid-code" />
-        </span>
-        <el-input
-          v-model="registerForm.captchaCode"
-          auto-complete="off"
-          :placeholder="$t('login.code')"
-          style="width: 65%"
-          @keyup.enter="handleRegister"
-        />
-
-        <div class="captcha">
-          <img :src="captchaImg" @click="handleCaptchaGenerate" height="38px" />
-        </div>
-      </el-form-item>
-
-      <el-button
-        :loading="loading"
-        type="primary"
-        style="width: 100%; margin-bottom: 30px"
-        @click.native.prevent="handleRegister"
-        >{{ $t('register.register') }}
-      </el-button>
-      <el-button
-        type="primary"
-        class="auth-secondary-button"
-        style="width: 100%; margin: 0"
-        @click.native.prevent="goLogin"
+      <el-form
+        ref="registerForm"
+        :model="registerForm"
+        :rules="registerRules"
+        class="auth-form"
+        auto-complete="on"
+        @submit.native.prevent
       >
-        {{ $t('register.login') }}
-      </el-button>
-    </el-form>
+        <el-form-item prop="username"
+          ><label class="fld"
+            ><span>用户名</span
+            ><input
+              ref="username"
+              v-model="registerForm.username"
+              placeholder="6–20 位字母或数字"
+              autocomplete="username" /></label
+        ></el-form-item>
+        <el-form-item prop="pass"
+          ><label class="fld"
+            ><span>密码</span
+            ><span class="password-field"
+              ><input
+                ref="pass"
+                v-model="registerForm.passOne"
+                :type="passwordType"
+                placeholder="6–20 位字母或数字"
+                autocomplete="new-password" /><button
+                type="button"
+                class="field-icon"
+                @click="showPwd"
+              >
+                <svg-icon
+                  :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
+                /></button></span></label
+        ></el-form-item>
+        <el-form-item prop="pass"
+          ><label class="fld"
+            ><span>确认密码</span
+            ><input
+              v-model="registerForm.pass"
+              :type="passwordType"
+              placeholder="再次输入密码"
+              autocomplete="new-password"
+              @keyup.enter="handleRegister" /></label
+        ></el-form-item>
+        <div v-if="captchaEnable" class="captcha-row">
+          <el-form-item prop="captchaCode"
+            ><label class="fld"
+              ><span>验证码</span
+              ><input
+                v-model="registerForm.captchaCode"
+                placeholder="输入右侧字符"
+                @keyup.enter="handleRegister" /></label></el-form-item
+          ><button
+            type="button"
+            class="captcha-img"
+            title="点击刷新"
+            @click="handleCaptchaGenerate"
+          >
+            <img alt="captcha" :src="captchaImg" />
+          </button>
+        </div>
+        <button
+          type="button"
+          class="cap primary auth-submit"
+          :disabled="loading"
+          @click="handleRegister"
+        >
+          {{ loading ? '提交中…' : '提交注册' }}
+        </button>
+        <div class="auth-divider">已有账号？</div>
+        <button type="button" class="cap auth-submit" @click="goLogin">
+          返回登录
+        </button>
+      </el-form>
+    </div>
   </div>
 </template>
 
@@ -115,7 +91,7 @@ import { setting } from '@/api/system'
 import LiquidThemeToggle from '@/components/LiquidThemeToggle'
 
 export default {
-  name: 'index',
+  name: 'RegisterPage',
   components: { LiquidThemeToggle },
   data() {
     const validatePass = (rule, value, callback) => {

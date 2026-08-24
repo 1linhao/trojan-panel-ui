@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    append-to-body
     :title="$t('exportNode.title').toString()"
     :visible.sync="dialogVisible"
     width="92%"
@@ -7,31 +8,29 @@
     @open="loadOptions"
     @closed="reset"
   >
-    <el-tabs v-model="activeClient" stretch @tab-click="selectDefaultTemplate">
-      <el-tab-pane
-        v-for="client in options"
-        :key="client.id"
-        :label="client.name"
-        :name="client.id"
-      />
-    </el-tabs>
+    <div class="seg liquid-tabs" role="tablist">
+      <button v-for="client in options" :key="client.id" type="button"
+        :class="{ on: activeClient === client.id }" @click="selectClient(client.id)">
+        {{ client.name }}
+      </button>
+    </div>
 
     <el-form label-position="top">
       <el-form-item :label="$t('exportNode.template').toString()">
-        <el-select v-model="selectedTemplate" style="width: 100%">
-          <el-option
+        <liquid-select v-model="selectedTemplate" style="width: 100%">
+          <option
             v-for="template in activeOption.templates"
             :key="template.id"
             :label="template.name"
             :value="template.id"
           />
-        </el-select>
+        </liquid-select>
       </el-form-item>
       <el-form-item
         class="format-actions"
         :label="$t('exportNode.format').toString()"
       >
-        <el-button
+        <liquid-button
           v-for="format in activeOption.formats"
           :key="format"
           :icon="formatIcon(format)"
@@ -39,7 +38,7 @@
           @click="handleExport(format)"
         >
           {{ $t(`exportNode.${format}`) }}
-        </el-button>
+        </liquid-button>
       </el-form-item>
     </el-form>
 
@@ -52,11 +51,7 @@
 <script>
 import copy from 'copy-to-clipboard'
 import { Message } from 'element-ui'
-import {
-  exportOptions,
-  exportQRCode,
-  exportSubscribe
-} from '@/api/account'
+import { exportOptions, exportQRCode, exportSubscribe } from '@/api/account'
 
 export default {
   name: 'ExportNodeDialog',
@@ -94,6 +89,10 @@ export default {
     }
   },
   methods: {
+    selectClient(client) {
+      this.activeClient = client
+      this.selectDefaultTemplate()
+    },
     loadOptions() {
       exportOptions().then((response) => {
         this.options = response.data || []

@@ -1,235 +1,283 @@
 <template>
-  <div class="app-container">
-    <div class="filter-container">
-      <el-input
-        v-model="listQuery.ip"
-        :placeholder="$t('table.nodeServerIp')"
-        style="width: 200px"
-        class="filter-item"
-        clearable
-        @keyup.enter.native="handleFilter"
-        @clear="handleFilter"
-        maxlength="64"
-      />
-      <el-input
-        v-model="listQuery.name"
-        :placeholder="$t('table.nodeServerName')"
-        style="width: 200px"
-        class="filter-item"
-        clearable
-        @keyup.enter.native="handleFilter"
-        @clear="handleFilter"
-        maxlength="20"
-      />
-      <el-button
-        class="filter-item"
-        type="primary"
-        icon="el-icon-search"
-        @click="handleFilter"
-      >
-        {{ $t('table.search') }}
-      </el-button>
-      <el-button
-        class="filter-item"
-        type="primary"
-        icon="el-icon-edit"
-        @click="handleCreate"
-        v-if="checkPermission(['sysadmin'])"
-      >
-        {{ $t('table.add') }}
-      </el-button>
-      <el-button
-        class="filter-item"
-        type="success"
-        icon="el-icon-upload2"
-        @click="handleImport"
-        v-if="checkPermission(['sysadmin'])"
-      >
-        {{ $t('table.import') }}
-      </el-button>
-      <el-button
-        class="filter-item"
-        type="success"
-        icon="el-icon-download"
-        @click="handleExport"
-        v-if="checkPermission(['sysadmin'])"
-      >
-        {{ $t('table.export') }}
-      </el-button>
-      <el-button
-        v-if="checkPermission(['sysadmin'])"
-        class="filter-item"
-        type="warning"
-        icon="el-icon-upload"
-        @click="handleBatchUpgrade"
-      >
-        {{ $t('kernel.batchUpgrade') }}
-      </el-button>
+  <div class="prototype-page grid">
+    <div class="glass card">
+      <div class="toolbar">
+        <div class="search-box">
+          <i class="el-icon-search"></i
+          ><input
+            v-model="listQuery.name"
+            placeholder="按名称搜索"
+            @keyup.enter="handleFilter"
+          />
+        </div>
+        <div class="search-box">
+          <i class="el-icon-connection"></i
+          ><input
+            v-model="listQuery.ip"
+            placeholder="按 IP 搜索"
+            @keyup.enter="handleFilter"
+          />
+        </div>
+        <div class="spacer"></div>
+        <button
+          v-if="checkPermission(['sysadmin'])"
+          class="cap small"
+          type="button"
+          @click="downloadTemplate"
+        >
+          <i class="el-icon-document"></i>模板
+        </button>
+        <button
+          v-if="checkPermission(['sysadmin'])"
+          class="cap small"
+          type="button"
+          @click="handleImport"
+        >
+          <i class="el-icon-upload2"></i>导入
+        </button>
+        <button
+          v-if="checkPermission(['sysadmin'])"
+          class="cap small"
+          type="button"
+          @click="handleExport"
+        >
+          <i class="el-icon-download"></i>导出
+        </button>
+        <button
+          v-if="checkPermission(['sysadmin'])"
+          class="cap small"
+          type="button"
+          @click="handleBatchUpgrade"
+        >
+          <i class="el-icon-top"></i>批量升级
+        </button>
+        <button
+          v-if="checkPermission(['sysadmin'])"
+          class="cap primary small"
+          type="button"
+          @click="handleCreate"
+        >
+          <i class="el-icon-plus"></i>添加服务器
+        </button>
+      </div>
     </div>
-    <el-table
-      :key="tableKey"
-      v-loading="listLoading"
-      :data="list"
-      border
-      fit
-      highlight-current-row
-      style="width: 100%"
-    >
-      <el-table-column
-        :label="$t('table.id')"
-        sortable="custom"
-        align="center"
-        width="80"
-        type="index"
-      />
-      <el-table-column
-        :label="$t('table.nodeServerName')"
-        width="180"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span>{{ row.name }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.nodeServerIp')"
-        width="180"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span>{{ row.ip }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.nodeServerGrpcPort')"
-        width="180"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span>{{ row.grpcPort }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.nodeStatus')"
-        width="100"
-        align="center"
-        v-if="checkPermission(['sysadmin', 'admin'])"
-      >
-        <template slot-scope="{ row }">
-          <el-tag :type="row.status | statusTypeFilter">
-            <span>{{ statusComputed(row.status) }}</span>
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.trojanPanelCoreVersion')"
-        width="180"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span>{{ row.trojanPanelCoreVersion }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('traffic.remaining')" min-width="220" align="center">
-        <template slot-scope="{ row }">
-          <span v-if="!row.trafficStatus || row.trafficStatus.period === 'none'">{{ $t('traffic.unlimited') }}</span>
-          <el-tag v-else-if="row.trafficStatus.reached" type="danger">{{ $t('traffic.reached') }}</el-tag>
-          <span v-else-if="row.trafficStatus.limitMode === 'separate'">
-            {{ $t('table.upload') }} {{ quotaFlow(row.trafficStatus.uploadLimit, row.trafficStatus.uploadRemaining) }} /
-            {{ $t('table.download') }} {{ quotaFlow(row.trafficStatus.downloadLimit, row.trafficStatus.downloadRemaining) }}
-          </span>
-          <span v-else>{{ getFlow(row.trafficStatus.totalRemaining) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="checkPermission(['sysadmin'])"
-        :label="$t('kernel.kernelSummary')"
-        min-width="220"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span>{{ row.kernelSummary || '-' }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-if="checkPermission(['sysadmin'])"
-        :label="$t('kernel.transport')"
-        width="110"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <el-tag :type="row.grpcTlsMode === 'mtls' ? 'success' : 'warning'">
-            {{ row.grpcTlsMode || 'legacy' }}
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.createTime')"
-        width="150"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span>{{ timeStampToDate(row.createTime, false) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.actions')"
-        align="center"
-        class-name="small-padding fixed-width"
-      >
-        <template slot-scope="{ row, $index }">
-          <el-button
-            type="primary"
-            size="mini"
-            @click="handleUpdate(row)"
-            v-if="checkPermission(['sysadmin'])"
-          >
-            {{ $t('table.edit') }}
-          </el-button>
-          <el-button
-            type="success"
-            size="mini"
-            :disabled="row.status | disabledFilter"
-            @click="handleDetail(row)"
-          >
-            {{ $t('table.detail') }}
-          </el-button>
-          <el-button
-            v-if="checkPermission(['sysadmin'])"
-            size="mini"
-            type="warning"
-            @click="handleKernelManage(row)"
-          >
-            {{ $t('kernel.manage') }}
-          </el-button>
-          <el-button
-            v-if="checkPermission(['sysadmin', 'admin'])"
-            size="mini"
-            type="warning"
-            :disabled="resettingServerId !== 0"
-            @click="handleResetServerTraffic(row)"
-          >
-            {{ $t('traffic.resetServer') }}
-          </el-button>
-          <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(row, $index)"
-            v-if="checkPermission(['sysadmin'])"
-          >
-            {{ $t('table.delete') }}
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
 
-    <pagination
-      v-if="total > 0"
-      :total="total"
-      :page.sync="listQuery.pageNum"
-      :limit.sync="listQuery.pageSize"
-      @pagination="getList"
-    />
+    <div class="glass card">
+      <div class="tbl-wrap" v-loading="listLoading">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>服务器</th>
+              <th>gRPC</th>
+              <th>流量配额</th>
+              <th>内核</th>
+              <th>Core</th>
+              <th>状态</th>
+              <th class="traffic-reset-column">
+                <div class="traffic-reset-column-head">
+                  <span>流量统计</span>
+                  <button
+                    v-if="checkPermission(['sysadmin', 'admin'])"
+                    class="cap small traffic-reset-button"
+                    type="button"
+                    title="重置所有服务器流量统计"
+                    aria-label="重置所有服务器流量统计"
+                    @click="handleResetAllServerTraffic"
+                  >
+                    <i class="el-icon-refresh"></i>重置全部
+                  </button>
+                </div>
+              </th>
+              <th style="text-align: right">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(row, index) in list" :key="row.id">
+              <td class="primary-cell">
+                <strong>{{ row.name }}</strong
+                ><small class="mono">{{ row.ip }}</small>
+              </td>
+              <td>
+                <span class="mono muted">:{{ row.grpcPort }}</span
+                ><span
+                  class="chip"
+                  :class="row.grpcTlsMode === 'mtls' ? 'ok' : 'warn'"
+                  >{{ row.grpcTlsMode || 'legacy' }}</span
+                >
+              </td>
+              <td style="min-width: 190px">
+                <span
+                  v-if="
+                    !row.trafficStatus || row.trafficStatus.period === 'none'
+                  "
+                  class="chip plain"
+                  >不限额</span
+                >
+                <span v-else-if="row.trafficStatus.reached" class="chip bad"
+                  >已达限额</span
+                >
+                <template v-else>
+                  <div class="traffic-label">
+                    <span class="faint">{{ row.trafficStatus.period }}</span
+                    ><span class="muted num">{{
+                      row.trafficStatus.limitMode === 'separate'
+                        ? '↑ ' +
+                          quotaFlow(
+                            row.trafficStatus.uploadLimit,
+                            row.trafficStatus.uploadRemaining
+                          ) +
+                          ' / ↓ ' +
+                          quotaFlow(
+                            row.trafficStatus.downloadLimit,
+                            row.trafficStatus.downloadRemaining
+                          )
+                        : getFlow(row.trafficStatus.totalRemaining)
+                    }}</span>
+                  </div>
+                  <div class="meter"><i style="width: 45%"></i></div>
+                </template>
+              </td>
+              <td>
+                <span class="chip plain mono">{{
+                  row.kernelSummary || '未上报'
+                }}</span>
+              </td>
+              <td class="mono muted">
+                {{ row.trojanPanelCoreVersion || '—' }}
+              </td>
+              <td>
+                <span class="chip" :class="row.status === 1 ? 'ok' : 'bad'"
+                  ><span class="dot"></span
+                  >{{ statusComputed(row.status) }}</span
+                >
+              </td>
+              <td>
+                <button
+                  v-if="checkPermission(['sysadmin', 'admin'])"
+                  class="cap small traffic-reset-button"
+                  type="button"
+                  :disabled="resettingServerId !== 0"
+                  :title="`重置服务器 ${row.name} 的流量统计`"
+                  :aria-label="`重置服务器 ${row.name} 的流量统计`"
+                  @click="handleResetServerTraffic(row)"
+                >
+                  <i class="el-icon-refresh-left"></i>重置流量
+                </button>
+                <span v-else class="faint">—</span>
+              </td>
+              <td>
+                <div class="row-actions">
+                  <button
+                    class="icon-btn"
+                    type="button"
+                    title="运行状态"
+                    @click="handleDetail(row)"
+                  >
+                    <i class="el-icon-view"></i>
+                  </button>
+                  <button
+                    v-if="checkPermission(['sysadmin'])"
+                    class="icon-btn"
+                    type="button"
+                    title="内核管理"
+                    @click="handleKernelManage(row)"
+                  >
+                    <i class="el-icon-top"></i>
+                  </button>
+                  <button
+                    v-if="checkPermission(['sysadmin'])"
+                    class="icon-btn"
+                    type="button"
+                    title="编辑"
+                    @click="handleUpdate(row)"
+                  >
+                    <i class="el-icon-edit"></i>
+                  </button>
+                  <button
+                    v-if="checkPermission(['sysadmin'])"
+                    class="icon-btn danger"
+                    type="button"
+                    title="删除"
+                    @click="handleDelete(row, index)"
+                  >
+                    <i class="el-icon-delete"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <pagination
+        v-if="total > 0"
+        :total="total"
+        :page.sync="listQuery.pageNum"
+        :limit.sync="listQuery.pageSize"
+        @pagination="getList"
+      />
+    </div>
+
+    <div v-if="detailServer" class="glass sheet">
+      <div class="card-head">
+        <div>
+          <span class="kicker">Server State</span>
+          <h2>{{ detailServer.name }} · 运行状态</h2>
+        </div>
+        <button class="icon-btn" type="button" @click="detailServer = null">
+          <i class="el-icon-close"></i>
+        </button>
+      </div>
+      <div class="server-detail-layout">
+        <div class="rings-row">
+          <div
+            v-for="ring in [
+              {
+                label: 'CPU',
+                value: detailState.cpuUsed || 0,
+                color: '#0a84ff'
+              },
+              {
+                label: '内存',
+                value: detailState.memUsed || 0,
+                color: '#af52de'
+              },
+              {
+                label: '磁盘',
+                value: detailState.diskUsed || 0,
+                color: '#30c76e'
+              }
+            ]"
+            :key="ring.label"
+          >
+            <div
+              class="ring"
+              :style="{ '--p': ring.value, '--ring-color': ring.color }"
+            >
+              <b>{{ ring.value }}<em>%</em></b>
+            </div>
+            <div class="ring-label">{{ ring.label }}</div>
+          </div>
+        </div>
+        <div class="kv-grid">
+          <div class="kv">
+            <span>传输安全</span
+            ><b>{{ detailServer.grpcTlsMode || 'legacy' }}</b>
+          </div>
+          <div class="kv">
+            <span>Core 版本</span
+            ><b>{{ detailServer.trojanPanelCoreVersion || '—' }}</b>
+          </div>
+          <div class="kv">
+            <span>创建时间</span
+            ><b>{{ timeStampToDate(detailServer.createTime, false) }}</b>
+          </div>
+          <div class="kv">
+            <span>运行状态</span
+            ><b>{{ statusComputed(detailServer.status) }}</b>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <NodeServerForm
       ref="nodeServerForm"
@@ -238,7 +286,6 @@
       :dialog-visible.sync="dialogFormVisible"
       :get-list="getList"
     />
-
     <import-tip
       ref="importTip"
       :dialog-form-visible.sync="importVisible"
@@ -260,9 +307,9 @@ import {
   exportNodeServer,
   importNodeServer,
   selectNodeServerPage,
+  nodeServerState,
   resetNodeServerTraffic
 } from '@/api/node-server'
-import Cookies from 'js-cookie'
 import NodeServerForm from '@/views/node-server/list/compoments/NodeServerForm'
 import { downloadTemplate } from '@/api/file-task'
 import { getFlow } from '@/utils/account'
@@ -304,7 +351,9 @@ export default {
       },
       importVisible: false,
       dialogStatus: '',
-      resettingServerId: 0
+      resettingServerId: 0,
+      detailServer: null,
+      detailState: { cpuUsed: 0, memUsed: 0, diskUsed: 0 }
     }
   },
   created() {
@@ -394,6 +443,9 @@ export default {
         })
       })
     },
+    handleResetAllServerTraffic() {
+      this.showPendingTrafficReset('全部服务器')
+    },
     handleResetServerTraffic(row) {
       if (this.resettingServerId) return
       MessageBox.confirm(
@@ -422,6 +474,13 @@ export default {
           this.resettingServerId = 0
         })
     },
+    showPendingTrafficReset(target) {
+      this.$message({
+        type: 'info',
+        showClose: true,
+        message: `${target}流量统计重置接口待接入，当前未修改任何数据`
+      })
+    },
     handleUpdate(row) {
       this.temp = Object.assign(this.temp, row)
       this.dialogStatus = 'update'
@@ -429,8 +488,14 @@ export default {
       this.$refs.nodeServerForm.clearValidate()
     },
     handleDetail(row) {
-      Cookies.set('nodeServerId', row.id)
-      this.$router.push({ path: 'server-detail' })
+      if (this.detailServer && this.detailServer.id === row.id) {
+        this.detailServer = null
+        return
+      }
+      nodeServerState({ id: row.id }).then(({ data }) => {
+        this.detailServer = row
+        this.detailState = data
+      })
     },
     handleKernelManage(row) {
       this.$router.push({

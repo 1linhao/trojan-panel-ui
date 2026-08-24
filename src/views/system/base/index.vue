@@ -1,22 +1,23 @@
 <template>
-  <div class="app-container">
-    <el-tabs v-model="activeName">
-      <el-tab-pane :label="$t('config.accountConfig')" name="account-config">
-        <account :system-config="systemConfig" />
-      </el-tab-pane>
-      <el-tab-pane :label="$t('config.configEmail')" name="config-email">
-        <email :system-config="systemConfig" />
-      </el-tab-pane>
-      <el-tab-pane :label="$t('config.configWebFile')" name="config-web-file">
-        <web-file />
-      </el-tab-pane>
-      <el-tab-pane
-        :label="$t('config.templateConfig')"
-        name="config-template-config"
-      >
-        <template-config :system-config="systemConfig" />
-      </el-tab-pane>
-    </el-tabs>
+  <div class="prototype-page">
+    <div class="glass card prototype-config-card">
+      <div class="card-head">
+        <div>
+          <span class="kicker">System Preferences</span>
+          <h2>系统配置</h2>
+        </div>
+      </div>
+      <div class="seg liquid-tabs" role="tablist" aria-label="系统配置">
+        <button v-for="tab in tabs" :key="tab.name" type="button"
+          :class="{ on: activeName === tab.name }" @click="activeName = tab.name">
+          {{ tab.label }}
+        </button>
+      </div>
+      <account v-if="activeName === 'account-config'" :system-config="systemConfig" />
+      <email v-else-if="activeName === 'config-email'" :system-config="systemConfig" />
+      <web-file v-else-if="activeName === 'config-web-file'" />
+      <template-config v-else :system-config="systemConfig" />
+    </div>
   </div>
 </template>
 
@@ -33,6 +34,12 @@ export default {
   data() {
     return {
       activeName: 'account-config',
+      tabs: [
+        { name: 'account-config', label: '账号' },
+        { name: 'config-email', label: '邮件' },
+        { name: 'config-web-file', label: 'Web 文件' },
+        { name: 'config-template-config', label: '订阅模板' }
+      ],
       systemConfig: {
         emailEnable: 0,
         emailHost: undefined,

@@ -23,6 +23,21 @@ const account = {
   createTime: '2026-08-01T12:00:00+08:00'
 }
 
+const accounts = Array.from({ length: 36 }, (_, index) => ({
+  ...account,
+  id: index + 2,
+  username: index === 0 ? account.username : `glassuser${index + 1}`,
+  email: index === 0 ? account.email : `user${index + 1}@example.com`,
+  download: account.download + index * 268435456,
+  upload: account.upload + index * 67108864
+}))
+
+const captchaSvg =
+  'data:image/svg+xml;charset=utf-8,' +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="236" height="84" viewBox="0 0 236 84"><path d="M4 62C42 7 76 79 118 28s74 39 114-6" fill="none" stroke="#0a7cff" stroke-opacity=".28" stroke-width="3"/><path d="M8 24l218 42M18 72L216 14" stroke="#8d56d9" stroke-opacity=".2" stroke-width="2"/><text x="118" y="57" text-anchor="middle" font-family="ui-monospace,monospace" font-size="39" font-weight="700" font-style="italic" letter-spacing="10" fill="#1767ba">K7M4</text></svg>'
+  )
+
 const node = {
   id: 1,
   nodeServerId: 1,
@@ -46,6 +61,10 @@ const node = {
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, 'http://127.0.0.1')
   const path = url.pathname.replace(/^\/api/, '')
+  const isUserSession = req.headers.authorization === 'Bearer user-token'
+  const isUserLogin = (req.headers.referer || '').startsWith(
+    'http://localhost:'
+  )
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Content-Type', 'application/json; charset=utf-8')
 
@@ -55,21 +74,23 @@ const server = http.createServer((req, res) => {
       registerQuota: 10240,
       registerExpireDays: 30,
       trafficRankEnable: 1,
-      captchaEnable: 0,
+      captchaEnable: 1,
       emailEnable: 0,
       systemName: 'Trojan Panel'
     },
-    '/auth/generateCaptcha/': { captchaId: 'mock', captchaImg: '' },
-    '/auth/generateCaptcha': { captchaId: 'mock', captchaImg: '' },
-    '/auth/login': { token: 'mock-token' },
+    '/auth/generateCaptcha/': { captchaId: 'mock', captchaImg: captchaSvg },
+    '/auth/generateCaptcha': { captchaId: 'mock', captchaImg: captchaSvg },
+    '/auth/login': { token: isUserLogin ? 'user-token' : 'mock-token' },
     '/auth/register': null,
-    '/account/getAccountInfo': {
-      id: 1,
-      username: 'sysadmin',
-      roles: ['sysadmin', 'admin', 'user']
-    },
+    '/account/getAccountInfo': isUserSession
+      ? { id: account.id, username: account.username, roles: account.roles }
+      : {
+          id: 1,
+          username: 'sysadmin',
+          roles: ['sysadmin', 'admin', 'user']
+        },
     '/account/logout': null,
-    '/account/selectAccountPage': page('accounts', [account]),
+    '/account/selectAccountPage': page('accounts', accounts),
     '/account/selectAccountById': account,
     '/account/exportOptions': [
       {
@@ -89,7 +110,7 @@ const server = http.createServer((req, res) => {
       residualFlow: -1,
       nodeCount: 1,
       expireTime: 4078656000000,
-      accountCount: 2,
+      accountCount: accounts.length,
       cpuUsed: 28,
       memUsed: 43,
       diskUsed: 37
@@ -118,7 +139,9 @@ const server = http.createServer((req, res) => {
       pageSize: 20,
       total: 1
     },
-    '/node/selectNodePage': page('nodes', [node]),
+    '/node/selectNodePage': page('nodes', [
+      isUserSession ? { ...node, status: 0 } : node
+    ]),
     '/node/selectNodeById': Object.assign({}, node, {
       password: 'demo',
       uuid: '00000000-0000-0000-0000-000000000000',
@@ -205,6 +228,22 @@ const server = http.createServer((req, res) => {
       trafficDownloadLimit: 0
     },
     '/nodeServer/nodeServerState': { cpuUsed: 28, memUsed: 43, diskUsed: 37 },
+    '/nodeServer/resetNodeServerTraffic': { deletedRows: 24 },
+    '/kernel/releases': {
+      releases: [
+        { version: '25.8.3', channel: 'stable' },
+        { version: '25.7.26', channel: 'stable' }
+      ]
+    },
+    '/kernel/inventory': {
+      os: 'linux',
+      arch: 'amd64',
+      kernels: {
+        xray: { version: '25.8.3', sha256: 'mock-xray', inUse: true },
+        hysteria2: { version: '2.6.3', sha256: 'mock-hysteria2', inUse: false }
+      }
+    },
+    '/kernel/selectTaskPage': page('tasks', []),
     '/emailRecord/selectEmailRecordPage': page('emailRecords', []),
     '/fileTask/selectFileTaskPage': page('fileTasks', []),
     '/blackList/selectBlackListPage': page('blackLists', []),
@@ -215,7 +254,7 @@ const server = http.createServer((req, res) => {
       registerExpireDays: 30,
       resetDownloadAndUploadMonth: 0,
       trafficRankEnable: 1,
-      captchaEnable: 0,
+      captchaEnable: 1,
       expireWarnEnable: 0,
       expireWarnDay: 0,
       emailEnable: 0,
@@ -225,9 +264,9 @@ const server = http.createServer((req, res) => {
       emailPassword: '',
       systemName: 'Trojan Panel',
       clashRule: '',
-      singBoxTun: '',
-      singBoxOutbound: '',
-      xrayTemplate: '',
+      singBoxTun: '{}',
+      singBoxOutbound: '{}',
+      xrayTemplate: '{}',
       clashTemplateName: 'Default',
       singBoxTunTemplateName: 'TUN',
       singBoxOutboundTemplateName: 'Outbound',

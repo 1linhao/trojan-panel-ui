@@ -11,7 +11,7 @@
         prop="emailEnable"
         clearable
       >
-        <el-switch
+        <liquid-switch
           v-model="systemConfig.emailEnable"
           :active-value="1"
           :inactive-value="0"
@@ -22,7 +22,7 @@
       </el-form-item>
 
       <el-form-item :label="$t('config.emailHost')" prop="emailHost">
-        <el-input
+        <liquid-input
           :disabled="emailDisable"
           v-model="systemConfig.emailHost"
           clearable
@@ -30,7 +30,7 @@
       </el-form-item>
 
       <el-form-item :label="$t('config.emailPort')" prop="emailPort">
-        <el-input-number
+        <liquid-number-input
           v-model.number="systemConfig.emailPort"
           controls-position="right"
           type="number"
@@ -43,7 +43,7 @@
         prop="emailUsername"
         clearable
       >
-        <el-input
+        <liquid-input
           :disabled="emailDisable"
           v-model="systemConfig.emailUsername"
         />
@@ -54,7 +54,7 @@
         prop="emailPassword"
         clearable
       >
-        <el-input
+        <liquid-input
           :disabled="emailDisable"
           type="password"
           v-model="systemConfig.emailPassword"
@@ -65,7 +65,7 @@
         :label="$t('config.expireWarnEnable')"
         prop="expireWarnEnable"
       >
-        <el-switch
+        <liquid-switch
           v-model="systemConfig.expireWarnEnable"
           :active-value="1"
           :inactive-value="0"
@@ -77,7 +77,7 @@
       </el-form-item>
 
       <el-form-item :label="$t('config.expireWarnDay')" prop="expireWarnDay">
-        <el-input-number
+        <liquid-number-input
           v-model.number="systemConfig.expireWarnDay"
           controls-position="right"
           type="number"
@@ -86,9 +86,9 @@
       </el-form-item>
 
       <el-form-item>
-        <el-button type="primary" @click="updateData()"
+        <liquid-button type="primary" @click="updateData()"
           >{{ $t('table.confirm') }}
-        </el-button>
+        </liquid-button>
       </el-form-item>
     </el-form>
   </div>

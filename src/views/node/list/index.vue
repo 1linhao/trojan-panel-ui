@@ -1,188 +1,185 @@
 <template>
-  <div class="app-container">
-    <div class="filter-container">
-      <el-input
-        v-model="listQuery.name"
-        :placeholder="$t('table.nodeName')"
-        style="width: 200px"
-        class="filter-item"
-        clearable
-        @keyup.enter.native="handleFilter"
-        @clear="handleFilter"
-      />
-      <el-select
-        v-model="listQuery.nodeServerId"
-        :placeholder="$t('table.nodeServerName').toString()"
-        class="filter-item"
-        @change="handleFilter"
-        @clear="handleFilter"
-      >
-        <el-option
-          :label="item.name"
-          :value="item.id"
-          :key="item.id"
-          v-for="item in nodeServers"
-        ></el-option>
-      </el-select>
-      <el-button
-        class="filter-item"
-        type="primary"
-        icon="el-icon-search"
-        @click="handleFilter"
-      >
-        {{ $t('table.search') }}
-      </el-button>
-      <el-button
-        class="filter-item"
-        type="primary"
-        icon="el-icon-edit"
-        @click="handleCreate"
-        v-if="checkPermission(['sysadmin', 'admin'])"
-      >
-        {{ $t('table.add') }}
-      </el-button>
-      <el-button
-        class="filter-item"
-        type="success"
-        icon="el-icon-upload2"
-        @click="exportDialogVisible = true"
-      >
-        {{ $t('exportNode.title') }}
-      </el-button>
+  <div class="prototype-page grid">
+    <div class="glass card">
+      <div class="toolbar">
+        <div class="search-box">
+          <i class="el-icon-search"></i
+          ><input
+            v-model="listQuery.name"
+            placeholder="按节点名搜索"
+            @keyup.enter="handleFilter"
+          />
+        </div>
+        <liquid-select
+          v-model="listQuery.nodeServerId"
+          clearable
+          placeholder="全部服务器"
+          class="prototype-select"
+          @change="handleFilter"
+        >
+          <option
+            v-for="item in nodeServers"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </liquid-select>
+        <div class="spacer"></div>
+        <button
+          class="cap small"
+          type="button"
+          @click="exportDialogVisible = true"
+        >
+          <i class="el-icon-upload2"></i>订阅导出
+        </button>
+        <button
+          v-if="checkPermission(['sysadmin', 'admin'])"
+          class="cap primary small"
+          type="button"
+          @click="handleCreate"
+        >
+          <i class="el-icon-plus"></i>新建节点
+        </button>
+      </div>
     </div>
-    <el-table
-      :key="tableKey"
-      v-loading="listLoading"
-      :data="list"
-      border
-      fit
-      highlight-current-row
-      style="width: 100%"
-    >
-      <el-table-column
-        :label="$t('table.id').toString()"
-        sortable="custom"
-        align="center"
-        width="80"
-        type="index"
-      />
-      <el-table-column
-        :label="$t('table.nodeName').toString()"
-        width="120"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span>{{ row.name }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.nodeServerName').toString()"
-        width="150"
-        align="center"
-        v-if="checkPermission(['sysadmin', 'admin'])"
-      >
-        <template slot-scope="{ row }">
-          <span>{{ nodeServerFind(nodeServers, row.nodeServerId) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.nodeDomain').toString()"
-        width="150"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span>{{ row.domain }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.nodePort').toString()"
-        width="80"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span>{{ row.port }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.nodePriority').toString()"
-        width="80"
-        align="center"
-        v-if="checkPermission(['sysadmin', 'admin'])"
-      >
-        <template slot-scope="{ row }">
-          <span>{{ row.priority }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.nodeType').toString()"
-        width="120"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span>{{ nodeTypeFind(nodeTypes, row.nodeTypeId) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.nodeStatus').toString()"
-        width="100"
-        align="center"
-        v-if="checkPermission(['sysadmin', 'admin'])"
-      >
-        <template slot-scope="{ row }">
-          <el-tag :type="row.status | statusTypeFilter">
-            <span>{{ statusComputed(row.status) }}</span>
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.createTime').toString()"
-        width="150"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span>{{ timeStampToDate(row.createTime, false) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('traffic.serverRemaining')" min-width="220" align="center">
-        <template slot-scope="{ row }">
-          <span v-if="!row.serverTraffic || row.serverTraffic.period === 'none'">{{ $t('traffic.unlimited') }}</span>
-          <el-tag v-else-if="row.serverTraffic.reached" type="danger">{{ $t('traffic.reached') }}</el-tag>
-          <span v-else-if="row.serverTraffic.limitMode === 'separate'">
-            ↑ {{ quotaFlow(row.serverTraffic.uploadLimit, row.serverTraffic.uploadRemaining) }} /
-            ↓ {{ quotaFlow(row.serverTraffic.downloadLimit, row.serverTraffic.downloadRemaining) }}
-          </span>
-          <span v-else>{{ getFlow(row.serverTraffic.totalRemaining) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.actions').toString()"
-        align="center"
-        class-name="small-padding fixed-width"
-      >
-        <template slot-scope="{ row, $index }">
-          <el-button
-            type="primary"
-            size="mini"
-            @click="handleUpdate(row)"
-            v-if="checkPermission(['sysadmin', 'admin'])"
-          >
-            {{ $t('table.edit') }}
-          </el-button>
-          <el-button type="success" size="mini" @click="handleDetail(row)">
-            {{ $t('table.detail') }}
-          </el-button>
-          <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(row, $index)"
-            v-if="checkPermission(['sysadmin', 'admin'])"
-          >
-            {{ $t('table.delete') }}
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
 
+    <div class="node-grid" v-loading="listLoading">
+      <template v-for="(row, index) in list">
+        <div :key="'node-' + row.id" class="glass node-card">
+          <div class="node-top">
+            <span
+              class="proto-badge tone-blue"
+              :title="nodeTypeFind(nodeTypes, row.nodeTypeId)"
+              >{{
+              nodeTypeFind(nodeTypes, row.nodeTypeId)
+            }}</span>
+            <div class="grow">
+              <h3>{{ row.name }}</h3>
+              <span class="muted"
+                >{{ nodeServerFind(nodeServers, row.nodeServerId) }} ·
+                {{ row.domain }}:{{ row.port }}</span
+              >
+            </div>
+          </div>
+          <div class="node-meta">
+            <span class="chip plain">{{
+              row.xrayProtocol || nodeTypeFind(nodeTypes, row.nodeTypeId)
+            }}</span>
+            <span class="chip info">优先级 {{ row.priority }}</span>
+            <span
+              v-if="checkPermission(['sysadmin', 'admin'])"
+              class="chip"
+              :class="row.status === 1 ? 'ok' : 'bad'"
+              ><span class="dot"></span>{{ statusComputed(row.status) }}</span
+            >
+          </div>
+          <div v-if="row.clients && row.clients.length" class="node-meta">
+            <span
+              v-for="client in row.clients"
+              :key="client"
+              class="chip violet"
+              >{{ client }}</span
+            >
+          </div>
+          <div class="node-foot">
+            <span
+              v-if="!row.serverTraffic || row.serverTraffic.period === 'none'"
+              class="latency"
+              >服务器流量不限额</span
+            >
+            <span v-else-if="row.serverTraffic.reached" class="latency bad-text"
+              >服务器流量已达限额</span
+            >
+            <span v-else class="latency"
+              >剩余
+              {{
+                row.serverTraffic.limitMode === 'separate'
+                  ? '↑ ' +
+                    quotaFlow(
+                      row.serverTraffic.uploadLimit,
+                      row.serverTraffic.uploadRemaining
+                    ) +
+                    ' / ↓ ' +
+                    quotaFlow(
+                      row.serverTraffic.downloadLimit,
+                      row.serverTraffic.downloadRemaining
+                    )
+                  : getFlow(row.serverTraffic.totalRemaining)
+              }}</span
+            >
+            <button
+              class="cap small"
+              type="button"
+              @click="handlePrototypeDetail(row)"
+            >
+              <i class="el-icon-view"></i
+              >{{ detailId === row.id ? '收起' : '详情' }}
+            </button>
+            <template v-if="checkPermission(['sysadmin', 'admin'])">
+              <button
+                class="icon-btn"
+                type="button"
+                title="编辑"
+                @click="handleUpdate(row)"
+              >
+                <i class="el-icon-edit"></i>
+              </button>
+              <button
+                class="icon-btn danger"
+                type="button"
+                title="删除"
+                @click="handleDelete(row, index)"
+              >
+                <i class="el-icon-delete"></i>
+              </button>
+            </template>
+          </div>
+        </div>
+        <div
+          v-if="detailId === row.id"
+          :key="'detail-' + row.id"
+          class="glass sheet node-detail"
+        >
+          <div class="card-head">
+            <div>
+              <span class="kicker">Connection</span>
+              <h2>{{ row.name }} · 连接参数</h2>
+            </div>
+            <button class="icon-btn" type="button" @click="detailId = 0">
+              <i class="el-icon-close"></i>
+            </button>
+          </div>
+          <div class="kv-grid">
+            <div class="kv">
+              <span>域名</span><b class="mono">{{ nodeDetail.domain }}</b>
+            </div>
+            <div class="kv">
+              <span>端口</span><b class="mono">{{ nodeDetail.port }}</b>
+            </div>
+            <div class="kv">
+              <span>连接密码</span
+              ><b class="mono">{{
+                nodeDetail.password || nodeDetail.pass || '—'
+              }}</b>
+            </div>
+            <div class="kv">
+              <span>协议</span
+              ><b
+                >{{ nodeTypeFind(nodeTypes, row.nodeTypeId) }} ·
+                {{ row.xrayProtocol || '默认' }}</b
+              >
+            </div>
+            <div v-if="nodeDetail.realityPbk" class="kv">
+              <span>Reality 公钥</span
+              ><b class="mono">{{ nodeDetail.realityPbk }}</b>
+            </div>
+            <div v-if="nodeDetail.uuid" class="kv">
+              <span>UUID</span><b class="mono">{{ nodeDetail.uuid }}</b>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
     <Pagination
       v-if="total > 0"
       :total="total"
@@ -190,7 +187,6 @@
       :limit.sync="listQuery.pageSize"
       @pagination="getList"
     />
-
     <NodeForm
       ref="nodeForm"
       :dialog-form-visible-props.sync="dialogFormVisible"
@@ -200,21 +196,12 @@
       :node-types-props="nodeTypes"
       :get-list-props="getList"
     />
-
-    <NodeDetail
-      :dialog-visible-props.sync="dialogInfoVisible"
-      :node-info-props="nodeDetail"
-      :node-servers-props="nodeServers"
-      :node-types-props="nodeTypes"
-    />
-
     <ExportNodeDialog :dialog-visible-props.sync="exportDialogVisible" />
   </div>
 </template>
 
 <script>
 import Pagination from '@/components/Pagination'
-import NodeDetail from '@/views/node/list/components/NodeDetail'
 import ExportNodeDialog from '@/views/node/list/components/ExportNodeDialog'
 import { MessageBox } from 'element-ui'
 import {
@@ -235,18 +222,13 @@ import checkPermission from '@/utils/permission'
 import { timeStampToDate } from '@/utils'
 import { getFlow } from '@/utils/account'
 import { selectNodeServerList } from '@/api/node-server'
-import FallbackForm from '@/views/node/list/components/FallbackForm'
-import FallbackInfo from '@/views/node/list/components/FallbackInfo'
 import NodeForm from '@/views/node/list/components/NodeForm'
 
 export default {
   name: 'index',
   components: {
     NodeForm,
-    FallbackInfo,
-    FallbackForm,
     ExportNodeDialog,
-    NodeDetail,
     Pagination
   },
   filters: {
@@ -469,6 +451,7 @@ export default {
       dialogFormVisible: false,
       dialogInfoVisible: false,
       exportDialogVisible: false,
+      detailId: 0,
       nodeTypes: [],
       nodeServers: [],
       textMap: {
@@ -483,6 +466,21 @@ export default {
     this.getList()
   },
   methods: {
+    handlePrototypeDetail(row) {
+      if (this.detailId === row.id) {
+        this.detailId = 0
+        return
+      }
+      this.nodeDetail = Object.assign({}, row)
+      selectNodeInfo({ id: row.id }).then((response) => {
+        try {
+          this.nodeDetail = handleNodeDetail(this.nodeDetail, response.data)
+        } catch (error) {
+          this.nodeDetail = Object.assign({}, this.nodeDetail, response.data)
+        }
+        this.detailId = row.id
+      })
+    },
     getFlow,
     quotaFlow(limit, remaining) {
       return limit > 0 ? getFlow(remaining) : this.$t('traffic.unlimited')

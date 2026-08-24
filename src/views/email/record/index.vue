@@ -1,100 +1,75 @@
 <template>
-  <div class="app-container">
-    <div class="filter-container">
-      <el-input
-        v-model="listQuery.toEmail"
-        :placeholder="$t('table.toEmail')"
-        style="width: 200px"
-        class="filter-item"
-        clearable
-        @keyup.enter.native="handleFilter"
-        @clear="handleFilter"
-        maxlength="64"
-      />
-      <el-select
-        v-model="listQuery.state"
-        :placeholder="$t('table.status')"
-        style="width: 200px"
-        class="filter-item"
-        clearable
-        @clear="
-          () => {
-            listQuery.state = undefined
-          }
-        "
-      >
-        <el-option
-          :label="item.label"
-          :value="item.value"
-          :key="item.value"
-          v-for="item in states"
-        ></el-option>
-      </el-select>
-      <el-button
-        class="filter-item"
-        type="primary"
-        icon="el-icon-search"
-        @click="handleFilter"
-      >
-        {{ $t('table.search') }}
-      </el-button>
+  <div class="prototype-page grid">
+    <div class="glass card">
+      <div class="toolbar">
+        <div class="search-box">
+          <i class="el-icon-search"></i
+          ><input
+            v-model="listQuery.toEmail"
+            placeholder="按收件邮箱搜索"
+            @keyup.enter="handleFilter"
+          />
+        </div>
+        <liquid-select
+          v-model="listQuery.state"
+          clearable
+          placeholder="发送状态"
+          class="prototype-select"
+          ><option
+            v-for="item in states"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value" /></liquid-select
+        ><button class="cap primary small" type="button" @click="handleFilter">
+          搜索记录
+        </button>
+      </div>
     </div>
-    <el-table
-      :key="tableKey"
-      v-loading="listLoading"
-      :data="list"
-      border
-      fit
-      highlight-current-row
-      style="width: 100%"
-    >
-      <el-table-column
-        :label="$t('table.id')"
-        sortable="custom"
-        align="center"
-        width="80"
-        type="index"
+    <div class="glass card">
+      <div class="tbl-wrap" v-loading="listLoading">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>收件人</th>
+              <th>主题</th>
+              <th>内容</th>
+              <th>状态</th>
+              <th>创建时间</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="row in list" :key="row.id">
+              <td class="primary-cell">
+                <strong>{{ row.toEmail }}</strong
+                ><small>#{{ row.id }}</small>
+              </td>
+              <td>{{ row.subject }}</td>
+              <td class="muted email-content">{{ row.content }}</td>
+              <td>
+                <span
+                  class="chip"
+                  :class="
+                    row.state === 1 ? 'ok' : row.state === -1 ? 'bad' : 'warn'
+                  "
+                  ><span class="dot"></span
+                  >{{ stateDescFilter(row.state) }}</span
+                >
+              </td>
+              <td class="muted">
+                {{ timeStampToDate(row.createTime, false) }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <pagination
+        v-if="total > 0"
+        :total="total"
+        :page.sync="listQuery.pageNum"
+        :limit.sync="listQuery.pageSize"
+        @pagination="getList"
       />
-      <el-table-column :label="$t('table.toEmail')" width="180" align="center">
-        <template slot-scope="{ row }">
-          <span>{{ row.toEmail }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('table.subject')" width="250" align="center">
-        <template slot-scope="{ row }">
-          <span>{{ row.subject }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('table.content')" width="400" align="center">
-        <template slot-scope="{ row }">
-          <span>{{ row.content }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('table.status')" width="180" align="center">
-        <template slot-scope="{ row }">
-          <el-tag :type="row.state | stateFilter">
-            {{ stateDescFilter(row.state) }}
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.createTime')"
-        align="center"
-        class-name="small-padding fixed-width"
-      >
-        <template slot-scope="{ row }">
-          <span>{{ timeStampToDate(row.createTime, false) }}</span>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <pagination
-      v-if="total > 0"
-      :total="total"
-      :page.sync="listQuery.pageNum"
-      :limit.sync="listQuery.pageSize"
-      @pagination="getList"
-    />
+    </div>
   </div>
 </template>
 

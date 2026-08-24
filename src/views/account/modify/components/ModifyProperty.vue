@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="profile-form">
     <aside v-if="emailEnable === 1">
       {{ this.$t('remark.emailEnable') }}
     </aside>
@@ -10,21 +10,21 @@
       label-position="left"
     >
       <el-form-item :label="$t('table.email')" prop="email">
-        <el-input
+        <liquid-input
           v-model="temp.email"
           :placeholder="$t('table.email')"
           clearable
         />
       </el-form-item>
       <el-form-item :label="$t('table.username')" prop="username">
-        <el-input
+        <liquid-input
           v-model="temp.username"
           :placeholder="$t('table.username')"
           clearable
         />
       </el-form-item>
       <el-form-item :label="$t('table.pass')" prop="pass">
-        <el-input
+        <liquid-input
           v-model="temp.pass"
           type="password"
           :placeholder="$t('table.pass')"
@@ -32,9 +32,9 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="updateData()"
+        <liquid-button type="primary" @click="updateData()"
           >{{ $t('table.confirm') }}
-        </el-button>
+        </liquid-button>
       </el-form-item>
     </el-form>
   </div>
@@ -71,7 +71,7 @@ export default {
           },
           {
             pattern:
-              /^([A-Za-z0-9_\-\.])+\@(163.com|126.com|qq.com|gmail.com)$/,
+              /^([A-Za-z0-9_.-])+@(163.com|126.com|qq.com|gmail.com)$/,
             message: this.$t('valid.emailElement'),
             trigger: ['change', 'blur']
           }

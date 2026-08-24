@@ -1,29 +1,27 @@
 <template>
-  <el-upload
-    list-type="picture-card"
-    ref="upload"
-    action=""
-    :file-list="fileList"
-    :http-request="uploadFile"
-    accept=".png"
-    :on-change="handleChange"
-    :before-upload="beforeUpload"
-    :limit="1"
-    :disabled="uploadDisable"
-  >
-    <i slot="default" class="el-icon-plus"></i>
-    <div slot="file" slot-scope="{ file }">
-      <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
-      <span class="el-upload-list__item-actions">
-        <span class="el-upload-list__item-delete" @click="handleRemove(file)">
-          <i class="el-icon-delete"></i>
-        </span>
-      </span>
+  <div class="liquid-logo-picker">
+    <div v-if="fileList.length" class="liquid-logo-picker__preview">
+      <img :src="fileList[0].url" alt="系统 Logo" />
+      <button type="button" aria-label="移除 Logo" @click="handleRemove">
+        <i class="el-icon-delete" aria-hidden="true" />
+      </button>
     </div>
-    <div slot="tip" class="el-upload__tip">
+    <template v-else>
+      <input
+        ref="upload"
+        class="liquid-logo-picker__native"
+        type="file"
+        accept=".png"
+        @change="handleNativeFile"
+      />
+      <liquid-button icon="el-icon-plus" @click="$refs.upload.click()">
+        选择 Logo
+      </liquid-button>
+    </template>
+    <div class="liquid-logo-picker__tip">
       {{ $t('config.imageFileTip') }}
     </div>
-  </el-upload>
+  </div>
 </template>
 
 <script>
@@ -44,7 +42,17 @@ export default {
     }
   },
   methods: {
-    handleRemove(file) {
+    handleNativeFile(event) {
+      const file = event.target.files[0]
+      if (!file || this.beforeUpload(file) === false) {
+        event.target.value = ''
+        return
+      }
+      const item = { name: file.name, raw: file, url: URL.createObjectURL(file) }
+      this.fileList = [item]
+      this.uploadFile({ file })
+    },
+    handleRemove() {
       this.fileList = []
     },
     beforeUpload(file) {
@@ -67,14 +75,10 @@ export default {
       }
       return isJPG && isLt2M
     },
-    handleChange(file, fileList) {
-      // 上传自动覆盖
-      this.fileList = [file]
-    },
     uploadFile(params) {
       if (this.fileList.length > 0) {
         let formData = new FormData()
-        formData.append('file', this.fileList[0].raw)
+        formData.append('file', params.file || this.fileList[0].raw)
         uploadLogo(formData).then(() => {
           this.$notify({
             title: 'Success',
@@ -88,4 +92,44 @@ export default {
   }
 }
 </script>
-<style></style>
+<style scoped>
+.liquid-logo-picker {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+}
+.liquid-logo-picker__native {
+  display: none;
+}
+.liquid-logo-picker__preview {
+  position: relative;
+  width: 112px;
+  height: 112px;
+  overflow: hidden;
+  border: 1px solid var(--rim);
+  border-radius: 20px;
+  background: var(--control-fill);
+  box-shadow: inset 0 1px 0 var(--spec-soft), var(--shadow-soft);
+}
+.liquid-logo-picker__preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.liquid-logo-picker__preview button {
+  position: absolute;
+  right: 7px;
+  bottom: 7px;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--rim);
+  border-radius: 10px;
+  color: var(--bad-fg);
+  background: var(--glass-popover);
+  cursor: pointer;
+}
+.liquid-logo-picker__tip {
+  color: var(--ink-3);
+  font-size: 11.5px;
+}
+</style>

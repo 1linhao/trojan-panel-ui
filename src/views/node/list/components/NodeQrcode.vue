@@ -1,20 +1,18 @@
 <template>
   <el-dialog
+    append-to-body
     :title="$t('table.nodeQRCode').toString()"
     :visible="dialogVisibleProps"
     @close="$emit('update:dialogVisibleProps', false)"
   >
-    <el-image
-      style="width: 256px; height: 256px"
-      :src="qrCodeSrcProps"
-    ></el-image>
+    <img class="node-qrcode" :src="qrCodeSrcProps" alt="二维码" />
     <div slot="footer" class="dialog-footer">
-      <el-button
+      <liquid-button
         type="primary"
         @click="$emit('update:dialogVisibleProps', false)"
       >
         {{ $t('table.confirm') }}
-      </el-button>
+      </liquid-button>
     </div>
   </el-dialog>
 </template>
@@ -35,4 +33,13 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.node-qrcode {
+  display: block;
+  width: min(256px, 100%);
+  height: auto;
+  margin: 0 auto;
+  aspect-ratio: 1;
+  border-radius: 16px;
+}
+</style>

@@ -1,125 +1,85 @@
 <template>
-  <div class="app-container">
-    <div class="filter-container">
-      <el-input
-        v-model="listQuery.accountUsername"
-        :placeholder="$t('table.fileTaskAccountUsername')"
-        style="width: 200px"
-        class="filter-item"
-        clearable
-        @keyup.enter.native="handleFilter"
-        @clear="handleFilter"
-        maxlength="20"
-      />
-      <el-button
-        class="filter-item"
-        type="primary"
-        icon="el-icon-search"
-        @click="handleFilter"
-      >
-        {{ $t('table.search') }}
-      </el-button>
+  <div class="prototype-page grid">
+    <div class="glass card">
+      <div class="toolbar">
+        <div class="search-box">
+          <i class="el-icon-search"></i
+          ><input
+            v-model="listQuery.accountUsername"
+            placeholder="按账号搜索"
+            @keyup.enter="handleFilter"
+          />
+        </div>
+        <button class="cap primary small" type="button" @click="handleFilter">
+          搜索任务
+        </button>
+      </div>
     </div>
-    <el-table
-      :key="tableKey"
-      v-loading="listLoading"
-      :data="list"
-      border
-      fit
-      highlight-current-row
-      style="width: 100%"
-    >
-      <el-table-column
-        :label="$t('table.id')"
-        sortable="custom"
-        align="center"
-        width="80"
-        type="index"
+    <div class="glass card">
+      <div class="tbl-wrap" v-loading="listLoading">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>任务</th>
+              <th>类型</th>
+              <th>账号</th>
+              <th>状态</th>
+              <th>错误信息</th>
+              <th>创建时间</th>
+              <th style="text-align: right">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(row, index) in list" :key="row.id">
+              <td class="primary-cell">
+                <strong>{{ row.name }}</strong
+                ><small>#{{ row.id }}</small>
+              </td>
+              <td>
+                <span class="chip info">{{ typeComputed(row.type) }}</span>
+              </td>
+              <td class="muted">{{ row.accountUsername }}</td>
+              <td>
+                <span
+                  class="chip"
+                  :class="
+                    row.status === 2 ? 'ok' : row.status === -1 ? 'bad' : 'warn'
+                  "
+                  ><span class="dot"></span
+                  >{{ statusComputed(row.status) }}</span
+                >
+              </td>
+              <td class="muted">{{ row.errMsg || '—' }}</td>
+              <td class="muted">
+                {{ timeStampToDate(row.createTime, false) }}
+              </td>
+              <td>
+                <div class="row-actions">
+                  <button
+                    v-if="checkPermission(['sysadmin', 'admin'])"
+                    class="cap small"
+                    type="button"
+                    :disabled="
+                      row.status !== 2 || row.type === 3 || row.type === 4
+                    "
+                    @click="handleDownload(row, index)"
+                  >
+                    <i class="el-icon-download"></i>下载
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <pagination
+        v-if="total > 0"
+        :total="total"
+        :page.sync="listQuery.pageNum"
+        :limit.sync="listQuery.pageSize"
+        @pagination="getList"
       />
-      <el-table-column
-        :label="$t('table.fileTaskName')"
-        width="180"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span>{{ row.name }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.fileTaskType')"
-        width="100"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <el-tag type="success">
-            <span>{{ typeComputed(row.type) }}</span>
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.fileTaskStatus')"
-        width="100"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <el-tag :type="row.status | statusTypeFilter">
-            <span>{{ statusComputed(row.status) }}</span>
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.fileTaskErrMsg')"
-        width="180"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span>{{ row.status === -1 ? row.errMsg : '' }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.fileTaskAccountUsername')"
-        width="180"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span>{{ row.accountUsername }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.createTime')"
-        width="150"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span>{{ timeStampToDate(row.createTime, false) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.actions')"
-        align="center"
-        class-name="small-padding fixed-width"
-      >
-        <template slot-scope="{ row, $index }">
-          <el-button
-            :disabled="row.status !== 2 || row.type === 3 || row.type === 4"
-            type="primary"
-            size="mini"
-            @click="handleDownload(row, $index)"
-            v-if="checkPermission(['sysadmin', 'admin'])"
-          >
-            {{ $t('table.fileTaskDownload') }}
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <pagination
-      v-if="total > 0"
-      :total="total"
-      :page.sync="listQuery.pageNum"
-      :limit.sync="listQuery.pageSize"
-      @pagination="getList"
-    />
+    </div>
   </div>
 </template>
 

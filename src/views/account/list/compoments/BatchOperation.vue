@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    append-to-body
     :title="$t('table.createBatch').toString()"
     :visible="dialogFormVisibleProps"
     @close="$emit('update:dialogFormVisibleProps', false)"
@@ -11,14 +12,17 @@
       label-position="left"
     >
       <el-form-item :label="$t('table.num').toString()" prop="num">
-        <el-input-number
+        <liquid-number-input
           v-model.number="temp.num"
           controls-position="right"
           type="number"
         />
       </el-form-item>
-      <el-form-item :label="$t('table.presetQuota').toString()" prop="presetQuota">
-        <el-input-number
+      <el-form-item
+        :label="$t('table.presetQuota').toString()"
+        prop="presetQuota"
+      >
+        <liquid-number-input
           v-model.number="temp.presetQuota"
           controls-position="right"
           type="number"
@@ -28,7 +32,7 @@
         :label="$t('table.presetExpire').toString()"
         prop="presetExpire"
       >
-        <el-input-number
+        <liquid-number-input
           v-model.number="temp.presetExpire"
           controls-position="right"
           type="number"
@@ -36,12 +40,12 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="$emit('update:dialogFormVisibleProps', false)"
+      <liquid-button @click="$emit('update:dialogFormVisibleProps', false)"
         >{{ $t('table.cancel') }}
-      </el-button>
-      <el-button type="primary" @click="createAccountBatch">
+      </liquid-button>
+      <liquid-button type="primary" @click="createAccountBatch">
         {{ $t('table.confirm') }}
-      </el-button>
+      </liquid-button>
     </div>
   </el-dialog>
 </template>

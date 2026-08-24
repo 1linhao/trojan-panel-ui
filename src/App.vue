@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="liquid-ambient" aria-hidden="true">
+    <div class="ambient liquid-ambient" aria-hidden="true">
       <i />
       <i />
       <i />

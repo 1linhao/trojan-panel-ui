@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="profile-form">
     <el-form
       ref="dataForm"
       :rules="updateRules"
@@ -7,7 +7,7 @@
       label-position="left"
     >
       <el-form-item :label="$t('table.oldPass')" prop="oldPass">
-        <el-input
+        <liquid-input
           v-model="temp.oldPass"
           type="password"
           :placeholder="$t('table.oldPass')"
@@ -15,7 +15,7 @@
         />
       </el-form-item>
       <el-form-item :label="$t('table.newPass')" prop="newPass">
-        <el-input
+        <liquid-input
           v-model="temp.newPassOne"
           type="password"
           :placeholder="$t('table.newPass')"
@@ -23,7 +23,7 @@
         />
       </el-form-item>
       <el-form-item :label="$t('table.newPass')" prop="newPass">
-        <el-input
+        <liquid-input
           v-model="temp.newPass"
           type="password"
           :placeholder="$t('table.newPass')"
@@ -31,9 +31,9 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="updateData()"
+        <liquid-button type="primary" @click="updateData()"
           >{{ $t('table.confirm') }}
-        </el-button>
+        </liquid-button>
       </el-form-item>
     </el-form>
   </div>
@@ -72,7 +72,7 @@ export default {
           },
           {
             pattern:
-              /^([A-Za-z0-9_\-\.])+\@(163.com|126.com|qq.com|gmail.com)$/,
+              /^([A-Za-z0-9_.-])+@(163.com|126.com|qq.com|gmail.com)$/,
             message: this.$t('valid.emailElement'),
             trigger: ['change', 'blur']
           }

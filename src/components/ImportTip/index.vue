@@ -1,12 +1,13 @@
 <template>
   <el-dialog
+    append-to-body
     :title="$t('table.import')"
     :visible="dialogFormVisible"
     @close="$emit('update:dialogFormVisible', false)"
   >
     <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left">
       <el-form-item :label="label" prop="cover">
-        <el-switch
+        <liquid-switch
           v-model="temp.cover"
           active-color="#13ce66"
           inactive-color="#ff4949"
@@ -15,49 +16,46 @@
           :active-value="1"
           :inactive-value="0"
         >
-        </el-switch>
+        </liquid-switch>
       </el-form-item>
       <el-form-item :label="$t('config.webFileSelect')" prop="file">
-        <el-upload
-          class="upload-demo"
-          ref="upload"
-          action=""
-          :file-list="fileList"
-          :http-request="importData"
-          :auto-upload="false"
-          accept=".json"
-          :on-change="handleChange"
-          :before-upload="beforeUpload"
-          :limit="1"
-        >
-          <el-button slot="trigger" size="small" type="primary"
-            >{{ $t('config.webFileSelect') }}
-          </el-button>
-          <el-button
-            class="filter-item"
-            type="success"
+        <div class="liquid-file-picker">
+          <input
+            ref="upload"
+            class="liquid-file-picker__native"
+            type="file"
+            accept=".json"
+            @change="handleNativeFile"
+          />
+          <liquid-button type="primary" @click="$refs.upload.click()">
+            {{ $t('config.webFileSelect') }}
+          </liquid-button>
+          <liquid-button
             icon="el-icon-download"
             @click="downloadTemplate"
           >
             {{ $t('table.downloadTemplate') }}
-          </el-button>
-          <div slot="tip" class="el-upload__tip">
+          </liquid-button>
+          <span v-if="fileList.length" class="liquid-file-picker__name">
+            {{ fileList[0].name }}
+          </span>
+          <div class="liquid-file-picker__tip">
             {{ $t('config.jsonFileTip') }}
           </div>
-        </el-upload>
+        </div>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="$emit('update:dialogFormVisible', false)">
+      <liquid-button @click="$emit('update:dialogFormVisible', false)">
         {{ $t('table.cancel') }}
-      </el-button>
-      <el-button
+      </liquid-button>
+      <liquid-button
         type="primary"
         @click="submitImport"
         :disabled="fileList.length === 0"
       >
         {{ $t('table.confirm') }}
-      </el-button>
+      </liquid-button>
     </div>
   </el-dialog>
 </template>
@@ -103,9 +101,13 @@ export default {
     }
   },
   methods: {
-    handleChange(file, fileList) {
-      // 上传自动覆盖
-      this.fileList = [file]
+    handleNativeFile(event) {
+      const file = event.target.files[0]
+      if (!file || this.beforeUpload(file) === false) {
+        event.target.value = ''
+        return
+      }
+      this.fileList = [{ name: file.name, raw: file }]
     },
     beforeUpload(file) {
       if (!file.name.endsWith('.json')) {
@@ -126,14 +128,31 @@ export default {
       }
     },
     submitImport() {
-      this.$refs.upload.submit()
+      if (this.fileList.length) {
+        this.importData({ file: this.fileList[0].raw })
+      }
     }
   }
 }
 </script>
 
 <style scoped>
-.el-button {
-  margin-left: 10px;
+.liquid-file-picker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.liquid-file-picker__native {
+  display: none;
+}
+.liquid-file-picker__name {
+  color: var(--ink-2);
+  font-size: 12px;
+}
+.liquid-file-picker__tip {
+  flex-basis: 100%;
+  color: var(--ink-3);
+  font-size: 11.5px;
 }
 </style>

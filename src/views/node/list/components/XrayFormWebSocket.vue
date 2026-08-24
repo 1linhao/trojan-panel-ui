@@ -4,13 +4,13 @@
       :label="$t('table.xrayStreamSettingsWsSettingsPath').toString()"
       prop="xrayStreamSettingsEntity.wsSettings.path"
     >
-      <el-input v-model="nodeProps.xrayStreamSettingsEntity.wsSettings.path" />
+      <liquid-input v-model="nodeProps.xrayStreamSettingsEntity.wsSettings.path" />
     </el-form-item>
     <el-form-item
       label="WebSocket Host"
       prop="xrayStreamSettingsEntity.wsSettings.headers.Host"
     >
-      <el-input
+      <liquid-input
         v-model="nodeProps.xrayStreamSettingsEntity.wsSettings.headers.Host"
       />
     </el-form-item>

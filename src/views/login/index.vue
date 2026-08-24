@@ -1,113 +1,91 @@
 <template>
-  <div class="login-container">
+  <div class="auth">
     <liquid-theme-toggle class="auth-theme-toggle" />
-    <el-form
-      ref="loginForm"
-      :model="loginForm"
-      :rules="loginRules"
-      class="login-form"
-      auto-complete="on"
-      label-position="left"
-    >
-      <div class="title-container">
-        <h3 class="title">
-          {{ systemName }}
-        </h3>
-        <lang-select class="set-language" />
+    <div class="auth-card glass raised">
+      <div class="auth-brand">
+        <span class="brand-mark">T</span>
+        <h1>{{ systemName || 'Trojan Panel' }}</h1>
       </div>
-
-      <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="username" />
-        </span>
-        <el-input
-          ref="username"
-          v-model="loginForm.username"
-          :placeholder="$t('login.username')"
-          name="username"
-          type="text"
-          tabindex="1"
-          auto-complete="on"
-          clearable
-        />
-      </el-form-item>
-
-      <el-form-item prop="pass">
-        <span class="svg-container">
-          <svg-icon icon-class="pass" />
-        </span>
-        <el-input
-          :key="passwordType"
-          ref="pass"
-          v-model="loginForm.pass"
-          :type="passwordType"
-          :placeholder="$t('login.password')"
-          name="password"
-          tabindex="2"
-          auto-complete="on"
-          @keyup.enter.native="handleLogin"
-          clearable
-        />
-        <span class="show-pwd" @click="showPwd">
-          <svg-icon
-            :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
-          />
-        </span>
-      </el-form-item>
-
-      <!-- 验证码 -->
-      <el-form-item prop="captchaCode" v-if="captchaEnable">
-        <span class="svg-container">
-          <svg-icon icon-class="valid-code" />
-        </span>
-        <el-input
-          v-model="loginForm.captchaCode"
-          auto-complete="off"
-          :placeholder="$t('login.code')"
-          style="width: 65%"
-          @keyup.enter.native="handleLogin"
-        />
-
-        <div class="captcha">
-          <img
-            alt="captcha"
-            :src="captchaImg"
-            @click="handleCaptchaGenerate"
-            height="38px"
-          />
-        </div>
-      </el-form-item>
-
-      <el-button
-        :loading="loading"
-        type="primary"
-        style="width: 100%; margin-bottom: 30px"
-        @click.native.prevent="handleLogin"
-        >{{ $t('login.logIn') }}
-      </el-button>
-
-      <el-button
-        type="primary"
-        class="auth-secondary-button"
-        style="width: 100%; margin: 0"
-        v-if="registerEnable === 1"
-        @click.native.prevent="goRegister"
+      <el-form
+        ref="loginForm"
+        :model="loginForm"
+        :rules="loginRules"
+        class="auth-form"
+        auto-complete="on"
+        @submit.native.prevent
       >
-        {{ $t('login.register') }}
-      </el-button>
-    </el-form>
+        <el-form-item prop="username"
+          ><label class="fld"
+            ><span>用户名</span
+            ><input
+              ref="username"
+              v-model="loginForm.username"
+              placeholder="6–20 位字母或数字"
+              autocomplete="username" /></label
+        ></el-form-item>
+        <el-form-item prop="pass"
+          ><label class="fld"
+            ><span>密码</span
+            ><span class="password-field"
+              ><input
+                ref="pass"
+                v-model="loginForm.pass"
+                :type="passwordType"
+                placeholder="6–20 位字母或数字"
+                autocomplete="current-password"
+                @keyup.enter="handleLogin" /><button
+                type="button"
+                class="field-icon"
+                @click="showPwd"
+              >
+                <svg-icon
+                  :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
+                /></button></span></label
+        ></el-form-item>
+        <div v-if="captchaEnable" class="captcha-row">
+          <el-form-item prop="captchaCode"
+            ><label class="fld"
+              ><span>验证码</span
+              ><input
+                v-model="loginForm.captchaCode"
+                placeholder="输入右侧字符"
+                @keyup.enter="handleLogin" /></label></el-form-item
+          ><button
+            type="button"
+            class="captcha-img"
+            title="点击刷新"
+            @click="handleCaptchaGenerate"
+          >
+            <img alt="captcha" :src="captchaImg" />
+          </button>
+        </div>
+        <button
+          type="button"
+          class="cap primary auth-submit"
+          :disabled="loading"
+          @click="handleLogin"
+        >
+          {{ loading ? '登录中…' : '登 录' }}
+        </button>
+        <template v-if="registerEnable === 1"
+          ><div class="auth-divider">没有账号？</div>
+          <button type="button" class="cap auth-submit" @click="goRegister">
+            注册新账号
+          </button></template
+        >
+      </el-form>
+    </div>
   </div>
 </template>
 
 <script>
-import LangSelect from '@/components/LangSelect'
 import { setting } from '@/api/system'
 import { generateCaptcha } from '@/api/account'
 import LiquidThemeToggle from '@/components/LiquidThemeToggle'
 
 export default {
-  name: 'index',
-  components: { LangSelect, LiquidThemeToggle },
+  name: 'LoginPage',
+  components: { LiquidThemeToggle },
   data() {
     return {
       loginForm: {

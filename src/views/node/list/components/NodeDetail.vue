@@ -1,113 +1,114 @@
 <template>
   <div>
     <el-dialog
+      append-to-body
       :title="$t('table.detail').toString()"
       :visible="dialogVisibleProps"
       @close="$emit('update:dialogVisibleProps', false)"
     >
       <el-form :model="nodeInfoProps" label-position="left">
         <el-form-item :label="$t('table.nodeName').toString()">
-          <el-tag>{{ nodeInfoProps.name }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.name }}</liquid-tag>
         </el-form-item>
         <el-form-item :label="$t('table.nodeServer').toString()">
-          <el-tag
+          <liquid-tag
             >{{ nodeServerFind(nodeServersProps, nodeInfoProps.nodeServerId) }}
-          </el-tag>
+          </liquid-tag>
         </el-form-item>
         <el-form-item :label="$t('table.nodeDomain').toString()">
-          <el-tag>{{ nodeInfoProps.domain }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.domain }}</liquid-tag>
         </el-form-item>
         <el-form-item :label="$t('table.nodePort').toString()">
-          <el-tag>{{ nodeInfoProps.port }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.port }}</liquid-tag>
         </el-form-item>
         <el-form-item :label="$t('table.nodeType').toString()">
-          <el-tag>
+          <liquid-tag>
             {{ nodeTypeFind(nodeTypesProps, nodeInfoProps.nodeTypeId) }}
-          </el-tag>
+          </liquid-tag>
         </el-form-item>
         <el-form-item :label="$t('table.nodePriority').toString()">
-          <el-tag>{{ nodeInfoProps.priority }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.priority }}</liquid-tag>
         </el-form-item>
         <el-form-item :label="$t('table.nodeClients').toString()">
           <template
             v-if="nodeInfoProps.clients && nodeInfoProps.clients.length"
           >
-            <el-tag
+            <liquid-tag
               v-for="client in nodeInfoProps.clients"
               :key="client"
               type="success"
             >
               {{ clientLabel(client) }}
-            </el-tag>
+            </liquid-tag>
           </template>
-          <el-tag v-else type="info">{{ $t('table.nodeClientsNone') }}</el-tag>
+          <liquid-tag v-else type="info">{{ $t('table.nodeClientsNone') }}</liquid-tag>
         </el-form-item>
         <el-form-item :label="$t('table.password').toString()">
-          <el-tag>{{ nodeInfoProps.password }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.password }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.uuid').toString()"
           v-if="showUUID(nodeInfoProps)"
         >
-          <el-tag>{{ nodeInfoProps.uuid }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.uuid }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.alterId').toString()"
           v-if="showAlterId(nodeInfoProps)"
         >
-          <el-tag>{{ nodeInfoProps.alterId }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.alterId }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.xrayProtocol').toString()"
           v-if="isXray(nodeInfoProps)"
         >
-          <el-tag>{{ nodeInfoProps.xrayProtocol }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.xrayProtocol }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.xrayStreamSettingsNetwork').toString()"
           v-if="isXray(nodeInfoProps) && !isXrayShadowsocks(nodeInfoProps)"
         >
-          <el-tag>
+          <liquid-tag>
             {{ nodeInfoProps.xrayStreamSettingsEntity.network }}
-          </el-tag>
+          </liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.xrayStreamSettingsWsSettingsPath').toString()"
           v-if="isXrayWs(nodeInfoProps) && !isXrayShadowsocks(nodeInfoProps)"
         >
-          <el-tag
+          <liquid-tag
             >{{ nodeInfoProps.xrayStreamSettingsEntity.wsSettings.path }}
-          </el-tag>
+          </liquid-tag>
         </el-form-item>
         <el-form-item
           label="WebSocket Host"
           v-if="isXrayWs(nodeInfoProps) && !isXrayShadowsocks(nodeInfoProps)"
         >
-          <el-tag
+          <liquid-tag
             >{{
               nodeInfoProps.xrayStreamSettingsEntity.wsSettings.headers.Host
             }}
-          </el-tag>
+          </liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.xrayStreamSettingsSecurity').toString()"
           v-if="isXray(nodeInfoProps) && !isXrayShadowsocks(nodeInfoProps)"
         >
-          <el-tag>{{ nodeInfoProps.xrayStreamSettingsEntity.security }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.xrayStreamSettingsEntity.security }}</liquid-tag>
         </el-form-item>
         <el-form-item
           label="serverName"
           v-if="isXrayStreamSettingsSecurityTls(nodeInfoProps)"
         >
-          <el-tag
+          <liquid-tag
             >{{ nodeInfoProps.xrayStreamSettingsEntity.tlsSettings.serverName }}
-          </el-tag>
+          </liquid-tag>
         </el-form-item>
         <el-form-item
           label="alpn"
           v-if="isXrayStreamSettingsSecurityTls(nodeInfoProps)"
         >
-          <el-tag
+          <liquid-tag
             v-for="(item, index) in nodeInfoProps.xrayStreamSettingsEntity
               .tlsSettings.alpn"
             :key="index"
@@ -117,50 +118,50 @@
             size="medium"
           >
             {{ item }}
-          </el-tag>
+          </liquid-tag>
         </el-form-item>
         <el-form-item
           label="allowInsecure"
           v-if="isXrayStreamSettingsSecurityTls(nodeInfoProps)"
         >
-          <el-tag
+          <liquid-tag
             >{{
               nodeInfoProps.xrayStreamSettingsEntity.tlsSettings.allowInsecure
             }}
-          </el-tag>
+          </liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.fingerprint').toString()"
           v-if="isXrayStreamSettingsSecurityTls(nodeInfoProps)"
         >
-          <el-tag
+          <liquid-tag
             >{{
               nodeInfoProps.xrayStreamSettingsEntity.tlsSettings.fingerprint
             }}
-          </el-tag>
+          </liquid-tag>
         </el-form-item>
         <el-form-item
           label="dest"
           v-if="isXrayStreamSettingsSecurityReality(nodeInfoProps)"
         >
-          <el-tag
+          <liquid-tag
             >{{ nodeInfoProps.xrayStreamSettingsEntity.realitySettings.dest }}
-          </el-tag>
+          </liquid-tag>
         </el-form-item>
         <el-form-item
           label="xver"
           v-if="isXrayStreamSettingsSecurityReality(nodeInfoProps)"
         >
-          <el-tag
+          <liquid-tag
             >{{ nodeInfoProps.xrayStreamSettingsEntity.realitySettings.xver }}
-          </el-tag>
+          </liquid-tag>
         </el-form-item>
 
         <el-form-item
           label="serverNames"
           v-if="isXrayStreamSettingsSecurityReality(nodeInfoProps)"
         >
-          <el-tag
+          <liquid-tag
             v-for="(item, index) in nodeInfoProps.xrayStreamSettingsEntity
               .realitySettings.serverNames"
             :key="index"
@@ -170,39 +171,39 @@
             size="medium"
           >
             {{ item }}
-          </el-tag>
+          </liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.fingerprint').toString()"
           v-if="isXrayStreamSettingsSecurityReality(nodeInfoProps)"
         >
-          <el-tag
+          <liquid-tag
             >{{
               nodeInfoProps.xrayStreamSettingsEntity.realitySettings.fingerprint
             }}
-          </el-tag>
+          </liquid-tag>
         </el-form-item>
         <el-form-item
           label="publicKey"
           v-if="isXrayStreamSettingsSecurityReality(nodeInfoProps)"
         >
-          <el-tag>{{ nodeInfoProps.realityPbk }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.realityPbk }}</liquid-tag>
         </el-form-item>
         <el-form-item
           label="privateKey"
           v-if="isXrayStreamSettingsSecurityReality(nodeInfoProps)"
         >
-          <el-tag
+          <liquid-tag
             >{{
               nodeInfoProps.xrayStreamSettingsEntity.realitySettings.privateKey
             }}
-          </el-tag>
+          </liquid-tag>
         </el-form-item>
         <el-form-item
           label="shortIds"
           v-if="isXrayStreamSettingsSecurityReality(nodeInfoProps)"
         >
-          <el-tag
+          <liquid-tag
             v-for="(item, index) in nodeInfoProps.xrayStreamSettingsEntity
               .realitySettings.shortIds"
             :key="index"
@@ -212,89 +213,97 @@
             size="medium"
           >
             {{ item }}
-          </el-tag>
+          </liquid-tag>
         </el-form-item>
         <el-form-item
           label="spiderX"
           v-if="isXrayStreamSettingsSecurityReality(nodeInfoProps)"
         >
-          <el-tag
+          <liquid-tag
             >{{
               nodeInfoProps.xrayStreamSettingsEntity.realitySettings.spiderX
             }}
-          </el-tag>
+          </liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.xrayFlow').toString()"
           v-if="showXrayFlow(nodeInfoProps)"
         >
-          <el-tag>{{ nodeInfoProps.xrayFlow }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.xrayFlow }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.xraySSMethod').toString()"
           v-if="isXrayShadowsocks(nodeInfoProps)"
         >
-          <el-tag>{{ nodeInfoProps.xraySSMethod }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.xraySSMethod }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.xraySSNetwork').toString()"
           v-if="isXrayShadowsocks(nodeInfoProps)"
         >
-          <el-tag>{{ nodeInfoProps.xraySettingsEntity.network }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.xraySettingsEntity.network }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.xrayUotEnable').toString()"
           v-if="isXrayShadowsocks(nodeInfoProps)"
         >
-          <el-tag>{{ enableComputed(nodeInfoProps.xrayUotEnable) }}</el-tag>
+          <liquid-tag>{{ enableComputed(nodeInfoProps.xrayUotEnable) }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.xrayUotVersion').toString()"
-          v-if="isXrayShadowsocks(nodeInfoProps) && nodeInfoProps.xrayUotEnable === 1"
+          v-if="
+            isXrayShadowsocks(nodeInfoProps) &&
+            nodeInfoProps.xrayUotEnable === 1
+          "
         >
-          <el-tag>{{ nodeInfoProps.xrayUotVersion }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.xrayUotVersion }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.xrayXudpEnable').toString()"
-          v-if="nodeInfoProps.xrayProtocol === 'vless' || nodeInfoProps.xrayProtocol === 'vmess'"
+          v-if="
+            nodeInfoProps.xrayProtocol === 'vless' ||
+            nodeInfoProps.xrayProtocol === 'vmess'
+          "
         >
-          <el-tag>{{ enableComputed(nodeInfoProps.xrayXudpEnable) }}</el-tag>
+          <liquid-tag>{{ enableComputed(nodeInfoProps.xrayXudpEnable) }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.xrayMuxEnable').toString()"
-          v-if="['vless', 'vmess', 'trojan'].includes(nodeInfoProps.xrayProtocol)"
+          v-if="
+            ['vless', 'vmess', 'trojan'].includes(nodeInfoProps.xrayProtocol)
+          "
         >
-          <el-tag>{{ enableComputed(nodeInfoProps.xrayMuxEnable) }}</el-tag>
+          <liquid-tag>{{ enableComputed(nodeInfoProps.xrayMuxEnable) }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.xraySocksUser').toString()"
           v-if="isXraySocks(nodeInfoProps)"
         >
-          <el-tag>{{
+          <liquid-tag>{{
             nodeInfoProps.xraySettingsEntity.accounts[0].user
-          }}</el-tag>
+          }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.xraySocksPass').toString()"
           v-if="isXraySocks(nodeInfoProps)"
         >
-          <el-tag>{{
+          <liquid-tag>{{
             nodeInfoProps.xraySettingsEntity.accounts[0].pass
-          }}</el-tag>
+          }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.xraySocksUdp').toString()"
           v-if="isXraySocks(nodeInfoProps)"
         >
-          <el-tag>{{
+          <liquid-tag>{{
             enableComputed(nodeInfoProps.xraySettingsEntity.udp)
-          }}</el-tag>
+          }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.xrayFallbacks').toString()"
           v-if="showFallback(nodeInfoProps)"
         >
-          <el-tag
+          <liquid-tag
             v-for="(item, index) in nodeInfoProps.xraySettingsEntity.fallbacks"
             :key="index"
             :disable-transitions="true"
@@ -304,47 +313,47 @@
             @click="handleFallbackDetail(item)"
           >
             {{ item.dest }}
-          </el-tag>
+          </liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.trojanGoSni').toString()"
           v-if="isTrojanGo(nodeInfoProps)"
         >
-          <el-tag>{{ nodeInfoProps.trojanGoSni }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.trojanGoSni }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.trojanGoMuxEnable').toString()"
           v-if="isTrojanGo(nodeInfoProps)"
         >
-          <el-tag>
+          <liquid-tag>
             {{ enableComputed(nodeInfoProps.trojanGoMuxEnable) }}
-          </el-tag>
+          </liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.trojanGoWebsocketEnable').toString()"
           v-if="isTrojanGo(nodeInfoProps)"
         >
-          <el-tag>
+          <liquid-tag>
             {{ enableComputed(nodeInfoProps.trojanGoWebsocketEnable) }}
-          </el-tag>
+          </liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.trojanGoWebsocketPath').toString()"
           v-if="isTrojanGoEnableWebsocket(nodeInfoProps)"
         >
-          <el-tag>{{ nodeInfoProps.trojanGoWebsocketPath }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.trojanGoWebsocketPath }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.trojanGoWebsocketHost').toString()"
           v-if="isTrojanGoEnableWebsocket(nodeInfoProps)"
         >
-          <el-tag>{{ nodeInfoProps.trojanGoWebsocketHost }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.trojanGoWebsocketHost }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.trojanGoSsEnable').toString()"
           v-if="isTrojanGoEnableWebsocket(nodeInfoProps)"
         >
-          <el-tag>{{ enableComputed(nodeInfoProps.trojanGoSsEnable) }} </el-tag>
+          <liquid-tag>{{ enableComputed(nodeInfoProps.trojanGoSsEnable) }} </liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.trojanGoSsMethod').toString()"
@@ -353,7 +362,7 @@
             isTrojanGoEnableSs(nodeInfoProps)
           "
         >
-          <el-tag>{{ nodeInfoProps.trojanGoSsMethod }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.trojanGoSsMethod }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.trojanGoSsPassword').toString()"
@@ -362,104 +371,104 @@
             isTrojanGoEnableSs(nodeInfoProps)
           "
         >
-          <el-tag>{{ nodeInfoProps.trojanGoSsPassword }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.trojanGoSsPassword }}</liquid-tag>
         </el-form-item>
 
         <el-form-item
           :label="$t('table.hysteriaProtocol').toString()"
           v-if="isHysteria(nodeInfoProps)"
         >
-          <el-tag>{{ nodeInfoProps.hysteriaProtocol }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.hysteriaProtocol }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.hysteriaObfs').toString()"
           v-if="isHysteria(nodeInfoProps)"
         >
-          <el-tag>{{ nodeInfoProps.hysteriaObfs }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.hysteriaObfs }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.hysteriaUpMbps').toString()"
           v-if="isHysteria(nodeInfoProps)"
         >
-          <el-tag>{{ nodeInfoProps.hysteriaUpMbps }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.hysteriaUpMbps }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.hysteriaDownMbps').toString()"
           v-if="isHysteria(nodeInfoProps)"
         >
-          <el-tag>{{ nodeInfoProps.hysteriaDownMbps }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.hysteriaDownMbps }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.hysteriaServerName').toString()"
           v-if="isHysteria(nodeInfoProps)"
         >
-          <el-tag>{{ nodeInfoProps.hysteriaServerName }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.hysteriaServerName }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.hysteriaInsecure').toString()"
           v-if="isHysteria(nodeInfoProps)"
         >
-          <el-tag>{{ enableComputed(nodeInfoProps.hysteriaInsecure) }}</el-tag>
+          <liquid-tag>{{ enableComputed(nodeInfoProps.hysteriaInsecure) }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.hysteriaFastOpen').toString()"
           v-if="isHysteria(nodeInfoProps)"
         >
-          <el-tag>{{ enableComputed(nodeInfoProps.hysteriaFastOpen) }}</el-tag>
+          <liquid-tag>{{ enableComputed(nodeInfoProps.hysteriaFastOpen) }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.hysteria2ObfsPassword').toString()"
           v-if="isHysteria2(nodeInfoProps)"
         >
-          <el-tag>{{ nodeInfoProps.hysteria2ObfsPassword }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.hysteria2ObfsPassword }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.hysteria2UpMbps').toString()"
           v-if="isHysteria2(nodeInfoProps)"
         >
-          <el-tag>{{ nodeInfoProps.hysteria2UpMbps }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.hysteria2UpMbps }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.hysteria2DownMbps').toString()"
           v-if="isHysteria2(nodeInfoProps)"
         >
-          <el-tag>{{ nodeInfoProps.hysteria2DownMbps }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.hysteria2DownMbps }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.hysteria2ServerName').toString()"
           v-if="isHysteria2(nodeInfoProps)"
         >
-          <el-tag>{{ nodeInfoProps.hysteria2ServerName }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.hysteria2ServerName }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.hysteria2PortHopping').toString()"
           v-if="isHysteria2(nodeInfoProps)"
         >
-          <el-tag>{{ nodeInfoProps.hysteria2PortHopping }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.hysteria2PortHopping }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.hysteria2HopInterval').toString()"
           v-if="isHysteria2(nodeInfoProps)"
         >
-          <el-tag>{{ nodeInfoProps.hysteria2HopInterval }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.hysteria2HopInterval }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.hysteria2Insecure').toString()"
           v-if="isHysteria2(nodeInfoProps)"
         >
-          <el-tag>{{ enableComputed(nodeInfoProps.hysteria2Insecure) }}</el-tag>
+          <liquid-tag>{{ enableComputed(nodeInfoProps.hysteria2Insecure) }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.naiveProxyUsername').toString()"
           v-if="isNaiveProxy(nodeInfoProps)"
         >
-          <el-tag>{{ nodeInfoProps.naiveProxyUsername }}</el-tag>
+          <liquid-tag>{{ nodeInfoProps.naiveProxyUsername }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.naiveUotEnable').toString()"
           v-if="isNaiveProxy(nodeInfoProps)"
         >
-          <el-tag>{{ enableComputed(nodeInfoProps.naiveUotEnable) }}</el-tag>
+          <liquid-tag>{{ enableComputed(nodeInfoProps.naiveUotEnable) }}</liquid-tag>
         </el-form-item>
         <el-form-item
           :label="$t('table.naiveUotVersion').toString()"
@@ -467,7 +476,7 @@
             isNaiveProxy(nodeInfoProps) && nodeInfoProps.naiveUotEnable === 1
           "
         >
-          <el-tag>v{{ nodeInfoProps.naiveUotVersion }}</el-tag>
+          <liquid-tag>v{{ nodeInfoProps.naiveUotVersion }}</liquid-tag>
         </el-form-item>
         <el-form-item v-if="isHysteria(nodeInfoProps)">
           <aside>
@@ -477,11 +486,11 @@
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button
+        <liquid-button
           type="primary"
           @click="$emit('update:dialogVisibleProps', false)"
           >{{ $t('table.confirm') }}
-        </el-button>
+        </liquid-button>
       </div>
     </el-dialog>
 

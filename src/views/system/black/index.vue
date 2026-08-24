@@ -1,95 +1,69 @@
 <template>
-  <div class="app-container">
-    <div class="filter-container">
-      <el-input
-        v-model="listQuery.ip"
-        :placeholder="$t('table.blackListIp')"
-        style="width: 200px"
-        class="filter-item"
-        clearable
-        @keyup.enter.native="handleFilter"
-        @clear="handleFilter"
-        maxlength="64"
-      />
-      <el-button
-        class="filter-item"
-        type="primary"
-        icon="el-icon-search"
-        @click="handleFilter"
-      >
-        {{ $t('table.search') }}
-      </el-button>
-      <el-button
-        class="filter-item"
-        type="primary"
-        icon="el-icon-edit"
-        @click="handleCreate"
-        v-if="checkPermission(['sysadmin'])"
-      >
-        {{ $t('table.add') }}
-      </el-button>
+  <div class="prototype-page grid">
+    <div class="glass card">
+      <div class="toolbar">
+        <div class="search-box">
+          <i class="el-icon-search"></i
+          ><input
+            v-model="listQuery.ip"
+            placeholder="按 IP 地址搜索"
+            @keyup.enter="handleFilter"
+          />
+        </div>
+        <div class="spacer"></div>
+        <button class="cap primary small" type="button" @click="handleCreate">
+          <i class="el-icon-plus"></i>添加黑名单
+        </button>
+      </div>
     </div>
-    <el-table
-      :key="tableKey"
-      v-loading="listLoading"
-      :data="list"
-      border
-      fit
-      highlight-current-row
-      style="width: 100%"
-    >
-      <el-table-column
-        :label="$t('table.id')"
-        sortable="custom"
-        align="center"
-        width="80"
-        type="index"
+    <div class="glass card">
+      <div class="tbl-wrap" v-loading="listLoading">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>IP 地址</th>
+              <th>创建时间</th>
+              <th style="text-align: right">操作</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(row, index) in list" :key="row.id || row.ip">
+              <td class="primary-cell">
+                <strong class="mono">{{ row.ip }}</strong
+                ><small>已阻止访问</small>
+              </td>
+              <td class="muted">
+                {{ timeStampToDate(row.createTime, false) }}
+              </td>
+              <td>
+                <div class="row-actions">
+                  <button
+                    class="icon-btn danger"
+                    type="button"
+                    title="删除"
+                    @click="handleDelete(row, index)"
+                  >
+                    <i class="el-icon-delete"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <pagination
+        v-if="total > 0"
+        :total="total"
+        :page.sync="listQuery.pageNum"
+        :limit.sync="listQuery.pageSize"
+        @pagination="getList"
       />
-      <el-table-column
-        :label="$t('table.blackListIp')"
-        width="180"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span>{{ row.ip }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.createTime')"
-        width="150"
-        align="center"
-      >
-        <template slot-scope="{ row }">
-          <span>{{ timeStampToDate(row.createTime, false) }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        :label="$t('table.actions')"
-        align="center"
-        class-name="small-padding fixed-width"
-      >
-        <template slot-scope="{ row, $index }">
-          <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(row, $index)"
-            v-if="checkPermission(['sysadmin'])"
-          >
-            {{ $t('table.delete') }}
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <pagination
-      v-if="total > 0"
-      :total="total"
-      :page.sync="listQuery.pageNum"
-      :limit.sync="listQuery.pageSize"
-      @pagination="getList"
-    />
-
-    <el-dialog :title="$t('table.add')" :visible.sync="dialogFormVisible">
+    </div>
+    <el-dialog
+      append-to-body
+      :title="$t('table.add')"
+      :visible.sync="dialogFormVisible"
+    >
       <el-form
         ref="dataForm"
         :rules="createRules"
@@ -97,16 +71,16 @@
         label-position="left"
       >
         <el-form-item :label="$t('table.blackListIp')" prop="ip">
-          <el-input v-model="temp.ip" clearable />
+          <liquid-input v-model="temp.ip" clearable />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false"
+        <liquid-button @click="dialogFormVisible = false"
           >{{ $t('table.cancel') }}
-        </el-button>
-        <el-button type="primary" @click="createData()">
+        </liquid-button>
+        <liquid-button type="primary" @click="createData()">
           {{ $t('table.confirm') }}
-        </el-button>
+        </liquid-button>
       </div>
     </el-dialog>
   </div>

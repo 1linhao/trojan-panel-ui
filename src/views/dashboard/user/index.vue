@@ -1,107 +1,138 @@
 <template>
-  <div class="dashboard-editor-container">
-    <panel-group :group-data="panelGroupData" />
-    <el-row :gutter="8">
-      <el-col
-        :xs="{ span: 24 }"
-        :sm="{ span: 24 }"
-        :md="{ span: 24 }"
-        :lg="{ span: 12 }"
-        :xl="{ span: 12 }"
-      >
-        <el-card class="box-card" v-if="trafficRankEnable === 1">
-          <div slot="header" class="clearfix">
-            <span>{{ $t('dashboard.trafficRank') }}</span>
+  <div class="prototype-page grid">
+    <div class="grid cols-2">
+      <div class="glass hero">
+        <span class="kicker">剩余流量</span>
+        <b class="big"
+          >{{ flowParts[0] }} <em>{{ flowParts[1] }}</em></b
+        >
+        <span class="muted">套餐总量 {{ quotaText }}</span>
+        <div
+          class="meter"
+          :class="{ warn: usedPercent > 70, bad: usedPercent > 90 }"
+        >
+          <i :style="{ width: `${usedPercent}%` }"></i>
+        </div>
+        <span class="faint usage-label">已使用 {{ usedPercent }}%</span>
+        <div class="hero-meta">
+          <div>
+            <b>{{ expireRelative }}</b
+            ><span>到期时间 {{ expireDate }}</span>
           </div>
-          <div class="component-item">
-            <traffic-table />
+          <div>
+            <b>{{ panelGroupData.nodeCount || panelGroupData.nodeNum }}</b
+            ><span>可用节点</span>
           </div>
-        </el-card>
-      </el-col>
-      <el-col
-        :xs="{ span: 24 }"
-        :sm="{ span: 12 }"
-        :md="{ span: 12 }"
-        :lg="{ span: 6 }"
-        :xl="{ span: 6 }"
-      >
-      </el-col>
-      <el-col
-        :xs="{ span: 24 }"
-        :sm="{ span: 12 }"
-        :md="{ span: 12 }"
-        :lg="{ span: 6 }"
-        :xl="{ span: 6 }"
-      >
-      </el-col>
-    </el-row>
+          <div><b>每月 1 日</b><span>流量自动重置</span></div>
+        </div>
+      </div>
+      <div class="glass card subscription-card">
+        <div class="card-head">
+          <div>
+            <span class="kicker">Subscription</span>
+            <h2>订阅导出</h2>
+          </div>
+        </div>
+        <p class="muted">选择客户端和配置模板，复制订阅地址或生成二维码。</p>
+        <div class="subscription-actions">
+          <button
+            class="cap primary"
+            type="button"
+            @click="exportVisible = true"
+          >
+            <svg-icon icon-class="flow" />打开订阅导出
+          </button>
+          <button
+            class="cap"
+            type="button"
+            @click="$router.push('/node-manage/node-list')"
+          >
+            <svg-icon icon-class="node" />查看我的节点
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="glass card">
+      <div class="card-head">
+        <div>
+          <span class="kicker">Traffic Rank</span>
+          <h2>账号流量排行</h2>
+        </div>
+      </div>
+      <traffic-table />
+    </div>
+    <export-node-dialog :dialog-visible-props.sync="exportVisible" />
   </div>
 </template>
 
 <script>
-import PanelGroup from '@/views/dashboard/user/compoments/PanelGroup'
 import { panelGroup } from '@/api/dashboard'
+import { getFlow } from '@/utils/account'
+import { timeStampToDate } from '@/utils'
+import ExportNodeDialog from '@/views/node/list/components/ExportNodeDialog'
 import TrafficTable from '@/views/dashboard/admin/compoments/TrafficTable'
-import { setting } from '@/api/system'
 
 export default {
-  name: 'User',
-  components: {
-    PanelGroup,
-    TrafficTable
-  },
+  name: 'UserDashboard',
+  components: { ExportNodeDialog, TrafficTable },
   data() {
     return {
       panelGroupData: {
-        totalFlow: 0,
-        residualFlow: 0,
+        quota: -1,
+        residualFlow: -1,
+        nodeCount: 0,
         nodeNum: 0,
-        expireTime: new Date()
+        expireTime: 0
       },
-      trafficRankEnable: 0
+      exportVisible: false
+    }
+  },
+  computed: {
+    quotaText() {
+      return this.panelGroupData.quota < 0
+        ? '不限'
+        : getFlow(this.panelGroupData.quota)
+    },
+    residualText() {
+      return this.panelGroupData.quota < 0
+        ? '不限 GB'
+        : getFlow(this.panelGroupData.residualFlow)
+    },
+    flowParts() {
+      const parts = this.residualText.split(' ')
+      return [parts[0], parts[1] || '']
+    },
+    usedPercent() {
+      const quota = Number(this.panelGroupData.quota)
+      if (quota <= 0) return 0
+      return Math.max(
+        0,
+        Math.min(
+          100,
+          Math.round(
+            ((quota - Number(this.panelGroupData.residualFlow || 0)) / quota) *
+              100
+          )
+        )
+      )
+    },
+    expireDate() {
+      return this.panelGroupData.expireTime
+        ? timeStampToDate(this.panelGroupData.expireTime, false)
+        : '—'
+    },
+    expireRelative() {
+      if (!this.panelGroupData.expireTime) return '—'
+      const days = Math.ceil(
+        (this.panelGroupData.expireTime - Date.now()) / 86400000
+      )
+      return days >= 0 ? `${days} 天` : '已到期'
     }
   },
   created() {
-    panelGroup().then((response) => {
-      const { data } = response
+    panelGroup().then(({ data }) => {
       this.panelGroupData = data
     })
-    this.setting()
-  },
-  methods: {
-    setting() {
-      setting().then((response) => {
-        const { data } = response
-        this.trafficRankEnable = data.trafficRankEnable
-      })
-    }
   }
 }
 </script>
-
-<style lang="scss" scoped>
-.dashboard-editor-container {
-  padding: 32px;
-  background-color: rgb(240, 242, 245);
-  position: relative;
-
-  .github-corner {
-    position: absolute;
-    top: 0px;
-    border: 0;
-    right: 0;
-  }
-
-  .chart-wrapper {
-    background: #fff;
-    padding: 16px 16px 0;
-    margin-bottom: 32px;
-  }
-}
-
-@media (max-width: 1024px) {
-  .chart-wrapper {
-    padding: 8px;
-  }
-}
-</style>

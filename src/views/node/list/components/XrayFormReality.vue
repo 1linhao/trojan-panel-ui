@@ -4,7 +4,7 @@
       label="dest"
       prop="xrayStreamSettingsEntity.realitySettings.dest"
     >
-      <el-input
+      <liquid-input
         v-model="nodeProps.xrayStreamSettingsEntity.realitySettings.dest"
       />
     </el-form-item>
@@ -12,7 +12,7 @@
       label="xver"
       prop="xrayStreamSettingsEntity.realitySettings.xver"
     >
-      <el-input-number
+      <liquid-number-input
         v-model="nodeProps.xrayStreamSettingsEntity.realitySettings.xver"
         controls-position="right"
         type="number"
@@ -33,27 +33,27 @@
       :label="$t('table.fingerprint').toString()"
       prop="fingerprint"
     >
-      <el-select
+      <liquid-select
         v-model="nodeProps.xrayStreamSettingsEntity.realitySettings.fingerprint"
         controls-position="right"
       >
-        <el-option
+        <option
           :label="item"
           :value="item"
           :key="index"
           v-for="(item, index) in fingerprints"
-        ></el-option>
-      </el-select>
+        ></option>
+      </liquid-select>
     </el-form-item>
 
     <el-form-item label="publicKey" prop="realityPbk">
-      <el-input v-model="nodeProps.realityPbk" />
+      <liquid-input v-model="nodeProps.realityPbk" />
     </el-form-item>
     <el-form-item
       label="privateKey"
       prop="xrayStreamSettingsEntity.realitySettings.privateKey"
     >
-      <el-input
+      <liquid-input
         v-model="nodeProps.xrayStreamSettingsEntity.realitySettings.privateKey"
       />
     </el-form-item>
@@ -72,7 +72,7 @@
       label="spiderX"
       prop="xrayStreamSettingsEntity.realitySettings.spiderX"
     >
-      <el-input
+      <liquid-input
         v-model="nodeProps.xrayStreamSettingsEntity.realitySettings.spiderX"
       />
     </el-form-item>

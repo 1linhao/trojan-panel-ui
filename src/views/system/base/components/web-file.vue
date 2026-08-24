@@ -1,32 +1,29 @@
 <template>
   <div class="app-container">
-    <el-upload
-      class="upload-demo"
-      ref="upload"
-      action=""
-      :file-list="fileList"
-      :http-request="uploadFile"
-      :auto-upload="false"
-      accept=".zip"
-      :on-change="handleChange"
-      :before-upload="beforeUpload"
-      :limit="1"
-    >
-      <el-button slot="trigger" size="small" type="primary"
-        >{{ $t('config.webFileSelect') }}
-      </el-button>
-      <el-button
-        size="small"
-        type="success"
+    <div class="liquid-file-picker">
+      <input
+        ref="upload"
+        class="liquid-file-picker__native"
+        type="file"
+        accept=".zip"
+        @change="handleNativeFile"
+      />
+      <liquid-button type="primary" @click="$refs.upload.click()">
+        {{ $t('config.webFileSelect') }}
+      </liquid-button>
+      <liquid-button
         @click="submitUpload"
         :disabled="fileList.length === 0"
       >
         {{ $t('config.webFileBtn') }}
-      </el-button>
-      <div slot="tip" class="el-upload__tip">
+      </liquid-button>
+      <span v-if="fileList.length" class="liquid-file-picker__name">
+        {{ fileList[0].name }}
+      </span>
+      <div class="liquid-file-picker__tip">
         {{ $t('config.webFileTip') }}
       </div>
-    </el-upload>
+    </div>
   </div>
 </template>
 
@@ -42,8 +39,16 @@ export default {
     }
   },
   methods: {
+    handleNativeFile(event) {
+      const file = event.target.files[0]
+      if (!file || this.beforeUpload(file) === false) {
+        event.target.value = ''
+        return
+      }
+      this.fileList = [{ name: file.name, raw: file }]
+    },
     submitUpload() {
-      this.$refs.upload.submit()
+      if (this.fileList.length) this.uploadFile({ file: this.fileList[0].raw })
     },
     uploadFile(params) {
       let formData = new FormData()
@@ -57,10 +62,6 @@ export default {
         })
       })
       this.fileList = []
-    },
-    handleChange(file, fileList) {
-      // 上传自动覆盖
-      this.fileList = [file]
     },
     beforeUpload(file) {
       if (!file.name.endsWith('.zip')) {
@@ -85,7 +86,22 @@ export default {
 </script>
 
 <style scoped>
-.el-button {
-  margin-left: 10px;
+.liquid-file-picker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.liquid-file-picker__native {
+  display: none;
+}
+.liquid-file-picker__name {
+  color: var(--ink-2);
+  font-size: 12px;
+}
+.liquid-file-picker__tip {
+  flex-basis: 100%;
+  color: var(--ink-3);
+  font-size: 11.5px;
 }
 </style>

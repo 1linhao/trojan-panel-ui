@@ -1,6 +1,7 @@
 <template>
   <div>
     <el-dialog
+      append-to-body
       :title="textMap[dialogStatusProps]"
       :visible="dialogFormVisibleProps"
       custom-class="liquid-node-editor"
@@ -10,35 +11,44 @@
         ref="dataForm"
         :rules="dialogStatusProps === 'create' ? createRules : updateRules"
         :model="nodeProps"
+        class="uniform-dialog-form"
+        label-width="132px"
         label-position="left"
       >
         <el-form-item :label="$t('table.nodeName').toString()" prop="name">
-          <el-input v-model="nodeProps.name" clearable />
+          <liquid-input v-model="nodeProps.name" clearable />
         </el-form-item>
         <el-form-item
           :label="$t('table.nodeServer').toString()"
           prop="nodeServerId"
         >
-          <el-select v-model="nodeProps.nodeServerId" controls-position="right">
-            <el-option
-              :label="item.name"
-              :value="item.id"
-              :key="item.id"
-              v-for="item in nodeServersProps"
-            ></el-option>
-          </el-select>
-          <el-button
-            type="primary"
-            size="mini"
-            icon="el-icon-plus"
-            @click="toAddNodeServer"
-          ></el-button>
+          <div class="uniform-control-with-action">
+            <liquid-select
+              v-model="nodeProps.nodeServerId"
+              controls-position="right"
+            >
+              <option
+                :label="item.name"
+                :value="item.id"
+                :key="item.id"
+                v-for="item in nodeServersProps"
+              ></option>
+            </liquid-select>
+            <liquid-button
+              class="liquid-add-button"
+              type="primary"
+              size="mini"
+              icon="el-icon-plus"
+              aria-label="添加服务器"
+              @click="toAddNodeServer"
+            ></liquid-button>
+          </div>
         </el-form-item>
         <el-form-item :label="$t('table.nodeDomain').toString()" prop="domain">
-          <el-input v-model="nodeProps.domain" clearable />
+          <liquid-input v-model="nodeProps.domain" clearable />
         </el-form-item>
         <el-form-item :label="$t('table.nodePort').toString()" prop="port">
-          <el-input-number
+          <liquid-number-input
             v-model.number="nodeProps.port"
             controls-position="right"
             type="number"
@@ -49,7 +59,7 @@
           :label="$t('table.nodePriority').toString()"
           prop="priority"
         >
-          <el-input-number
+          <liquid-number-input
             v-model.number="nodeProps.priority"
             controls-position="right"
             type="number"
@@ -60,14 +70,14 @@
           :label="$t('table.nodeType').toString()"
           prop="nodeTypeId"
         >
-          <el-select v-model="nodeProps.nodeTypeId" controls-position="right">
-            <el-option
+          <liquid-select v-model="nodeProps.nodeTypeId">
+            <option
               :label="item.name"
               :value="item.id"
               :key="item.id"
               v-for="item in nodeTypesProps"
-            ></el-option>
-          </el-select>
+            ></option>
+          </liquid-select>
         </el-form-item>
 
         <el-form-item
@@ -106,15 +116,15 @@
         />
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="$emit('update:dialogFormVisibleProps', false)"
+        <liquid-button @click="$emit('update:dialogFormVisibleProps', false)"
           >{{ $t('table.cancel') }}
-        </el-button>
-        <el-button
+        </liquid-button>
+        <liquid-button
           type="primary"
           @click="dialogStatusProps === 'create' ? createData() : updateData()"
         >
           {{ $t('table.confirm') }}
-        </el-button>
+        </liquid-button>
       </div>
     </el-dialog>
 
