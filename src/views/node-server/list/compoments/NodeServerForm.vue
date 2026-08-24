@@ -43,9 +43,9 @@
       <el-form-item :label="$t('traffic.period')">
         <liquid-select v-model="form.trafficPeriod">
           <option :label="$t('traffic.unlimited')" value="none" />
-          <option :label="$t('traffic.day')" value="day" />
-          <option :label="$t('traffic.month')" value="month" />
-          <option :label="$t('traffic.year')" value="year" />
+          <option :label="$t('traffic.perDay')" value="day" />
+          <option :label="$t('traffic.perMonth')" value="month" />
+          <option :label="$t('traffic.perYear')" value="year" />
         </liquid-select>
       </el-form-item>
       <el-form-item

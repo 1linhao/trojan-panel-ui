@@ -282,6 +282,7 @@ export default {
   },
   traffic: {
     total: 'All time', year: 'This year', month: 'This month', day: 'Today',
+    perYear: 'Yearly', perMonth: 'Monthly', perDay: 'Daily',
     rankAll: 'All', rankMonth: 'By month', rankDay: 'By day',
     selectMonth: 'Select month', selectDay: 'Select date',
     resetServer: 'Reset traffic statistics',

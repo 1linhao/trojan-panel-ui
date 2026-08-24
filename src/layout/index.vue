@@ -44,15 +44,6 @@
               <i class="el-icon-switch-button" aria-hidden="true" />
             </button>
           </div>
-          <button
-            class="prototype-icon-btn prototype-mobile-logout"
-            type="button"
-            title="退出登录"
-            aria-label="退出登录"
-            @click="logout"
-          >
-            <i class="el-icon-switch-button" aria-hidden="true" />
-          </button>
         </div>
       </header>
       <section class="prototype-content"><app-main /></section>

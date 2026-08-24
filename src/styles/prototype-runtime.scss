@@ -1961,12 +1961,8 @@ h3 {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.prototype-topbar-user .prototype-icon-btn,
-.prototype-mobile-logout {
+.prototype-topbar-user .prototype-icon-btn {
   color: var(--bad-fg);
-}
-.prototype-mobile-logout {
-  display: none;
 }
 .prototype-kicker {
   @extend .kicker;
@@ -2606,6 +2602,21 @@ h3 {
   backdrop-filter: none;
 }
 
+/* Element 默认在弹窗 wrapper 上执行 translate3d。Chromium 会在该合成层动画
+   结束时重新栅格化内部 backdrop-filter，导致玻璃背景瞬间改变。禁用这段动画，
+   让面板从首帧开始就使用最终的实时模糊。 */
+.dialog-fade-enter-active,
+.dialog-fade-leave-active {
+  animation: none !important;
+  transition: none !important;
+}
+
+.dialog-fade-enter,
+.dialog-fade-leave-to {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
 .el-message,
 .el-notification {
   border: 1px solid var(--rim);
@@ -2803,10 +2814,8 @@ h3 {
     bottom: 12px;
   }
   .prototype-topbar-user {
-    display: none;
-  }
-  .prototype-mobile-logout {
-    display: inline-flex;
+    display: flex;
+    max-width: min(220px, 42vw);
   }
 }
 @media (max-width: 760px) {
@@ -2847,8 +2856,30 @@ h3 {
   }
   .topbar {
     top: 12px;
+    gap: 8px;
     margin-bottom: 14px;
-    padding: 10px 14px;
+    padding: 10px 12px;
+  }
+  .prototype-topbar-actions {
+    gap: 5px;
+  }
+  .prototype-topbar-user {
+    max-width: min(190px, 48vw);
+    gap: 6px;
+    padding: 4px;
+  }
+  .prototype-topbar-user .prototype-avatar {
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
+  }
+  .prototype-topbar-user > strong {
+    max-width: 76px;
+  }
+  .prototype-topbar-user .prototype-icon-btn {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
   }
   .card,
   .sheet {

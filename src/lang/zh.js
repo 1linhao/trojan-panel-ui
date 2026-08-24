@@ -281,6 +281,7 @@ export default {
   },
   traffic: {
     total: '累计', year: '本年', month: '本月', day: '今日',
+    perYear: '每年', perMonth: '每月', perDay: '每日',
     rankAll: '全部', rankMonth: '按月', rankDay: '按日',
     selectMonth: '选择月份', selectDay: '选择日期',
     resetServer: '重置流量统计',

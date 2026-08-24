@@ -3,13 +3,12 @@ const THEME_KEY = 'trojan-panel-color-scheme'
 export function applyTheme(theme) {
   const nextTheme = theme === 'dark' ? 'dark' : 'light'
   document.documentElement.setAttribute('data-theme', nextTheme)
-  localStorage.setItem(THEME_KEY, nextTheme)
   return nextTheme
 }
 
 export function getInitialTheme() {
-  const savedTheme = localStorage.getItem(THEME_KEY)
-  if (savedTheme === 'dark' || savedTheme === 'light') return savedTheme
+  const runtimeTheme = document.documentElement.getAttribute('data-theme')
+  if (runtimeTheme === 'dark' || runtimeTheme === 'light') return runtimeTheme
   return window.matchMedia &&
     window.matchMedia('(prefers-color-scheme: dark)').matches
     ? 'dark'
@@ -17,7 +16,13 @@ export function getInitialTheme() {
 }
 
 export function initializeTheme() {
-  return applyTheme(getInitialTheme())
+  // 旧版本曾将主题写入本地；新逻辑只在当前运行周期内保留手动选择。
+  localStorage.removeItem(THEME_KEY)
+  const browserTheme = window.matchMedia &&
+    window.matchMedia('(prefers-color-scheme: dark)').matches
+    ? 'dark'
+    : 'light'
+  return applyTheme(browserTheme)
 }
 
 export function toggleTheme() {
