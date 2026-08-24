@@ -43,7 +43,7 @@
       </div>
     </div>
 
-    <div class="node-grid" v-loading="listLoading">
+    <div class="node-grid" v-liquid-loading="listLoading">
       <template v-for="(row, index) in list">
         <div :key="'node-' + row.id" class="glass node-card">
           <div class="node-top">
@@ -203,7 +203,7 @@
 <script>
 import Pagination from '@/components/Pagination'
 import ExportNodeDialog from '@/views/node/list/components/ExportNodeDialog'
-import { MessageBox } from 'element-ui'
+import { MessageBox } from '@/utils/liquid-feedback'
 import {
   deleteNodeById,
   nodeDefault,

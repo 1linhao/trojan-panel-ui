@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="glass card">
-      <div class="tbl-wrap" v-loading="listLoading">
+      <div class="tbl-wrap" v-liquid-loading="listLoading">
         <table class="tbl">
           <thead>
             <tr>
@@ -59,21 +59,21 @@
         @pagination="getList"
       />
     </div>
-    <el-dialog
+    <liquid-dialog
       append-to-body
       :title="$t('table.add')"
       :visible.sync="dialogFormVisible"
     >
-      <el-form
+      <liquid-form
         ref="dataForm"
         :rules="createRules"
         :model="temp"
         label-position="left"
       >
-        <el-form-item :label="$t('table.blackListIp')" prop="ip">
+        <liquid-form-item :label="$t('table.blackListIp')" prop="ip">
           <liquid-input v-model="temp.ip" clearable />
-        </el-form-item>
-      </el-form>
+        </liquid-form-item>
+      </liquid-form>
       <div slot="footer" class="dialog-footer">
         <liquid-button @click="dialogFormVisible = false"
           >{{ $t('table.cancel') }}
@@ -82,14 +82,14 @@
           {{ $t('table.confirm') }}
         </liquid-button>
       </div>
-    </el-dialog>
+    </liquid-dialog>
   </div>
 </template>
 
 <script>
 import { timeStampToDate } from '@/utils'
 import Pagination from '@/components/Pagination'
-import { MessageBox } from 'element-ui'
+import { MessageBox } from '@/utils/liquid-feedback'
 import {
   createBlackList,
   deleteBlackListByIp,

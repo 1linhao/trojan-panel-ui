@@ -54,7 +54,7 @@ export default {
 .liquid-button.is-primary {
   color: var(--on-accent);
   border-color: transparent;
-  background: linear-gradient(135deg, #198cff, var(--accent-deep));
+  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
 }
 .liquid-button.is-danger {
   color: var(--bad-fg);

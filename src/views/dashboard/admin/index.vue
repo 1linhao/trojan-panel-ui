@@ -77,17 +77,17 @@ export default {
         {
           label: 'CPU',
           value: this.percent(this.panelGroupData.cpuUsed),
-          color: '#0a84ff'
+          color: 'var(--chart-1)'
         },
         {
           label: '内存',
           value: this.percent(this.panelGroupData.memUsed),
-          color: '#af52de'
+          color: 'var(--chart-2)'
         },
         {
           label: '磁盘',
           value: this.percent(this.panelGroupData.diskUsed),
-          color: '#30c76e'
+          color: 'var(--chart-3)'
         }
       ]
     }

@@ -1,28 +1,25 @@
 <template>
   <div class="drawer-container">
     <div>
-      <h3 class="drawer-title">{{ $('settings.title') }}</h3>
+      <h3 class="drawer-title">{{ $t('settings.title') }}</h3>
 
       <div class="drawer-item">
-        <span>{{ $('settings.theme') }}</span>
-        <theme-picker
-          style="float: right; height: 26px; margin: -3px 8px 0 0"
-          @change="themeChange"
-        />
+        <span>{{ $t('settings.theme') }}</span>
+        <theme-picker class="drawer-palette-picker" />
       </div>
 
       <div class="drawer-item">
-        <span>{{ $('settings.tagsView') }}</span>
+        <span>{{ $t('settings.tagsView') }}</span>
         <liquid-switch v-model="tagsView" class="drawer-switch" />
       </div>
 
       <div class="drawer-item">
-        <span>{{ $('settings.fixedHeader') }}</span>
+        <span>{{ $t('settings.fixedHeader') }}</span>
         <liquid-switch v-model="fixedHeader" class="drawer-switch" />
       </div>
 
       <div class="drawer-item">
-        <span>{{ $('settings.sidebarLogo') }}</span>
+        <span>{{ $t('settings.sidebarLogo') }}</span>
         <liquid-switch v-model="sidebarLogo" class="drawer-switch" />
       </div>
     </div>
@@ -33,6 +30,7 @@
 import ThemePicker from '@/components/ThemePicker'
 
 export default {
+  name: 'LayoutSettings',
   components: { ThemePicker },
   data() {
     return {}
@@ -71,14 +69,6 @@ export default {
         })
       }
     }
-  },
-  methods: {
-    themeChange(val) {
-      this.$store.dispatch('settings/changeSetting', {
-        key: 'theme',
-        value: val
-      })
-    }
   }
 }
 </script>
@@ -92,18 +82,22 @@ export default {
 
   .drawer-title {
     margin-bottom: 12px;
-    color: rgba(0, 0, 0, 0.85);
+    color: var(--ink);
     font-size: 14px;
     line-height: 22px;
   }
 
   .drawer-item {
-    color: rgba(0, 0, 0, 0.65);
+    color: var(--ink-2);
     font-size: 14px;
     padding: 12px 0;
   }
 
   .drawer-switch {
+    float: right;
+  }
+
+  .drawer-palette-picker {
     float: right;
   }
 }

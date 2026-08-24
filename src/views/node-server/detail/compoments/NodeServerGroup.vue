@@ -1,6 +1,6 @@
 <template>
-  <el-row :gutter="40" class="panel-group">
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+  <liquid-row :gutter="40" class="panel-group">
+    <liquid-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-sysinfo">
           <svg-icon icon-class="sysinfo" class-name="card-panel-icon" />
@@ -12,8 +12,8 @@
           </h3>
         </div>
       </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    </liquid-col>
+    <liquid-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-sysinfo">
           <svg-icon icon-class="sysinfo" class-name="card-panel-icon" />
@@ -25,8 +25,8 @@
           </h3>
         </div>
       </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    </liquid-col>
+    <liquid-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-sysinfo">
           <svg-icon icon-class="sysinfo" class-name="card-panel-icon" />
@@ -38,8 +38,8 @@
           </h3>
         </div>
       </div>
-    </el-col>
-  </el-row>
+    </liquid-col>
+  </liquid-row>
 </template>
 
 <script>
@@ -53,7 +53,7 @@ export default {
   },
   filters: {
     useWarning: function (value) {
-      return value >= 80 ? 'color: #FF0000;' : ''
+      return value >= 80 ? 'color: var(--bad-fg);' : ''
     },
     toPercent: function (value) {
       return value + '%'

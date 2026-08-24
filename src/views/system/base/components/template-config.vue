@@ -1,18 +1,18 @@
 <template>
   <div class="app-container">
-    <el-form
+    <liquid-form
       ref="dataForm"
       :rules="updateRules"
       :model="systemConfig"
       label-position="top"
     >
       <div class="general-settings">
-        <el-form-item :label="$t('config.systemLogo')" prop="systemName">
+        <liquid-form-item :label="$t('config.systemLogo')" prop="systemName">
           <upload-logo />
-        </el-form-item>
-        <el-form-item :label="$t('config.systemName')" prop="systemName">
+        </liquid-form-item>
+        <liquid-form-item :label="$t('config.systemName')" prop="systemName">
           <liquid-input v-model="systemConfig.systemName" clearable />
-        </el-form-item>
+        </liquid-form-item>
       </div>
 
       <div class="seg liquid-tabs" role="tablist" aria-label="订阅模板客户端">
@@ -22,20 +22,20 @@
         </button>
       </div>
       <template v-if="activeClient === 'clash-meta'">
-          <el-form-item
+          <liquid-form-item
             :label="$t('config.templateName')"
             prop="clashTemplateName"
           >
             <liquid-input v-model="systemConfig.clashTemplateName" clearable />
-          </el-form-item>
-          <el-form-item :label="$t('config.clashRule')" prop="clashRule">
+          </liquid-form-item>
+          <liquid-form-item :label="$t('config.clashRule')" prop="clashRule">
             <liquid-input
               v-model="systemConfig.clashRule"
               type="textarea"
               :autosize="{ minRows: 10, maxRows: 24 }"
               clearable
             />
-          </el-form-item>
+          </liquid-form-item>
       </template>
 
       <template v-else-if="activeClient === 'sing-box'">
@@ -57,7 +57,7 @@
           </div>
 
           <template v-if="activeSingBoxTemplate === 'tun'">
-            <el-form-item
+            <liquid-form-item
               :label="$t('config.templateName')"
               prop="singBoxTunTemplateName"
             >
@@ -65,8 +65,8 @@
                 v-model="systemConfig.singBoxTunTemplateName"
                 clearable
               />
-            </el-form-item>
-            <el-form-item
+            </liquid-form-item>
+            <liquid-form-item
               :label="$t('config.singBoxTunTemplate')"
               prop="singBoxTun"
             >
@@ -75,11 +75,11 @@
                 v-bind="systemConfig.singBoxTunEntity"
                 mode="text"
               />
-            </el-form-item>
+            </liquid-form-item>
           </template>
 
           <template v-else>
-            <el-form-item
+            <liquid-form-item
               :label="$t('config.templateName')"
               prop="singBoxOutboundTemplateName"
             >
@@ -87,8 +87,8 @@
                 v-model="systemConfig.singBoxOutboundTemplateName"
                 clearable
               />
-            </el-form-item>
-            <el-form-item
+            </liquid-form-item>
+            <liquid-form-item
               :label="$t('config.singBoxOutboundTemplate')"
               prop="singBoxOutbound"
             >
@@ -97,32 +97,32 @@
                 v-bind="systemConfig.singBoxOutboundEntity"
                 mode="text"
               />
-            </el-form-item>
+            </liquid-form-item>
           </template>
       </template>
 
       <template v-else>
-          <el-form-item
+          <liquid-form-item
             :label="$t('config.templateName')"
             prop="xrayTemplateName"
           >
             <liquid-input v-model="systemConfig.xrayTemplateName" clearable />
-          </el-form-item>
-          <el-form-item :label="$t('config.xrayTemplate')" prop="xrayTemplate">
+          </liquid-form-item>
+          <liquid-form-item :label="$t('config.xrayTemplate')" prop="xrayTemplate">
             <JsonEditorVue
               v-model="systemConfig.xrayTemplateEntity"
               v-bind="systemConfig.xrayTemplateEntity"
               mode="text"
             />
-          </el-form-item>
+          </liquid-form-item>
       </template>
 
-      <el-form-item class="actions">
+      <liquid-form-item class="actions">
         <liquid-button type="primary" icon="el-icon-check" @click="updateData">
           {{ $t('table.confirm') }}
         </liquid-button>
-      </el-form-item>
-    </el-form>
+      </liquid-form-item>
+    </liquid-form>
   </div>
 </template>
 

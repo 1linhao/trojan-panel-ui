@@ -1,6 +1,6 @@
 <template>
   <div v-if="formVisibleProps">
-    <el-form-item
+    <liquid-form-item
       :label="$t('table.hysteriaProtocol').toString()"
       prop="hysteriaProtocol"
     >
@@ -16,14 +16,14 @@
           v-for="item in hysteriaProtocols"
         ></option>
       </liquid-select>
-    </el-form-item>
-    <el-form-item
+    </liquid-form-item>
+    <liquid-form-item
       :label="$t('table.hysteriaObfs').toString()"
       prop="hysteriaObfs"
     >
       <liquid-input v-model="nodeProps.hysteriaObfs" />
-    </el-form-item>
-    <el-form-item
+    </liquid-form-item>
+    <liquid-form-item
       :label="$t('table.hysteriaUpMbps').toString()"
       prop="hysteriaUpMbps"
     >
@@ -32,8 +32,8 @@
         controls-position="right"
         type="number"
       />
-    </el-form-item>
-    <el-form-item
+    </liquid-form-item>
+    <liquid-form-item
       :label="$t('table.hysteriaDownMbps').toString()"
       prop="hysteriaDownMbps"
     >
@@ -42,48 +42,44 @@
         controls-position="right"
         type="number"
       />
-    </el-form-item>
-    <el-form-item
+    </liquid-form-item>
+    <liquid-form-item
       :label="$t('table.hysteriaServerName').toString()"
       prop="hysteriaServerName"
     >
       <liquid-input v-model="nodeProps.hysteriaServerName" />
-    </el-form-item>
-    <el-form-item
+    </liquid-form-item>
+    <liquid-form-item
       :label="$t('table.hysteriaInsecure').toString()"
       prop="hysteriaInsecure"
     >
       <liquid-switch
         v-model="nodeProps.hysteriaInsecure"
-        active-color="#13ce66"
-        inactive-color="#ff4949"
         :active-text="$t('table.enable').toString()"
         :inactive-text="$t('table.disable').toString()"
         :active-value="1"
         :inactive-value="0"
       >
       </liquid-switch>
-    </el-form-item>
-    <el-form-item
+    </liquid-form-item>
+    <liquid-form-item
       :label="$t('table.hysteriaFastOpen').toString()"
       prop="hysteriaFastOpen"
     >
       <liquid-switch
         v-model="nodeProps.hysteriaFastOpen"
-        active-color="#13ce66"
-        inactive-color="#ff4949"
         :active-text="$t('table.enable').toString()"
         :inactive-text="$t('table.disable').toString()"
         :active-value="1"
         :inactive-value="0"
       >
       </liquid-switch>
-    </el-form-item>
-    <el-form-item>
+    </liquid-form-item>
+    <liquid-form-item>
       <aside>
         {{ $t('table.hysteriaTip') }}
       </aside>
-    </el-form-item>
+    </liquid-form-item>
   </div>
 </template>
 

@@ -29,7 +29,7 @@
 
 <script>
 import { uploadWebFile } from '@/api/system'
-import { Message } from 'element-ui'
+import { Message } from '@/utils/liquid-feedback'
 
 export default {
   name: 'web-file',

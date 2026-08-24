@@ -1,6 +1,6 @@
 <template>
   <div v-if="formVisibleProps">
-    <el-form-item
+    <liquid-form-item
         :label="$t('table.xrayProtocol').toString()"
         prop="xrayProtocol"
     >
@@ -16,8 +16,8 @@
             v-for="(item, index) in xrayProtocols"
         ></option>
       </liquid-select>
-    </el-form-item>
-    <el-form-item
+    </liquid-form-item>
+    <liquid-form-item
         :label="$t('table.xrayUotEnable').toString()"
         v-if="isXrayShadowsocks(nodeProps)"
     >
@@ -29,8 +29,8 @@
           :inactive-value="0"
       />
       <div class="option-help">{{ $t('table.xrayUotHelp') }}</div>
-    </el-form-item>
-    <el-form-item
+    </liquid-form-item>
+    <liquid-form-item
         :label="$t('table.xrayUotVersion').toString()"
         v-if="isXrayShadowsocks(nodeProps) && nodeProps.xrayUotEnable === 1"
     >
@@ -38,8 +38,8 @@
         <option :value="1" label="1" />
         <option :value="2" label="2" />
       </liquid-select>
-    </el-form-item>
-    <el-form-item
+    </liquid-form-item>
+    <liquid-form-item
         :label="$t('table.xrayXudpEnable').toString()"
         v-if="isXrayVless(nodeProps) || isXrayVmess(nodeProps)"
     >
@@ -50,8 +50,8 @@
           :active-value="1"
           :inactive-value="0"
       />
-    </el-form-item>
-    <el-form-item
+    </liquid-form-item>
+    <liquid-form-item
         :label="$t('table.xrayMuxEnable').toString()"
         v-if="isXrayVless(nodeProps) || isXrayVmess(nodeProps) || isXrayTrojan(nodeProps)"
     >
@@ -62,8 +62,8 @@
           :active-value="1"
           :inactive-value="0"
       />
-    </el-form-item>
-    <el-form-item
+    </liquid-form-item>
+    <liquid-form-item
         :label="$t('table.xrayStreamSettingsNetwork').toString()"
         prop="xrayStreamSettingsEntity.network"
         v-if="
@@ -82,14 +82,14 @@
             v-for="item in xrayStreamSettingsNetworks"
         ></option>
       </liquid-select>
-    </el-form-item>
+    </liquid-form-item>
 
     <XrayFormWebSocket
         :form-visible-props="isXrayWs(nodeProps) && !isXrayShadowsocks(nodeProps)"
         :node-props="nodeProps"
     />
 
-    <el-form-item
+    <liquid-form-item
         :label="$t('table.xrayStreamSettingsSecurity').toString()"
         prop="xrayStreamSettingsEntity.security"
         v-if="!isXrayShadowsocks(nodeProps)"
@@ -106,7 +106,7 @@
             v-for="item in xrayStreamSettingsSecuritys"
         ></option>
       </liquid-select>
-    </el-form-item>
+    </liquid-form-item>
 
     <XrayFormTls
         :form-visible-props="isXrayStreamSettingsSecurityTls(nodeProps)"
@@ -118,7 +118,7 @@
         :node-props="nodeProps"
     />
 
-    <el-form-item
+    <liquid-form-item
         :label="$t('table.xrayFlow').toString()"
         prop="xrayFlow"
         v-if="showXrayFlow(nodeProps)"
@@ -131,8 +131,8 @@
             v-for="(item, index) in xrayFlows"
         ></option>
       </liquid-select>
-    </el-form-item>
-    <el-form-item
+    </liquid-form-item>
+    <liquid-form-item
         :label="$t('table.xraySSMethod').toString()"
         prop="xraySSMethod"
         v-if="
@@ -149,8 +149,8 @@
             v-for="(item, index) in xraySSMethods"
         ></option>
       </liquid-select>
-    </el-form-item>
-    <el-form-item
+    </liquid-form-item>
+    <liquid-form-item
         :label="$t('table.xraySSNetwork').toString()"
         prop="xraySettingsEntity.network"
         v-if="
@@ -169,8 +169,8 @@
             v-for="(item, index) in xraySettingsNetworks"
         ></option>
       </liquid-select>
-    </el-form-item>
-    <el-form-item
+    </liquid-form-item>
+    <liquid-form-item
         :label="$t('table.xrayFallbacks').toString()"
         prop="xraySettingsEntity.fallbacks"
         v-if="showFallback(nodeProps)"
@@ -195,29 +195,27 @@
           icon="el-icon-plus"
           @click="handleCreateFallbackProps"
       ></liquid-button>
-    </el-form-item>
-    <el-form-item :label="$t('table.xraySocksUser').toString()" prop="xraySettingsEntity.accounts[0].user" v-if="isXraySocks(nodeProps)">
+    </liquid-form-item>
+    <liquid-form-item :label="$t('table.xraySocksUser').toString()" prop="xraySettingsEntity.accounts[0].user" v-if="isXraySocks(nodeProps)">
       <liquid-input v-model="nodeProps.xraySettingsEntity.accounts[0].user" />
-    </el-form-item>
-    <el-form-item :label="$t('table.xraySocksPass').toString()" prop="xraySettingsEntity.accounts[0].pass" v-if="isXraySocks(nodeProps)">
+    </liquid-form-item>
+    <liquid-form-item :label="$t('table.xraySocksPass').toString()" prop="xraySettingsEntity.accounts[0].pass" v-if="isXraySocks(nodeProps)">
       <liquid-input v-model="nodeProps.xraySettingsEntity.accounts[0].pass" />
-    </el-form-item>
-    <el-form-item
+    </liquid-form-item>
+    <liquid-form-item
         :label="$t('table.xraySocksUdp').toString()"
         prop="xraySettingsEntity.udp"
         v-if="isXraySocks(nodeProps)"
     >
       <liquid-switch
           v-model="nodeProps.xraySettingsEntity.udp"
-          active-color="#13ce66"
-          inactive-color="#ff4949"
           :active-text="$t('table.enable').toString()"
           :inactive-text="$t('table.disable').toString()"
           :active-value="true"
           :inactive-value="false"
       >
       </liquid-switch>
-    </el-form-item>
+    </liquid-form-item>
   </div>
 </template>
 

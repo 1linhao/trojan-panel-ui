@@ -12,45 +12,45 @@
       <template v-if="device !== 'mobile'">
         <screenfull id="screenfull" class="right-menu-item hover-effect" />
 
-        <el-tooltip
+        <liquid-tooltip
           :content="$t('navbar.size')"
           effect="dark"
           placement="bottom"
         >
           <SizeSelect id="size-select" class="right-menu-item hover-effect" />
-        </el-tooltip>
+        </liquid-tooltip>
 
         <lang-select class="right-menu-item hover-effect" />
       </template>
       <liquid-theme-toggle class="right-menu-item" />
-      <el-dropdown class="avatar-container" trigger="click">
+      <liquid-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <span class="user-avatar">{{ userInitials }}</span>
           <i class="el-icon-caret-bottom" />
         </div>
-        <el-dropdown-menu slot="dropdown" class="user-dropdown">
-          <el-dropdown-item @click.native="goProfile">
+        <liquid-dropdown-menu slot="dropdown" class="user-dropdown">
+          <liquid-dropdown-item @click.native="goProfile">
             {{ $t('navbar.profile') }}
-          </el-dropdown-item>
+          </liquid-dropdown-item>
           <a
             target="_blank"
             href="https://github.com/trojanpanel"
             v-if="checkPermission(['sysadmin', 'admin'])"
           >
-            <el-dropdown-item>{{ $t('navbar.github') }}</el-dropdown-item>
+            <liquid-dropdown-item>{{ $t('navbar.github') }}</liquid-dropdown-item>
           </a>
           <a
             target="_blank"
             href="https://trojanpanel.github.io"
             v-if="checkPermission(['sysadmin', 'admin'])"
           >
-            <el-dropdown-item>{{ $t('navbar.doc') }}</el-dropdown-item>
+            <liquid-dropdown-item>{{ $t('navbar.doc') }}</liquid-dropdown-item>
           </a>
-          <el-dropdown-item divided @click.native="logout">
+          <liquid-dropdown-item divided @click.native="logout">
             <span style="display: block">{{ $t('navbar.logout') }}</span>
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+          </liquid-dropdown-item>
+        </liquid-dropdown-menu>
+      </liquid-dropdown>
     </div>
   </div>
 </template>
@@ -170,10 +170,10 @@ export default {
           width: 38px;
           height: 38px;
           border-radius: 14px;
-          color: #fff;
-          background: linear-gradient(135deg, #0a84ff, #5e5ce6);
-          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45),
-            0 8px 18px -10px #245bd7;
+          color: var(--on-accent);
+          background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+          box-shadow: inset 0 1px 0 var(--spec),
+            0 8px 18px -10px color-mix(in srgb, var(--accent) 70%, transparent);
           font-size: 12px;
           font-weight: 800;
         }

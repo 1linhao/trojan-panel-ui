@@ -1,12 +1,12 @@
 <template>
   <div class="app-container">
-    <el-form
+    <liquid-form
       ref="dataForm"
       :rules="updateRules"
       :model="systemConfig"
       label-position="left"
     >
-      <el-form-item
+      <liquid-form-item
         :label="$t('config.emailEnable')"
         prop="emailEnable"
         clearable
@@ -16,29 +16,27 @@
           :active-value="1"
           :inactive-value="0"
           class="ml-2"
-          active-color="#13ce66"
-          inactive-color="#ff4949"
         />
-      </el-form-item>
+      </liquid-form-item>
 
-      <el-form-item :label="$t('config.emailHost')" prop="emailHost">
+      <liquid-form-item :label="$t('config.emailHost')" prop="emailHost">
         <liquid-input
           :disabled="emailDisable"
           v-model="systemConfig.emailHost"
           clearable
         />
-      </el-form-item>
+      </liquid-form-item>
 
-      <el-form-item :label="$t('config.emailPort')" prop="emailPort">
+      <liquid-form-item :label="$t('config.emailPort')" prop="emailPort">
         <liquid-number-input
           v-model.number="systemConfig.emailPort"
           controls-position="right"
           type="number"
           :disabled="emailDisable"
         />
-      </el-form-item>
+      </liquid-form-item>
 
-      <el-form-item
+      <liquid-form-item
         :label="$t('config.emailUsername')"
         prop="emailUsername"
         clearable
@@ -47,9 +45,9 @@
           :disabled="emailDisable"
           v-model="systemConfig.emailUsername"
         />
-      </el-form-item>
+      </liquid-form-item>
 
-      <el-form-item
+      <liquid-form-item
         :label="$t('config.emailPassword')"
         prop="emailPassword"
         clearable
@@ -59,9 +57,9 @@
           type="password"
           v-model="systemConfig.emailPassword"
         />
-      </el-form-item>
+      </liquid-form-item>
 
-      <el-form-item
+      <liquid-form-item
         :label="$t('config.expireWarnEnable')"
         prop="expireWarnEnable"
       >
@@ -70,27 +68,25 @@
           :active-value="1"
           :inactive-value="0"
           class="ml-2"
-          active-color="#13ce66"
-          inactive-color="#ff4949"
           :disabled="emailDisable"
         />
-      </el-form-item>
+      </liquid-form-item>
 
-      <el-form-item :label="$t('config.expireWarnDay')" prop="expireWarnDay">
+      <liquid-form-item :label="$t('config.expireWarnDay')" prop="expireWarnDay">
         <liquid-number-input
           v-model.number="systemConfig.expireWarnDay"
           controls-position="right"
           type="number"
           :disabled="emailDisable || expireWarnDisable"
         />
-      </el-form-item>
+      </liquid-form-item>
 
-      <el-form-item>
+      <liquid-form-item>
         <liquid-button type="primary" @click="updateData()"
           >{{ $t('table.confirm') }}
         </liquid-button>
-      </el-form-item>
-    </el-form>
+      </liquid-form-item>
+    </liquid-form>
   </div>
 </template>
 

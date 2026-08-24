@@ -1,24 +1,22 @@
 <template>
-  <el-dialog
+  <liquid-dialog
     append-to-body
     :title="$t('table.import')"
     :visible="dialogFormVisible"
     @close="$emit('update:dialogFormVisible', false)"
   >
-    <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left">
-      <el-form-item :label="label" prop="cover">
+    <liquid-form ref="dataForm" :rules="rules" :model="temp" label-position="left">
+      <liquid-form-item :label="label" prop="cover">
         <liquid-switch
           v-model="temp.cover"
-          active-color="#13ce66"
-          inactive-color="#ff4949"
           :active-text="$t('table.yes')"
           :inactive-text="$t('table.no')"
           :active-value="1"
           :inactive-value="0"
         >
         </liquid-switch>
-      </el-form-item>
-      <el-form-item :label="$t('config.webFileSelect')" prop="file">
+      </liquid-form-item>
+      <liquid-form-item :label="$t('config.webFileSelect')" prop="file">
         <div class="liquid-file-picker">
           <input
             ref="upload"
@@ -43,8 +41,8 @@
             {{ $t('config.jsonFileTip') }}
           </div>
         </div>
-      </el-form-item>
-    </el-form>
+      </liquid-form-item>
+    </liquid-form>
     <div slot="footer" class="dialog-footer">
       <liquid-button @click="$emit('update:dialogFormVisible', false)">
         {{ $t('table.cancel') }}
@@ -57,11 +55,11 @@
         {{ $t('table.confirm') }}
       </liquid-button>
     </div>
-  </el-dialog>
+  </liquid-dialog>
 </template>
 
 <script>
-import { Message } from 'element-ui'
+import { Message } from '@/utils/liquid-feedback'
 
 export default {
   name: 'index',

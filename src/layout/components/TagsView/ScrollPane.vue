@@ -1,12 +1,12 @@
 <template>
-  <el-scrollbar
+  <liquid-scrollbar
     ref="scrollContainer"
     :vertical="false"
     class="scroll-container"
     @wheel.native.prevent="handleScroll"
   >
     <slot />
-  </el-scrollbar>
+  </liquid-scrollbar>
 </template>
 
 <script>

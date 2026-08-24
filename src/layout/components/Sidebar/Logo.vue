@@ -101,15 +101,15 @@ export default {
     width: 34px;
     height: 34px;
     border-radius: 12px;
-    color: #fff;
+    color: var(--on-accent);
     background: linear-gradient(
         155deg,
         rgba(255, 255, 255, 0.48),
         transparent 54%
       ),
-      linear-gradient(135deg, #0a84ff, #5e5ce6);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62),
-      0 8px 20px -8px rgba(30, 60, 200, 0.62);
+      linear-gradient(135deg, var(--accent), var(--accent-deep));
+    box-shadow: inset 0 1px 0 var(--spec),
+      0 8px 20px -8px color-mix(in srgb, var(--accent) 64%, transparent);
     font-size: 17px;
     font-weight: 800;
   }

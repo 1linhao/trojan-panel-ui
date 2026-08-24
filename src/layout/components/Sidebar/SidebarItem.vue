@@ -8,7 +8,7 @@
       "
     >
       <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
-        <el-menu-item
+        <liquid-menu-item
           :index="resolvePath(onlyOneChild.path)"
           :class="{ 'submenu-title-noDropdown': !isNest }"
         >
@@ -16,11 +16,11 @@
             :icon="onlyOneChild.meta.icon || (item.meta && item.meta.icon)"
             :title="generateTitle(onlyOneChild.meta.title)"
           />
-        </el-menu-item>
+        </liquid-menu-item>
       </app-link>
     </template>
 
-    <el-submenu
+    <liquid-submenu
       v-else
       ref="subMenu"
       :index="resolvePath(item.path)"
@@ -41,7 +41,7 @@
         :base-path="resolvePath(child.path)"
         class="nest-menu"
       />
-    </el-submenu>
+    </liquid-submenu>
   </div>
 </template>
 

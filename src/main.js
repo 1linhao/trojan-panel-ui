@@ -19,6 +19,7 @@ import LiquidSwitch from '@/components/LiquidSwitch'
 import LiquidButton from '@/components/LiquidButton'
 import LiquidTag from '@/components/LiquidTag'
 import LiquidDatePicker from '@/components/LiquidDatePicker'
+import LiquidLoading from '@/directives/liquid-loading'
 
 import VCA from '@vue/composition-api'
 import JsonEditorVue from 'json-editor-vue'
@@ -31,6 +32,36 @@ Vue.use(ElementUI, {
   i18n: (key, value) => i18n.t(key, value)
 })
 
+// Page templates depend on a stable Liquid Interface. ElementUI remains an
+// internal Adapter for complex structural behaviour until those implementations
+// can be replaced without touching every page again.
+const liquidStructuralAdapters = {
+  LiquidBreadcrumb: ElementUI.Breadcrumb,
+  LiquidBreadcrumbItem: ElementUI.BreadcrumbItem,
+  LiquidCard: ElementUI.Card,
+  LiquidCol: ElementUI.Col,
+  LiquidDescriptions: ElementUI.Descriptions,
+  LiquidDescriptionsItem: ElementUI.DescriptionsItem,
+  LiquidDialog: ElementUI.Dialog,
+  LiquidDropdown: ElementUI.Dropdown,
+  LiquidDropdownItem: ElementUI.DropdownItem,
+  LiquidDropdownMenu: ElementUI.DropdownMenu,
+  LiquidForm: ElementUI.Form,
+  LiquidFormItem: ElementUI.FormItem,
+  LiquidMenu: ElementUI.Menu,
+  LiquidMenuItem: ElementUI.MenuItem,
+  LiquidRow: ElementUI.Row,
+  LiquidScrollbar: ElementUI.Scrollbar,
+  LiquidSubmenu: ElementUI.Submenu,
+  LiquidTable: ElementUI.Table,
+  LiquidTableColumn: ElementUI.TableColumn,
+  LiquidTooltip: ElementUI.Tooltip
+}
+
+Object.entries(liquidStructuralAdapters).forEach(([name, adapter]) => {
+  Vue.component(name, adapter)
+})
+
 Vue.config.productionTip = false
 
 Vue.component('LiquidNumberInput', LiquidNumberInput)
@@ -40,6 +71,7 @@ Vue.component('LiquidSwitch', LiquidSwitch)
 Vue.component('LiquidButton', LiquidButton)
 Vue.component('LiquidTag', LiquidTag)
 Vue.component('LiquidDatePicker', LiquidDatePicker)
+Vue.directive('liquid-loading', LiquidLoading)
 
 initializeTheme()
 

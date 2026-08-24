@@ -1,13 +1,13 @@
 <template>
   <div>
-    <el-dialog
+    <liquid-dialog
       append-to-body
       :title="textMap[dialogStatusProps]"
       :visible="dialogFormVisibleProps"
       custom-class="liquid-node-editor"
       @close="$emit('update:dialogFormVisibleProps', false)"
     >
-      <el-form
+      <liquid-form
         ref="dataForm"
         :rules="dialogStatusProps === 'create' ? createRules : updateRules"
         :model="nodeProps"
@@ -15,10 +15,10 @@
         label-width="132px"
         label-position="left"
       >
-        <el-form-item :label="$t('table.nodeName').toString()" prop="name">
+        <liquid-form-item :label="$t('table.nodeName').toString()" prop="name">
           <liquid-input v-model="nodeProps.name" clearable />
-        </el-form-item>
-        <el-form-item
+        </liquid-form-item>
+        <liquid-form-item
           :label="$t('table.nodeServer').toString()"
           prop="nodeServerId"
         >
@@ -43,19 +43,19 @@
               @click="toAddNodeServer"
             ></liquid-button>
           </div>
-        </el-form-item>
-        <el-form-item :label="$t('table.nodeDomain').toString()" prop="domain">
+        </liquid-form-item>
+        <liquid-form-item :label="$t('table.nodeDomain').toString()" prop="domain">
           <liquid-input v-model="nodeProps.domain" clearable />
-        </el-form-item>
-        <el-form-item :label="$t('table.nodePort').toString()" prop="port">
+        </liquid-form-item>
+        <liquid-form-item :label="$t('table.nodePort').toString()" prop="port">
           <liquid-number-input
             v-model.number="nodeProps.port"
             controls-position="right"
             type="number"
           />
-        </el-form-item>
+        </liquid-form-item>
 
-        <el-form-item
+        <liquid-form-item
           :label="$t('table.nodePriority').toString()"
           prop="priority"
         >
@@ -64,9 +64,9 @@
             controls-position="right"
             type="number"
           />
-        </el-form-item>
+        </liquid-form-item>
 
-        <el-form-item
+        <liquid-form-item
           :label="$t('table.nodeType').toString()"
           prop="nodeTypeId"
         >
@@ -78,14 +78,14 @@
               v-for="item in nodeTypesProps"
             ></option>
           </liquid-select>
-        </el-form-item>
+        </liquid-form-item>
 
-        <el-form-item
+        <liquid-form-item
           :label="$t('table.nodeClients').toString()"
           prop="clients"
         >
           <NodeClientSelector :node-props="nodeProps" />
-        </el-form-item>
+        </liquid-form-item>
 
         <XrayForm
           :node-props="nodeProps"
@@ -114,7 +114,7 @@
           :node-props="nodeProps"
           :form-visible-props="isHysteria2(nodeProps)"
         />
-      </el-form>
+      </liquid-form>
       <div slot="footer" class="dialog-footer">
         <liquid-button @click="$emit('update:dialogFormVisibleProps', false)"
           >{{ $t('table.cancel') }}
@@ -126,7 +126,7 @@
           {{ $t('table.confirm') }}
         </liquid-button>
       </div>
-    </el-dialog>
+    </liquid-dialog>
 
     <FallbackInfo
       :dialog-visible-props.sync="dialogFallbackDetailVisible"

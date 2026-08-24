@@ -23,7 +23,7 @@
       :disabled="disabled"
       :aria-expanded="String(open)"
       aria-haspopup="listbox"
-      @click.stop="toggleMenu"
+      @click="toggleMenu"
       @keydown.down.prevent="openMenu"
       @keydown.enter.prevent="toggleMenu"
       @keydown.space.prevent="toggleMenu"
@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import emitter from 'element-ui/src/mixins/emitter'
+import emitter from '@/mixins/liquid-control-emitter'
 
 export default {
   name: 'LiquidSelect',
@@ -232,14 +232,15 @@ export default {
     updatePosition() {
       if (!this.open || !this.$refs.trigger) return
       const rect = this.$refs.trigger.getBoundingClientRect()
+      const width = Math.min(rect.width, window.innerWidth - 24)
       const maxHeight = Math.min(320, window.innerHeight - 24)
       const roomBelow = window.innerHeight - rect.bottom - 12
       const openAbove = roomBelow < 180 && rect.top > roomBelow
       this.menuStyle = {
-        left: `${Math.max(12, rect.left)}px`,
+        left: `${Math.min(Math.max(12, rect.left), window.innerWidth - width - 12)}px`,
         top: openAbove ? 'auto' : `${rect.bottom + 6}px`,
         bottom: openAbove ? `${window.innerHeight - rect.top + 6}px` : 'auto',
-        width: `${Math.min(rect.width, window.innerWidth - 24)}px`,
+        width: `${width}px`,
         maxHeight: `${maxHeight}px`
       }
     },
@@ -256,7 +257,7 @@ export default {
 <style scoped>
 .liquid-select {
   position: relative;
-  width: 100%;
+  width: min(100%, var(--control-max-width));
   min-width: 0;
 }
 .liquid-select__native {
@@ -417,5 +418,11 @@ export default {
 }
 .liquid-select.is-disabled {
   opacity: 0.58;
+}
+@media (max-width: 760px) {
+  .liquid-select {
+    width: 100%;
+    max-width: none;
+  }
 }
 </style>

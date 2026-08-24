@@ -1,37 +1,37 @@
 <template>
-  <el-dialog
+  <liquid-dialog
     append-to-body
     :title="$t('table.add').toString()"
     :visible="dialogVisibleProps"
     @close="$emit('update:dialogVisibleProps', false)"
     width="30%"
   >
-    <el-form
+    <liquid-form
       ref="dataForm"
       :rules="createRules"
       :model="temp"
       label-position="left"
     >
-      <el-form-item label="name" prop="name">
+      <liquid-form-item label="name" prop="name">
         <liquid-input v-model="temp.name" clearable />
-      </el-form-item>
-      <el-form-item label="alpn" prop="alpn">
+      </liquid-form-item>
+      <liquid-form-item label="alpn" prop="alpn">
         <liquid-input v-model="temp.alpn" clearable />
-      </el-form-item>
-      <el-form-item label="path" prop="path">
+      </liquid-form-item>
+      <liquid-form-item label="path" prop="path">
         <liquid-input v-model="temp.path" clearable />
-      </el-form-item>
-      <el-form-item label="dest" prop="dest">
+      </liquid-form-item>
+      <liquid-form-item label="dest" prop="dest">
         <liquid-input v-model="temp.dest" clearable />
-      </el-form-item>
-      <el-form-item label="xver" prop="xver">
+      </liquid-form-item>
+      <liquid-form-item label="xver" prop="xver">
         <liquid-number-input
           v-model.number="temp.xver"
           controls-position="right"
           type="number"
         />
-      </el-form-item>
-    </el-form>
+      </liquid-form-item>
+    </liquid-form>
     <div slot="footer" class="dialog-footer">
       <liquid-button @click="$emit('update:dialogVisibleProps', false)"
         >{{ $t('table.cancel') }}
@@ -40,7 +40,7 @@
         {{ $t('table.confirm') }}
       </liquid-button>
     </div>
-  </el-dialog>
+  </liquid-dialog>
 </template>
 
 <script>

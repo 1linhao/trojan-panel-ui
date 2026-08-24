@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import emitter from 'element-ui/src/mixins/emitter'
+import emitter from '@/mixins/liquid-control-emitter'
 
 export default {
   name: 'LiquidNumberInput',

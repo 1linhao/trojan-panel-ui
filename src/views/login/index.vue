@@ -6,7 +6,7 @@
         <span class="brand-mark">T</span>
         <h1>{{ systemName || 'Trojan Panel' }}</h1>
       </div>
-      <el-form
+      <liquid-form
         ref="loginForm"
         :model="loginForm"
         :rules="loginRules"
@@ -14,7 +14,7 @@
         auto-complete="on"
         @submit.native.prevent
       >
-        <el-form-item prop="username"
+        <liquid-form-item prop="username"
           ><label class="fld"
             ><span>用户名</span
             ><input
@@ -22,8 +22,8 @@
               v-model="loginForm.username"
               placeholder="6–20 位字母或数字"
               autocomplete="username" /></label
-        ></el-form-item>
-        <el-form-item prop="pass"
+        ></liquid-form-item>
+        <liquid-form-item prop="pass"
           ><label class="fld"
             ><span>密码</span
             ><span class="password-field"
@@ -41,15 +41,15 @@
                 <svg-icon
                   :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
                 /></button></span></label
-        ></el-form-item>
+        ></liquid-form-item>
         <div v-if="captchaEnable" class="captcha-row">
-          <el-form-item prop="captchaCode"
+          <liquid-form-item prop="captchaCode"
             ><label class="fld"
               ><span>验证码</span
               ><input
                 v-model="loginForm.captchaCode"
                 placeholder="输入右侧字符"
-                @keyup.enter="handleLogin" /></label></el-form-item
+                @keyup.enter="handleLogin" /></label></liquid-form-item
           ><button
             type="button"
             class="captcha-img"
@@ -73,7 +73,7 @@
             注册新账号
           </button></template
         >
-      </el-form>
+      </liquid-form>
     </div>
   </div>
 </template>

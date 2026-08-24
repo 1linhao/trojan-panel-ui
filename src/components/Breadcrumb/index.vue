@@ -1,7 +1,7 @@
 <template>
-  <el-breadcrumb class="app-breadcrumb" separator="/">
+  <liquid-breadcrumb class="app-breadcrumb" separator="/">
     <transition-group name="breadcrumb">
-      <el-breadcrumb-item v-for="(item, index) in levelList" :key="index">
+      <liquid-breadcrumb-item v-for="(item, index) in levelList" :key="index">
         <span
           v-if="
             item.redirect === 'noRedirect' || index === levelList.length - 1
@@ -13,9 +13,9 @@
         <a v-else @click.prevent="handleLink(item)">{{
           generateTitle(item.meta.title)
         }}</a>
-      </el-breadcrumb-item>
+      </liquid-breadcrumb-item>
     </transition-group>
-  </el-breadcrumb>
+  </liquid-breadcrumb>
 </template>
 
 <script>

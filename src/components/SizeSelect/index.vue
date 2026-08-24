@@ -1,19 +1,19 @@
 <template>
-  <el-dropdown trigger="click" @command="handleSetSize">
+  <liquid-dropdown trigger="click" @command="handleSetSize">
     <div>
       <svg-icon class-name="size-icon" icon-class="size" />
     </div>
-    <el-dropdown-menu slot="dropdown">
-      <el-dropdown-item
+    <liquid-dropdown-menu slot="dropdown">
+      <liquid-dropdown-item
         v-for="item of sizeOptions"
         :key="item.value"
         :disabled="size === item.value"
         :command="item.value"
       >
         {{ item.label }}
-      </el-dropdown-item>
-    </el-dropdown-menu>
-  </el-dropdown>
+      </liquid-dropdown-item>
+    </liquid-dropdown-menu>
+  </liquid-dropdown>
 </template>
 
 <script>

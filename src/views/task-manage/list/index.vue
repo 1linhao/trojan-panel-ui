@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="glass card">
-      <div class="tbl-wrap" v-loading="listLoading">
+      <div class="tbl-wrap" v-liquid-loading="listLoading">
         <table class="tbl">
           <thead>
             <tr>

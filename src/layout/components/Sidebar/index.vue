@@ -1,8 +1,8 @@
 <template>
   <div :class="{ 'has-logo': showLogo }">
     <logo v-if="showLogo" :collapse="isCollapse" />
-    <el-scrollbar wrap-class="scrollbar-wrapper">
-      <el-menu
+    <liquid-scrollbar wrap-class="scrollbar-wrapper">
+      <liquid-menu
         :default-active="activeMenu"
         :collapse="isCollapse"
         :unique-opened="false"
@@ -16,8 +16,8 @@
           :item="route"
           :base-path="route.path"
         />
-      </el-menu>
-    </el-scrollbar>
+      </liquid-menu>
+    </liquid-scrollbar>
   </div>
 </template>
 

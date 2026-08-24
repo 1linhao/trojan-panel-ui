@@ -39,7 +39,7 @@ export default {
   },
   methods: {
     handleToggle() {
-      this.theme = toggleTheme()
+      this.theme = toggleTheme().mode
     }
   }
 }

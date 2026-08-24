@@ -1,6 +1,6 @@
 <template>
-  <el-row :gutter="40" class="panel-group">
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+  <liquid-row :gutter="40" class="panel-group">
+    <liquid-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-sysinfo">
           <svg-icon icon-class="sysinfo" class-name="card-panel-icon" />
@@ -12,8 +12,8 @@
           </h3>
         </div>
       </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    </liquid-col>
+    <liquid-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-sysinfo">
           <svg-icon icon-class="sysinfo" class-name="card-panel-icon" />
@@ -25,8 +25,8 @@
           </h3>
         </div>
       </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    </liquid-col>
+    <liquid-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-sysinfo">
           <svg-icon icon-class="sysinfo" class-name="card-panel-icon" />
@@ -38,8 +38,8 @@
           </h3>
         </div>
       </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    </liquid-col>
+    <liquid-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-node">
           <svg-icon icon-class="node" class-name="card-panel-icon" />
@@ -49,8 +49,8 @@
           <h3>{{ groupData.nodeCount }}</h3>
         </div>
       </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    </liquid-col>
+    <liquid-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-user">
           <svg-icon icon-class="account" class-name="card-panel-icon" />
@@ -60,8 +60,8 @@
           <h3>{{ groupData.accountCount }}</h3>
         </div>
       </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    </liquid-col>
+    <liquid-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-flow">
           <svg-icon icon-class="flow" class-name="card-panel-icon" />
@@ -71,8 +71,8 @@
           <h3>{{ quota }}</h3>
         </div>
       </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    </liquid-col>
+    <liquid-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-flow">
           <svg-icon icon-class="flow" class-name="card-panel-icon" />
@@ -82,8 +82,8 @@
           <h3 :style="residualFlowStyle">{{ residualFlow }}</h3>
         </div>
       </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
+    </liquid-col>
+    <liquid-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-time">
           <svg-icon icon-class="time" class-name="card-panel-icon" />
@@ -95,8 +95,8 @@
           </h3>
         </div>
       </div>
-    </el-col>
-  </el-row>
+    </liquid-col>
+  </liquid-row>
 </template>
 
 <script>
@@ -117,7 +117,7 @@ export default {
   },
   filters: {
     useWarning: function (value) {
-      return value >= 80 ? 'color: #FF0000;' : ''
+      return value >= 80 ? 'color: var(--bad-fg);' : ''
     },
     toPercent: function (value) {
       return value + '%'
@@ -141,7 +141,7 @@ export default {
     },
     expireTimeStyle: function () {
       return this.groupData.expireTime <= new Date().getTime()
-        ? 'color: #FF0000;'
+        ? 'color: var(--bad-fg);'
         : ''
     }
   }

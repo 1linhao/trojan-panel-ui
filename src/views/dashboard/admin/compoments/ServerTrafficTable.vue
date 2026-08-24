@@ -27,35 +27,35 @@
         </button>
       </div>
     </div>
-    <el-table :data="rows" v-loading="loading" style="width: 100%">
-      <el-table-column
+    <liquid-table :data="rows" v-liquid-loading="loading" style="width: 100%">
+      <liquid-table-column
         prop="username"
         :label="$t('dashboard.username')"
         min-width="150"
       />
-      <el-table-column
+      <liquid-table-column
         prop="nodeServerName"
         :label="$t('table.nodeServerName')"
         min-width="150"
       />
-      <el-table-column :label="$t('table.upload')" min-width="130"
+      <liquid-table-column :label="$t('table.upload')" min-width="130"
         ><template slot-scope="s">{{
           getFlow(s.row.upload)
-        }}</template></el-table-column
+        }}</template></liquid-table-column
       >
-      <el-table-column
+      <liquid-table-column
         :label="$t('table.download')"
         min-width="130"
         ><template slot-scope="s">{{
           getFlow(s.row.download)
-        }}</template></el-table-column
+        }}</template></liquid-table-column
       >
-      <el-table-column :label="$t('traffic.combined')" min-width="130"
+      <liquid-table-column :label="$t('traffic.combined')" min-width="130"
         ><template slot-scope="s">{{
           getFlow(s.row.total)
-        }}</template></el-table-column
+        }}</template></liquid-table-column
       >
-    </el-table>
+    </liquid-table>
     <pagination
       v-if="total > query.pageSize"
       :total="total"

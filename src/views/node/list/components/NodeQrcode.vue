@@ -1,5 +1,5 @@
 <template>
-  <el-dialog
+  <liquid-dialog
     append-to-body
     :title="$t('table.nodeQRCode').toString()"
     :visible="dialogVisibleProps"
@@ -14,7 +14,7 @@
         {{ $t('table.confirm') }}
       </liquid-button>
     </div>
-  </el-dialog>
+  </liquid-dialog>
 </template>
 
 <script>

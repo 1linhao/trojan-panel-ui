@@ -1,19 +1,19 @@
 <template>
   <div v-if="formVisibleProps">
-    <el-form-item
+    <liquid-form-item
       :label="$t('table.xrayStreamSettingsWsSettingsPath').toString()"
       prop="xrayStreamSettingsEntity.wsSettings.path"
     >
       <liquid-input v-model="nodeProps.xrayStreamSettingsEntity.wsSettings.path" />
-    </el-form-item>
-    <el-form-item
+    </liquid-form-item>
+    <liquid-form-item
       label="WebSocket Host"
       prop="xrayStreamSettingsEntity.wsSettings.headers.Host"
     >
       <liquid-input
         v-model="nodeProps.xrayStreamSettingsEntity.wsSettings.headers.Host"
       />
-    </el-form-item>
+    </liquid-form-item>
   </div>
 </template>
 

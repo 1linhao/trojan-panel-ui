@@ -31,14 +31,14 @@
       :placeholder="$t('traffic.selectDay')"
       @change="fetchData"
     />
-    <el-table :data="list" style="width: 100%" v-loading="loading">
-      <el-table-column
+    <liquid-table :data="list" style="width: 100%" v-liquid-loading="loading">
+      <liquid-table-column
         :label="$t('dashboard.ranking')"
         width="100"
         align="center"
         type="index"
       />
-      <el-table-column
+      <liquid-table-column
         :label="$t('dashboard.username')"
         width="200"
         align="center"
@@ -46,8 +46,8 @@
         <template slot-scope="scope">
           {{ scope.row.username }}
         </template>
-      </el-table-column>
-      <el-table-column
+      </liquid-table-column>
+      <liquid-table-column
         :label="$t('dashboard.trafficUsed')"
         min-width="200"
         align="center"
@@ -55,8 +55,8 @@
         <template slot-scope="scope">
           {{ getFlow(scope.row.trafficUsed) }}</template
         >
-      </el-table-column>
-    </el-table>
+      </liquid-table-column>
+    </liquid-table>
   </div>
 </template>
 
@@ -123,7 +123,6 @@ export default {
 
 <style scoped>
 .traffic-rank-date {
-  width: 100%;
   margin-bottom: 12px;
 }
 </style>

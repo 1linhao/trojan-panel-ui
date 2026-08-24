@@ -1,30 +1,28 @@
 <template>
   <div class="app-container">
-    <el-form
+    <liquid-form
       ref="dataForm"
       :rules="updateRules"
       :model="systemConfig"
       label-position="left"
     >
-      <el-form-item :label="$t('config.registerEnable')" prop="registerEnable">
+      <liquid-form-item :label="$t('config.registerEnable')" prop="registerEnable">
         <liquid-switch
           v-model="systemConfig.registerEnable"
           :active-value="1"
           :inactive-value="0"
           class="ml-2"
-          active-color="#13ce66"
-          inactive-color="#ff4949"
         />
-      </el-form-item>
-      <el-form-item :label="$t('config.registerQuota')" prop="registerQuota">
+      </liquid-form-item>
+      <liquid-form-item :label="$t('config.registerQuota')" prop="registerQuota">
         <liquid-number-input
           v-model.number="systemConfig.registerQuota"
           controls-position="right"
           type="number"
           :disabled="registerDisable"
         />
-      </el-form-item>
-      <el-form-item
+      </liquid-form-item>
+      <liquid-form-item
         :label="$t('config.registerExpireDays')"
         prop="registerExpireDays"
       >
@@ -34,8 +32,8 @@
           type="number"
           :disabled="registerDisable"
         />
-      </el-form-item>
-      <el-form-item
+      </liquid-form-item>
+      <liquid-form-item
         :label="$t('config.resetDownloadAndUploadMonth')"
         prop="resetDownloadAndUploadMonth"
       >
@@ -44,11 +42,9 @@
           :active-value="1"
           :inactive-value="0"
           class="ml-2"
-          active-color="#13ce66"
-          inactive-color="#ff4949"
         />
-      </el-form-item>
-      <el-form-item
+      </liquid-form-item>
+      <liquid-form-item
         :label="$t('config.trafficRankEnable')"
         prop="trafficRankEnable"
       >
@@ -57,26 +53,22 @@
           :active-value="1"
           :inactive-value="0"
           class="ml-2"
-          active-color="#13ce66"
-          inactive-color="#ff4949"
         />
-      </el-form-item>
-      <el-form-item :label="$t('config.captchaEnable')" prop="captchaEnable">
+      </liquid-form-item>
+      <liquid-form-item :label="$t('config.captchaEnable')" prop="captchaEnable">
         <liquid-switch
           v-model="systemConfig.captchaEnable"
           :active-value="1"
           :inactive-value="0"
           class="ml-2"
-          active-color="#13ce66"
-          inactive-color="#ff4949"
         />
-      </el-form-item>
-      <el-form-item>
+      </liquid-form-item>
+      <liquid-form-item>
         <liquid-button type="primary" @click="updateData()"
           >{{ $t('table.confirm') }}
         </liquid-button>
-      </el-form-item>
-    </el-form>
+      </liquid-form-item>
+    </liquid-form>
   </div>
 </template>
 

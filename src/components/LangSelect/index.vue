@@ -1,5 +1,5 @@
 <template>
-  <el-dropdown
+  <liquid-dropdown
     trigger="click"
     class="international"
     @command="handleSetLanguage"
@@ -7,21 +7,21 @@
     <div>
       <svg-icon class-name="international-icon" icon-class="language" />
     </div>
-    <el-dropdown-menu slot="dropdown">
-      <el-dropdown-item :disabled="language === 'zh'" command="zh">
+    <liquid-dropdown-menu slot="dropdown">
+      <liquid-dropdown-item :disabled="language === 'zh'" command="zh">
         中文
-      </el-dropdown-item>
-      <el-dropdown-item :disabled="language === 'en'" command="en">
+      </liquid-dropdown-item>
+      <liquid-dropdown-item :disabled="language === 'en'" command="en">
         English
-      </el-dropdown-item>
-      <el-dropdown-item :disabled="language === 'ko'" command="ko">
+      </liquid-dropdown-item>
+      <liquid-dropdown-item :disabled="language === 'ko'" command="ko">
         한국인
-      </el-dropdown-item>
-      <el-dropdown-item :disabled="language === 'fa'" command="fa">
+      </liquid-dropdown-item>
+      <liquid-dropdown-item :disabled="language === 'fa'" command="fa">
         فارسی
-      </el-dropdown-item>
-    </el-dropdown-menu>
-  </el-dropdown>
+      </liquid-dropdown-item>
+    </liquid-dropdown-menu>
+  </liquid-dropdown>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-  <el-dialog
+  <liquid-dialog
     append-to-body
     :title="$t('exportNode.title').toString()"
     :visible.sync="dialogVisible"
@@ -15,9 +15,9 @@
       </button>
     </div>
 
-    <el-form label-position="top">
-      <el-form-item :label="$t('exportNode.template').toString()">
-        <liquid-select v-model="selectedTemplate" style="width: 100%">
+    <liquid-form label-position="top">
+      <liquid-form-item :label="$t('exportNode.template').toString()">
+        <liquid-select v-model="selectedTemplate">
           <option
             v-for="template in activeOption.templates"
             :key="template.id"
@@ -25,8 +25,8 @@
             :value="template.id"
           />
         </liquid-select>
-      </el-form-item>
-      <el-form-item
+      </liquid-form-item>
+      <liquid-form-item
         class="format-actions"
         :label="$t('exportNode.format').toString()"
       >
@@ -39,18 +39,18 @@
         >
           {{ $t(`exportNode.${format}`) }}
         </liquid-button>
-      </el-form-item>
-    </el-form>
+      </liquid-form-item>
+    </liquid-form>
 
     <div v-if="qrCodeSrc" class="qrcode">
       <img :src="qrCodeSrc" :alt="$t('exportNode.qrcode').toString()" />
     </div>
-  </el-dialog>
+  </liquid-dialog>
 </template>
 
 <script>
 import copy from 'copy-to-clipboard'
-import { Message } from 'element-ui'
+import { Message } from '@/utils/liquid-feedback'
 import { exportOptions, exportQRCode, exportSubscribe } from '@/api/account'
 
 export default {

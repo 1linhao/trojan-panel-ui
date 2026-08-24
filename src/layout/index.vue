@@ -30,6 +30,7 @@
       <header class="prototype-topbar glass raised">
         <h1>{{ pageTitle }}</h1>
         <div class="prototype-topbar-actions">
+          <liquid-palette-picker />
           <liquid-theme-toggle />
           <div class="prototype-user-pill prototype-topbar-user">
             <span class="prototype-avatar">{{ initials }}</span>
@@ -68,6 +69,7 @@
 import { mapGetters } from 'vuex'
 import { AppMain } from './components'
 import LiquidThemeToggle from '@/components/LiquidThemeToggle'
+import LiquidPalettePicker from '@/components/LiquidPalettePicker'
 
 const ADMIN_GROUPS = [
   {
@@ -209,7 +211,7 @@ const TITLES = {
 
 export default {
   name: 'PrototypeLayout',
-  components: { AppMain, LiquidThemeToggle },
+  components: { AppMain, LiquidThemeToggle, LiquidPalettePicker },
   computed: {
     ...mapGetters(['roles', 'username']),
     isAdmin() {

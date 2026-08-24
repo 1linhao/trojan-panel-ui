@@ -63,7 +63,7 @@
     </div>
 
     <div class="glass card">
-      <div class="tbl-wrap" v-loading="listLoading">
+      <div class="tbl-wrap" v-liquid-loading="listLoading">
         <table class="tbl">
           <thead>
             <tr>
@@ -234,17 +234,17 @@
               {
                 label: 'CPU',
                 value: detailState.cpuUsed || 0,
-                color: '#0a84ff'
+                color: 'var(--chart-1)'
               },
               {
                 label: '内存',
                 value: detailState.memUsed || 0,
-                color: '#af52de'
+                color: 'var(--chart-2)'
               },
               {
                 label: '磁盘',
                 value: detailState.diskUsed || 0,
-                color: '#30c76e'
+                color: 'var(--chart-3)'
               }
             ]"
             :key="ring.label"
@@ -300,7 +300,7 @@
 import { timeStampToDate } from '@/utils'
 import Pagination from '@/components/Pagination'
 import ImportTip from '@/components/ImportTip'
-import { MessageBox } from 'element-ui'
+import { MessageBox } from '@/utils/liquid-feedback'
 import checkPermission from '@/utils/permission'
 import {
   deleteNodeServerById,

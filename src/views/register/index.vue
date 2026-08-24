@@ -6,7 +6,7 @@
         <span class="brand-mark">T</span>
         <h1>创建账号</h1>
       </div>
-      <el-form
+      <liquid-form
         ref="registerForm"
         :model="registerForm"
         :rules="registerRules"
@@ -14,7 +14,7 @@
         auto-complete="on"
         @submit.native.prevent
       >
-        <el-form-item prop="username"
+        <liquid-form-item prop="username"
           ><label class="fld"
             ><span>用户名</span
             ><input
@@ -22,8 +22,8 @@
               v-model="registerForm.username"
               placeholder="6–20 位字母或数字"
               autocomplete="username" /></label
-        ></el-form-item>
-        <el-form-item prop="pass"
+        ></liquid-form-item>
+        <liquid-form-item prop="pass"
           ><label class="fld"
             ><span>密码</span
             ><span class="password-field"
@@ -40,8 +40,8 @@
                 <svg-icon
                   :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
                 /></button></span></label
-        ></el-form-item>
-        <el-form-item prop="pass"
+        ></liquid-form-item>
+        <liquid-form-item prop="pass"
           ><label class="fld"
             ><span>确认密码</span
             ><input
@@ -50,15 +50,15 @@
               placeholder="再次输入密码"
               autocomplete="new-password"
               @keyup.enter="handleRegister" /></label
-        ></el-form-item>
+        ></liquid-form-item>
         <div v-if="captchaEnable" class="captcha-row">
-          <el-form-item prop="captchaCode"
+          <liquid-form-item prop="captchaCode"
             ><label class="fld"
               ><span>验证码</span
               ><input
                 v-model="registerForm.captchaCode"
                 placeholder="输入右侧字符"
-                @keyup.enter="handleRegister" /></label></el-form-item
+                @keyup.enter="handleRegister" /></label></liquid-form-item
           ><button
             type="button"
             class="captcha-img"
@@ -80,7 +80,7 @@
         <button type="button" class="cap auth-submit" @click="goLogin">
           返回登录
         </button>
-      </el-form>
+      </liquid-form>
     </div>
   </div>
 </template>

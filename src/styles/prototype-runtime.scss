@@ -25,6 +25,7 @@
   --r-md: 18px;
   --r-sm: 12px;
   --list-scrollbar-size: 10px;
+  --control-max-width: 360px;
 
   --dur: 0.32s;
   --spring: cubic-bezier(0.32, 0.72, 0.25, 1);
@@ -72,6 +73,12 @@
   --blob-c: #9fe6d8;
   --blob-d: #ffd7ae;
   --blob-e: #ffb7cf;
+
+  --chart-1: #0a84ff;
+  --chart-2: #af52de;
+  --chart-3: #30c76e;
+  --chart-4: #ff9f0a;
+  --chart-5: #ff453a;
 }
 
 [data-theme='dark'] {
@@ -118,6 +125,103 @@
   --blob-c: #0e8b7f;
   --blob-d: #b0632a;
   --blob-e: #b23a6b;
+
+  --chart-1: #64a9ff;
+  --chart-2: #cf8bff;
+  --chart-3: #56dc91;
+  --chart-4: #ffb84d;
+  --chart-5: #ff746b;
+}
+
+/* 色系只负责品牌强调、环境光和数据图表；明暗表面与状态语义保持独立。 */
+[data-theme='light'][data-palette='violet'] {
+  --accent: #8155e7;
+  --accent-deep: #6437c8;
+  --blob-a: #c5b5ff;
+  --blob-b: #ecb9ff;
+  --blob-c: #a9d8ff;
+  --blob-d: #ffd0e9;
+  --blob-e: #c6b8ff;
+  --chart-1: #8155e7;
+  --chart-2: #bd4fd8;
+  --chart-3: #438edb;
+  --chart-4: #d574a8;
+  --chart-5: #6f5cbb;
+}
+
+[data-theme='dark'][data-palette='violet'] {
+  --accent: #a98bff;
+  --accent-deep: #c8b7ff;
+  --blob-a: #4e2ca5;
+  --blob-b: #842d9e;
+  --blob-c: #285894;
+  --blob-d: #8f3e72;
+  --blob-e: #572c92;
+  --chart-1: #a98bff;
+  --chart-2: #dc7df2;
+  --chart-3: #6bb7ff;
+  --chart-4: #f294c5;
+  --chart-5: #8f79e8;
+}
+
+[data-theme='light'][data-palette='emerald'] {
+  --accent: #078b6c;
+  --accent-deep: #006f55;
+  --blob-a: #9de4cf;
+  --blob-b: #b7e7d0;
+  --blob-c: #8edfd8;
+  --blob-d: #d5e9ae;
+  --blob-e: #a5d9c3;
+  --chart-1: #078b6c;
+  --chart-2: #32a9a0;
+  --chart-3: #6fa52b;
+  --chart-4: #3b8fb0;
+  --chart-5: #8a8e2f;
+}
+
+[data-theme='dark'][data-palette='emerald'] {
+  --accent: #45d4ad;
+  --accent-deep: #81edd0;
+  --blob-a: #075f4e;
+  --blob-b: #176d55;
+  --blob-c: #087169;
+  --blob-d: #63752b;
+  --blob-e: #225f4b;
+  --chart-1: #45d4ad;
+  --chart-2: #58d8cf;
+  --chart-3: #a5d45c;
+  --chart-4: #69c5df;
+  --chart-5: #d1c65d;
+}
+
+[data-theme='light'][data-palette='amber'] {
+  --accent: #cf7100;
+  --accent-deep: #a95700;
+  --blob-a: #ffd39b;
+  --blob-b: #ffe0aa;
+  --blob-c: #f4dfa0;
+  --blob-d: #ffbd8d;
+  --blob-e: #ffd1a8;
+  --chart-1: #cf7100;
+  --chart-2: #e99a18;
+  --chart-3: #aa8410;
+  --chart-4: #df6544;
+  --chart-5: #997040;
+}
+
+[data-theme='dark'][data-palette='amber'] {
+  --accent: #ffad42;
+  --accent-deep: #ffd08b;
+  --blob-a: #8a4d0d;
+  --blob-b: #865d16;
+  --blob-c: #77631a;
+  --blob-d: #913f1c;
+  --blob-e: #814c21;
+  --chart-1: #ffad42;
+  --chart-2: #ffc563;
+  --chart-3: #e0c24d;
+  --chart-4: #ff8164;
+  --chart-5: #d3a56c;
 }
 
 /* ---------- 基础 ---------- */
@@ -184,6 +288,10 @@ select,
 textarea {
   font: inherit;
   color: inherit;
+}
+
+[data-theme='dark'] .liquid-date-picker__time input {
+  color-scheme: dark;
 }
 
 button:focus-visible,
@@ -1087,15 +1195,15 @@ h3 {
   width: 42px;
   height: 42px;
   border-radius: 14px;
-  color: #fff;
+  color: var(--on-accent);
   background: linear-gradient(
       155deg,
       rgba(255, 255, 255, 0.45),
       transparent 55%
     ),
-    linear-gradient(135deg, #0a84ff, #5e5ce6);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6),
-    0 8px 20px -8px rgba(30, 60, 200, 0.6);
+    linear-gradient(135deg, var(--accent), var(--accent-deep));
+  box-shadow: inset 0 1px 0 var(--spec),
+    0 8px 20px -8px color-mix(in srgb, var(--accent) 64%, transparent);
   font-size: 20px;
   font-weight: 800;
 }
@@ -1173,8 +1281,8 @@ h3 {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  color: #fff;
-  background: linear-gradient(140deg, #34c759, #0a84ff);
+  color: var(--on-accent);
+  background: linear-gradient(140deg, var(--chart-3), var(--accent));
   font-size: 13px;
   font-weight: 700;
 }
@@ -1295,15 +1403,15 @@ h3 {
 }
 
 .tone-blue {
-  color: #0a6dd8;
-  background: rgba(10, 132, 255, 0.16);
+  color: var(--accent-deep);
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
 }
 .tone-green {
-  color: #178244;
+  color: var(--ok-fg);
   background: var(--ok-bg);
 }
 .tone-orange {
-  color: #a35d06;
+  color: var(--warn-fg);
   background: var(--warn-bg);
 }
 .tone-violet {
@@ -1313,16 +1421,6 @@ h3 {
 .tone-teal {
   color: var(--info-fg);
   background: var(--info-bg);
-}
-
-[data-theme='dark'] .tone-blue {
-  color: #74b6ff;
-}
-[data-theme='dark'] .tone-green {
-  color: #4fd88a;
-}
-[data-theme='dark'] .tone-orange {
-  color: #ffb340;
 }
 
 .rings-row {
@@ -2434,7 +2532,7 @@ h3 {
 .el-message-box .el-button--primary {
   color: var(--on-accent);
   border-color: transparent;
-  background: linear-gradient(135deg, #198cff, var(--accent-deep));
+  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
 }
 
 #app .el-radio-button__inner,
@@ -2762,23 +2860,57 @@ h3 {
   }
 }
 
-/* Element UI 的默认加载层是纯白色，会破坏玻璃材质与暗色主题。 */
-.el-loading-mask {
-  background: transparent !important;
-  backdrop-filter: none !important;
+/* 全局加载提示进入浏览器 top layer，不再被表格高度或 overflow 裁切。 */
+.liquid-global-loading {
+  position: fixed;
+  z-index: 100000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  width: 100vw;
+  max-width: none;
+  height: 100vh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  pointer-events: none;
+  overflow: visible;
 }
 
-.el-loading-spinner {
-  width: auto;
-  left: 50%;
-  right: auto;
-  padding: 10px 14px;
-  transform: translateX(-50%);
+.liquid-global-loading::backdrop {
+  background: transparent;
+}
+
+.liquid-global-loading__surface {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
   border: 1px solid var(--rim);
-  border-radius: 999px;
+  border-radius: 50%;
   background: var(--glass-strong);
   box-shadow: var(--shadow-soft), inset 0 1px 0 var(--spec-soft);
   backdrop-filter: blur(18px) saturate(160%);
+}
+
+.liquid-global-loading__surface svg {
+  width: 32px;
+  height: 32px;
+  animation: liquid-loading-rotate 0.9s linear infinite;
+}
+
+.liquid-global-loading__surface circle {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  stroke-dasharray: 70 24;
+}
+
+@keyframes liquid-loading-rotate {
+  to { transform: rotate(360deg); }
 }
 .traffic-label {
   display: flex;

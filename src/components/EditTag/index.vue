@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { Message } from 'element-ui'
+import { Message } from '@/utils/liquid-feedback'
 
 export default {
   data() {

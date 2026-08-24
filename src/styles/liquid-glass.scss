@@ -1,80 +1,5 @@
 /* Production Liquid Glass skin. The visual tokens mirror docs/web-ui/prototype-liquid-glass. */
 
-:root {
-  --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text',
-    'PingFang SC', 'HarmonyOS Sans SC', 'Microsoft YaHei', 'Segoe UI',
-    sans-serif;
-  --r-xl: 32px;
-  --r-lg: 26px;
-  --r-md: 18px;
-  --r-sm: 12px;
-  --ink: #171a21;
-  --ink-2: rgba(38, 44, 60, 0.66);
-  --ink-3: rgba(38, 44, 60, 0.44);
-  --accent: #0a7cff;
-  --accent-deep: #0061e0;
-  --on-accent: #fff;
-  --bg-base: #dde4f0;
-  --glass: rgba(255, 255, 255, 0.5);
-  --glass-strong: rgba(255, 255, 255, 0.76);
-  --glass-popover: rgba(255, 255, 255, 0.94);
-  --glass-soft: rgba(255, 255, 255, 0.34);
-  --glass-input: rgba(255, 255, 255, 0.5);
-  --rim: rgba(255, 255, 255, 0.7);
-  --hairline: rgba(23, 32, 54, 0.1);
-  --spec: rgba(255, 255, 255, 0.78);
-  --shadow: 0 26px 64px -24px rgba(24, 36, 66, 0.42);
-  --shadow-soft: 0 14px 36px -18px rgba(24, 36, 66, 0.34);
-  --ok-fg: #157347;
-  --ok-bg: rgba(48, 199, 110, 0.18);
-  --warn-fg: #96570a;
-  --warn-bg: rgba(255, 159, 10, 0.2);
-  --bad-fg: #c02537;
-  --bad-bg: rgba(255, 69, 58, 0.16);
-  --info-fg: #0a6a92;
-  --info-bg: rgba(50, 173, 230, 0.18);
-  --neutral-bg: rgba(38, 44, 60, 0.09);
-  --blob-a: #a8c6ff;
-  --blob-b: #d4bbff;
-  --blob-c: #9fe6d8;
-  --blob-d: #ffd7ae;
-  --blob-e: #ffb7cf;
-}
-
-[data-theme='dark'] {
-  --ink: #eef1f9;
-  --ink-2: rgba(222, 229, 246, 0.68);
-  --ink-3: rgba(222, 229, 246, 0.44);
-  --accent: #3f9bff;
-  --accent-deep: #7ab8ff;
-  --on-accent: #041530;
-  --bg-base: #0a0e1c;
-  --glass: rgba(22, 28, 48, 0.56);
-  --glass-strong: rgba(34, 42, 68, 0.72);
-  --glass-popover: rgba(36, 44, 72, 0.96);
-  --glass-soft: rgba(255, 255, 255, 0.06);
-  --glass-input: rgba(10, 14, 28, 0.48);
-  --rim: rgba(255, 255, 255, 0.15);
-  --hairline: rgba(255, 255, 255, 0.1);
-  --spec: rgba(255, 255, 255, 0.23);
-  --shadow: 0 30px 72px -24px rgba(0, 0, 0, 0.68);
-  --shadow-soft: 0 16px 38px -18px rgba(0, 0, 0, 0.58);
-  --ok-fg: #4fd88a;
-  --ok-bg: rgba(48, 199, 110, 0.16);
-  --warn-fg: #ffb340;
-  --warn-bg: rgba(255, 159, 10, 0.16);
-  --bad-fg: #ff7a70;
-  --bad-bg: rgba(255, 69, 58, 0.16);
-  --info-fg: #5fc7f2;
-  --info-bg: rgba(50, 173, 230, 0.16);
-  --neutral-bg: rgba(222, 229, 246, 0.09);
-  --blob-a: #1e50c8;
-  --blob-b: #6a2fbf;
-  --blob-c: #0e8b7f;
-  --blob-d: #b0632a;
-  --blob-e: #b23a6b;
-}
-
 html,
 body,
 #app {
@@ -287,7 +212,7 @@ body {
 
 #app .sidebar-container .el-menu-item.is-active {
   color: var(--on-accent) !important;
-  background: linear-gradient(135deg, #198cff, var(--accent-deep)) !important;
+  background: linear-gradient(135deg, var(--accent), var(--accent-deep)) !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4),
     0 10px 24px -14px var(--accent);
 }
@@ -501,7 +426,7 @@ body {
 #app .el-button--primary {
   color: var(--on-accent);
   border-color: transparent;
-  background: linear-gradient(135deg, #198cff, var(--accent-deep));
+  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45),
     0 12px 26px -14px var(--accent);
 }
@@ -510,7 +435,7 @@ body {
 #app .el-button--primary:focus {
   color: var(--on-accent);
   border-color: transparent;
-  background: linear-gradient(135deg, #35a0ff, var(--accent));
+  background: linear-gradient(135deg, var(--accent-deep), var(--accent));
 }
 #app .el-button--danger {
   color: var(--bad-fg);

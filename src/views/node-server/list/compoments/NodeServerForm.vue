@@ -1,12 +1,12 @@
 <template>
-  <el-dialog
+  <liquid-dialog
     append-to-body
     :title="textMap[dialogStatus]"
     :visible="dialogVisible"
     custom-class="liquid-node-server-editor"
     @close="$emit('update:dialogVisible', false)"
   >
-    <el-form
+    <liquid-form
       ref="dataForm"
       :rules="dialogStatus === 'create' ? createRules : updateRules"
       :model="form"
@@ -14,20 +14,20 @@
       label-width="132px"
       label-position="left"
     >
-      <el-form-item :label="$t('table.nodeServerName')" prop="name">
+      <liquid-form-item :label="$t('table.nodeServerName')" prop="name">
         <liquid-input v-model="form.name" clearable />
-      </el-form-item>
-      <el-form-item :label="$t('table.nodeServerIp')" prop="ip">
+      </liquid-form-item>
+      <liquid-form-item :label="$t('table.nodeServerIp')" prop="ip">
         <liquid-input v-model="form.ip" clearable />
-      </el-form-item>
-      <el-form-item :label="$t('table.nodeServerGrpcPort')" prop="grpcPort">
+      </liquid-form-item>
+      <liquid-form-item :label="$t('table.nodeServerGrpcPort')" prop="grpcPort">
         <liquid-number-input
           v-model.number="form.grpcPort"
           controls-position="right"
           type="number"
         />
-      </el-form-item>
-      <el-form-item
+      </liquid-form-item>
+      <liquid-form-item
         :label="$t('kernel.tlsServerName')"
         prop="grpcTlsServerName"
       >
@@ -36,19 +36,19 @@
           :placeholder="$t('kernel.tlsServerNamePlaceholder')"
           clearable
         />
-      </el-form-item>
+      </liquid-form-item>
       <div class="dialog-section-title">
         <span>{{ $t('traffic.limitSettings') }}</span>
       </div>
-      <el-form-item :label="$t('traffic.period')">
+      <liquid-form-item :label="$t('traffic.period')">
         <liquid-select v-model="form.trafficPeriod">
           <option :label="$t('traffic.unlimited')" value="none" />
           <option :label="$t('traffic.perDay')" value="day" />
           <option :label="$t('traffic.perMonth')" value="month" />
           <option :label="$t('traffic.perYear')" value="year" />
         </liquid-select>
-      </el-form-item>
-      <el-form-item
+      </liquid-form-item>
+      <liquid-form-item
         v-if="form.trafficPeriod !== 'none'"
         :label="$t('traffic.limitMode')"
       >
@@ -68,8 +68,8 @@
             {{ $t('traffic.split') }}
           </button>
         </div>
-      </el-form-item>
-      <el-form-item
+      </liquid-form-item>
+      <liquid-form-item
         v-if="
           form.trafficPeriod !== 'none' && form.trafficLimitMode === 'combined'
         "
@@ -81,28 +81,28 @@
           :min="0"
           :max="8388607"
         />
-      </el-form-item>
+      </liquid-form-item>
       <template
         v-if="
           form.trafficPeriod !== 'none' && form.trafficLimitMode === 'separate'
         "
       >
-        <el-form-item :label="$t('traffic.uploadLimitGiB')"
+        <liquid-form-item :label="$t('traffic.uploadLimitGiB')"
           ><liquid-number-input
             v-model="form.trafficUploadLimitGiB"
             controls-position="right"
             :min="0"
             :max="8388607"
-        /></el-form-item>
-        <el-form-item :label="$t('traffic.downloadLimitGiB')"
+        /></liquid-form-item>
+        <liquid-form-item :label="$t('traffic.downloadLimitGiB')"
           ><liquid-number-input
             v-model="form.trafficDownloadLimitGiB"
             controls-position="right"
             :min="0"
             :max="8388607"
-        /></el-form-item>
+        /></liquid-form-item>
       </template>
-    </el-form>
+    </liquid-form>
     <div slot="footer" class="dialog-footer">
       <liquid-button @click="$emit('update:dialogVisible', false)"
         >{{ $t('table.cancel') }}
@@ -114,7 +114,7 @@
         {{ $t('table.confirm') }}
       </liquid-button>
     </div>
-  </el-dialog>
+  </liquid-dialog>
 </template>
 
 <script>

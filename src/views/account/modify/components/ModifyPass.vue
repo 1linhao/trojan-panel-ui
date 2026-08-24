@@ -1,41 +1,41 @@
 <template>
   <div class="profile-form">
-    <el-form
+    <liquid-form
       ref="dataForm"
       :rules="updateRules"
       :model="temp"
       label-position="left"
     >
-      <el-form-item :label="$t('table.oldPass')" prop="oldPass">
+      <liquid-form-item :label="$t('table.oldPass')" prop="oldPass">
         <liquid-input
           v-model="temp.oldPass"
           type="password"
           :placeholder="$t('table.oldPass')"
           clearable
         />
-      </el-form-item>
-      <el-form-item :label="$t('table.newPass')" prop="newPass">
+      </liquid-form-item>
+      <liquid-form-item :label="$t('table.newPass')" prop="newPass">
         <liquid-input
           v-model="temp.newPassOne"
           type="password"
           :placeholder="$t('table.newPass')"
           clearable
         />
-      </el-form-item>
-      <el-form-item :label="$t('table.newPass')" prop="newPass">
+      </liquid-form-item>
+      <liquid-form-item :label="$t('table.newPass')" prop="newPass">
         <liquid-input
           v-model="temp.newPass"
           type="password"
           :placeholder="$t('table.newPass')"
           clearable
         />
-      </el-form-item>
-      <el-form-item>
+      </liquid-form-item>
+      <liquid-form-item>
         <liquid-button type="primary" @click="updateData()"
           >{{ $t('table.confirm') }}
         </liquid-button>
-      </el-form-item>
-    </el-form>
+      </liquid-form-item>
+    </liquid-form>
   </div>
 </template>
 

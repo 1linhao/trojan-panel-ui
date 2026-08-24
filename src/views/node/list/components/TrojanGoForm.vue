@@ -1,72 +1,66 @@
 <template>
   <div v-if="formVisibleProps">
-    <el-form-item
+    <liquid-form-item
       :label="$t('table.trojanGoSni').toString()"
       prop="trojanGoSni"
     >
       <liquid-input v-model="nodeProps.trojanGoSni" clearable />
-    </el-form-item>
-    <el-form-item
+    </liquid-form-item>
+    <liquid-form-item
       :label="$t('table.trojanGoMuxEnable').toString()"
       prop="trojanGoMuxEnable"
     >
       <liquid-switch
         v-model="nodeProps.trojanGoMuxEnable"
-        active-color="#13ce66"
-        inactive-color="#ff4949"
         :active-text="$t('table.enable').toString()"
         :inactive-text="$t('table.disable').toString()"
         :active-value="1"
         :inactive-value="0"
       >
       </liquid-switch>
-    </el-form-item>
-    <el-form-item
+    </liquid-form-item>
+    <liquid-form-item
       :label="$t('table.trojanGoWebsocketEnable').toString()"
       prop="trojanGoWebsocketEnable"
     >
       <liquid-switch
         v-model="nodeProps.trojanGoWebsocketEnable"
-        active-color="#13ce66"
-        inactive-color="#ff4949"
         :active-text="$t('table.enable').toString()"
         :inactive-text="$t('table.disable').toString()"
         :active-value="1"
         :inactive-value="0"
       >
       </liquid-switch>
-    </el-form-item>
-    <el-form-item
+    </liquid-form-item>
+    <liquid-form-item
       :label="$t('table.trojanGoWebsocketPath').toString()"
       prop="trojanGoWebsocketPath"
       v-if="isTrojanGoEnableWebsocket(nodeProps)"
     >
       <liquid-input v-model="nodeProps.trojanGoWebsocketPath" clearable />
-    </el-form-item>
-    <el-form-item
+    </liquid-form-item>
+    <liquid-form-item
       :label="$t('table.trojanGoWebsocketHost').toString()"
       prop="trojanGoWebsocketHost"
       v-if="isTrojanGoEnableWebsocket(nodeProps)"
     >
       <liquid-input v-model="nodeProps.trojanGoWebsocketHost" clearable />
-    </el-form-item>
-    <el-form-item
+    </liquid-form-item>
+    <liquid-form-item
       :label="$t('table.trojanGoSsEnable').toString()"
       prop="trojanGoSsEnable"
       v-if="isTrojanGoEnableWebsocket(nodeProps)"
     >
       <liquid-switch
         v-model="nodeProps.trojanGoSsEnable"
-        active-color="#13ce66"
-        inactive-color="#ff4949"
         :active-text="$t('table.enable').toString()"
         :inactive-text="$t('table.disable').toString()"
         :active-value="1"
         :inactive-value="0"
       >
       </liquid-switch>
-    </el-form-item>
-    <el-form-item
+    </liquid-form-item>
+    <liquid-form-item
       :label="$t('table.trojanGoSsMethod').toString()"
       prop="trojanGoSsMethod"
       v-if="
@@ -85,8 +79,8 @@
           v-for="item in trojanGoSsMethods"
         ></option>
       </liquid-select>
-    </el-form-item>
-    <el-form-item
+    </liquid-form-item>
+    <liquid-form-item
       :label="$t('table.trojanGoSsPassword').toString()"
       prop="trojanGoSsPassword"
       v-if="
@@ -94,7 +88,7 @@
       "
     >
       <liquid-input v-model="nodeProps.trojanGoSsPassword" clearable />
-    </el-form-item>
+    </liquid-form-item>
   </div>
 </template>
 

@@ -3,40 +3,40 @@
     <aside v-if="emailEnable === 1">
       {{ this.$t('remark.emailEnable') }}
     </aside>
-    <el-form
+    <liquid-form
       ref="dataForm"
       :rules="updateRules"
       :model="temp"
       label-position="left"
     >
-      <el-form-item :label="$t('table.email')" prop="email">
+      <liquid-form-item :label="$t('table.email')" prop="email">
         <liquid-input
           v-model="temp.email"
           :placeholder="$t('table.email')"
           clearable
         />
-      </el-form-item>
-      <el-form-item :label="$t('table.username')" prop="username">
+      </liquid-form-item>
+      <liquid-form-item :label="$t('table.username')" prop="username">
         <liquid-input
           v-model="temp.username"
           :placeholder="$t('table.username')"
           clearable
         />
-      </el-form-item>
-      <el-form-item :label="$t('table.pass')" prop="pass">
+      </liquid-form-item>
+      <liquid-form-item :label="$t('table.pass')" prop="pass">
         <liquid-input
           v-model="temp.pass"
           type="password"
           :placeholder="$t('table.pass')"
           clearable
         />
-      </el-form-item>
-      <el-form-item>
+      </liquid-form-item>
+      <liquid-form-item>
         <liquid-button type="primary" @click="updateData()"
           >{{ $t('table.confirm') }}
         </liquid-button>
-      </el-form-item>
-    </el-form>
+      </liquid-form-item>
+    </liquid-form>
   </div>
 </template>
 

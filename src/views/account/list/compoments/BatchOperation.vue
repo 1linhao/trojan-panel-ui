@@ -1,24 +1,24 @@
 <template>
-  <el-dialog
+  <liquid-dialog
     append-to-body
     :title="$t('table.createBatch').toString()"
     :visible="dialogFormVisibleProps"
     @close="$emit('update:dialogFormVisibleProps', false)"
   >
-    <el-form
+    <liquid-form
       ref="dataForm"
       :rules="createRules"
       :model="temp"
       label-position="left"
     >
-      <el-form-item :label="$t('table.num').toString()" prop="num">
+      <liquid-form-item :label="$t('table.num').toString()" prop="num">
         <liquid-number-input
           v-model.number="temp.num"
           controls-position="right"
           type="number"
         />
-      </el-form-item>
-      <el-form-item
+      </liquid-form-item>
+      <liquid-form-item
         :label="$t('table.presetQuota').toString()"
         prop="presetQuota"
       >
@@ -27,8 +27,8 @@
           controls-position="right"
           type="number"
         />
-      </el-form-item>
-      <el-form-item
+      </liquid-form-item>
+      <liquid-form-item
         :label="$t('table.presetExpire').toString()"
         prop="presetExpire"
       >
@@ -37,8 +37,8 @@
           controls-position="right"
           type="number"
         />
-      </el-form-item>
-    </el-form>
+      </liquid-form-item>
+    </liquid-form>
     <div slot="footer" class="dialog-footer">
       <liquid-button @click="$emit('update:dialogFormVisibleProps', false)"
         >{{ $t('table.cancel') }}
@@ -47,7 +47,7 @@
         {{ $t('table.confirm') }}
       </liquid-button>
     </div>
-  </el-dialog>
+  </liquid-dialog>
 </template>
 
 <script>

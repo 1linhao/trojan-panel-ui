@@ -68,7 +68,7 @@
     </div>
 
     <div class="glass card">
-      <div class="tbl-wrap" v-loading="listLoading">
+      <div class="tbl-wrap" v-liquid-loading="listLoading">
         <table class="tbl">
           <thead>
             <tr>
@@ -202,18 +202,18 @@
         @pagination="getList"
       />
     </div>
-    <el-dialog
+    <liquid-dialog
       append-to-body
       :title="textMap[dialogStatus]"
       :visible.sync="dialogFormVisible"
     >
-      <el-form
+      <liquid-form
         ref="dataForm"
         :rules="dialogStatus === 'create' ? createRules : updateRules"
         :model="temp"
         label-position="left"
       >
-        <el-form-item
+        <liquid-form-item
           v-if="dialogStatus === 'create'"
           :label="$t('table.username')"
           prop="username"
@@ -223,50 +223,48 @@
             :placeholder="$t('table.username')"
             clearable
           />
-        </el-form-item>
-        <el-form-item :label="$t('table.pass')" prop="pass">
+        </liquid-form-item>
+        <liquid-form-item :label="$t('table.pass')" prop="pass">
           <liquid-input
             v-model="temp.pass"
             type="password"
             :placeholder="$t('table.pass')"
             clearable
           />
-        </el-form-item>
-        <el-form-item :label="$t('table.editQuota')" prop="quota">
+        </liquid-form-item>
+        <liquid-form-item :label="$t('table.editQuota')" prop="quota">
           <liquid-number-input
             v-model.number="temp.quota"
             controls-position="right"
             type="number"
           />
-        </el-form-item>
-        <el-form-item :label="$t('table.email')" prop="email">
+        </liquid-form-item>
+        <liquid-form-item :label="$t('table.email')" prop="email">
           <liquid-input
             v-model="temp.email"
             :placeholder="$t('table.email')"
             clearable
           />
-        </el-form-item>
-        <el-form-item :label="$t('table.status')" prop="deleted">
+        </liquid-form-item>
+        <liquid-form-item :label="$t('table.status')" prop="deleted">
           <liquid-switch
             v-model="temp.deleted"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
             :active-text="$t('table.enable')"
             :inactive-text="$t('table.disable')"
             :active-value="0"
             :inactive-value="1"
           >
           </liquid-switch>
-        </el-form-item>
-        <el-form-item :label="$t('table.expireTime')" prop="expireTime">
+        </liquid-form-item>
+        <liquid-form-item :label="$t('table.expireTime')" prop="expireTime">
           <liquid-date-picker
             v-model="temp.expireTime"
             type="datetime"
             value-format="timestamp"
             :placeholder="$t('table.expireTime')"
           />
-        </el-form-item>
-      </el-form>
+        </liquid-form-item>
+      </liquid-form>
       <div slot="footer" class="dialog-footer">
         <liquid-button @click="dialogFormVisible = false"
           >{{ $t('table.cancel') }}
@@ -278,7 +276,7 @@
           {{ $t('table.confirm') }}
         </liquid-button>
       </div>
-    </el-dialog>
+    </liquid-dialog>
     <import-tip
       ref="importTip"
       :dialog-form-visible.sync="importVisible"
@@ -309,7 +307,7 @@ import {
 import Pagination from '@/components/Pagination'
 import ImportTip from '@/components/ImportTip'
 
-import { Message, MessageBox } from 'element-ui'
+import { Message, MessageBox } from '@/utils/liquid-feedback'
 import { timeStampToDate } from '@/utils'
 import { byteToMb, getFlow, mbToByte } from '@/utils/account'
 import { selectRoleList } from '@/api/role'

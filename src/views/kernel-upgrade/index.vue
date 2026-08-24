@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
-    <el-card v-if="batchMode" class="section">
+    <liquid-card v-if="batchMode" class="section">
       <div slot="header">{{ $t('kernel.batchUpgrade') }}</div>
-      <el-form label-width="150px">
-        <el-form-item :label="$t('kernel.nodes')">
+      <liquid-form label-width="150px">
+        <liquid-form-item :label="$t('kernel.nodes')">
           <liquid-select
             v-model="selectedNodeIds"
             multiple
@@ -17,8 +17,8 @@
               :value="server.id"
             />
           </liquid-select>
-        </el-form-item>
-        <el-form-item :label="$t('kernel.canary')">
+        </liquid-form-item>
+        <liquid-form-item :label="$t('kernel.canary')">
           <liquid-select v-model="canaryNodeId" clearable>
             <option
               v-for="server in selectedServers"
@@ -27,22 +27,22 @@
               :value="server.id"
             />
           </liquid-select>
-        </el-form-item>
-      </el-form>
-    </el-card>
+        </liquid-form-item>
+      </liquid-form>
+    </liquid-card>
 
-    <el-card v-if="!batchMode" v-loading="inventoryLoading" class="section">
+    <liquid-card v-if="!batchMode" v-liquid-loading="inventoryLoading" class="section">
       <div slot="header">
         {{ $t('kernel.inventory') }}
         <liquid-button size="mini" style="float: right" @click="loadInventory">
           {{ $t('kernel.refreshInventory') }}
         </liquid-button>
       </div>
-      <el-descriptions v-if="currentServer.id" :column="2" border>
-        <el-descriptions-item :label="$t('kernel.platform')">
+      <liquid-descriptions v-if="currentServer.id" :column="2" border>
+        <liquid-descriptions-item :label="$t('kernel.platform')">
           {{ inventory ? inventory.os + '/' + inventory.arch : '-' }}
-        </el-descriptions-item>
-        <el-descriptions-item :label="$t('kernel.transport')">
+        </liquid-descriptions-item>
+        <liquid-descriptions-item :label="$t('kernel.transport')">
           {{ currentServer.grpcTlsMode || 'legacy' }}
           <liquid-button
             v-if="currentServer.grpcTlsMode !== 'mtls'"
@@ -52,25 +52,25 @@
           >
             {{ $t('kernel.probeMTLS') }}
           </liquid-button>
-        </el-descriptions-item>
-      </el-descriptions>
-    </el-card>
+        </liquid-descriptions-item>
+      </liquid-descriptions>
+    </liquid-card>
 
-    <el-card class="section">
+    <liquid-card class="section">
       <div slot="header">
         {{ $t('kernel.managedKernels') }}
         <liquid-button size="mini" style="float: right" @click="loadReleases(true)">
           {{ $t('kernel.refreshReleases') }}
         </liquid-button>
       </div>
-      <el-table :data="kernelRows" border>
-        <el-table-column prop="name" :label="$t('kernel.kernel')" width="130" />
-        <el-table-column :label="$t('kernel.currentVersion')" min-width="140">
+      <liquid-table :data="kernelRows" border>
+        <liquid-table-column prop="name" :label="$t('kernel.kernel')" width="130" />
+        <liquid-table-column :label="$t('kernel.currentVersion')" min-width="140">
           <template slot-scope="{ row }">{{
             row.currentVersion || '-'
           }}</template>
-        </el-table-column>
-        <el-table-column :label="$t('kernel.channel')" width="150">
+        </liquid-table-column>
+        <liquid-table-column :label="$t('kernel.channel')" width="150">
           <template slot-scope="{ row }">
             <liquid-select
               v-model="row.targetChannel"
@@ -81,8 +81,8 @@
               <option :label="$t('kernel.prerelease')" value="prerelease" />
             </liquid-select>
           </template>
-        </el-table-column>
-        <el-table-column :label="$t('kernel.targetVersion')" min-width="180">
+        </liquid-table-column>
+        <liquid-table-column :label="$t('kernel.targetVersion')" min-width="180">
           <template slot-scope="{ row }">
             <liquid-select v-model="row.targetVersion" size="mini" filterable>
               <option
@@ -93,20 +93,20 @@
               />
             </liquid-select>
           </template>
-        </el-table-column>
-        <el-table-column :label="$t('kernel.sha256')" min-width="220">
+        </liquid-table-column>
+        <liquid-table-column :label="$t('kernel.sha256')" min-width="220">
           <template slot-scope="{ row }">
             <span class="hash">{{ row.currentSha256 || '-' }}</span>
           </template>
-        </el-table-column>
-        <el-table-column :label="$t('kernel.usage')" width="100">
+        </liquid-table-column>
+        <liquid-table-column :label="$t('kernel.usage')" width="100">
           <template slot-scope="{ row }">
             <liquid-tag :type="row.inUse ? 'success' : 'info'">
               {{ row.inUse ? $t('kernel.inUse') : $t('kernel.notInUse') }}
             </liquid-tag>
           </template>
-        </el-table-column>
-        <el-table-column
+        </liquid-table-column>
+        <liquid-table-column
           v-if="!batchMode"
           :label="$t('kernel.rollback')"
           min-width="220"
@@ -128,8 +128,8 @@
               {{ version.version }}
             </liquid-button>
           </template>
-        </el-table-column>
-        <el-table-column :label="$t('table.actions')" width="120">
+        </liquid-table-column>
+        <liquid-table-column :label="$t('table.actions')" width="120">
           <template slot-scope="{ row }">
             <liquid-button
               type="primary"
@@ -153,8 +153,8 @@
               }}
             </liquid-button>
           </template>
-        </el-table-column>
-      </el-table>
+        </liquid-table-column>
+      </liquid-table>
       <liquid-button
         v-if="batchMode"
         type="primary"
@@ -164,30 +164,30 @@
       >
         {{ $t('kernel.createBatchTask') }}
       </liquid-button>
-    </el-card>
+    </liquid-card>
 
-    <el-card v-for="task in tasks" :key="task.id" class="section">
+    <liquid-card v-for="task in tasks" :key="task.id" class="section">
       <div slot="header">
         {{ $t('kernel.task') }} #{{ task.id }}
         <liquid-tag>{{ statusLabel(task.status) }}</liquid-tag>
       </div>
-      <el-table :data="task.items || []" border>
-        <el-table-column prop="nodeServerName" :label="$t('kernel.node')" />
-        <el-table-column prop="kernel" :label="$t('kernel.kernel')" />
-        <el-table-column prop="fromVersion" :label="$t('kernel.fromVersion')" />
-        <el-table-column
+      <liquid-table :data="task.items || []" border>
+        <liquid-table-column prop="nodeServerName" :label="$t('kernel.node')" />
+        <liquid-table-column prop="kernel" :label="$t('kernel.kernel')" />
+        <liquid-table-column prop="fromVersion" :label="$t('kernel.fromVersion')" />
+        <liquid-table-column
           prop="targetVersion"
           :label="$t('kernel.targetVersion')"
         />
-        <el-table-column :label="$t('kernel.stage')">
+        <liquid-table-column :label="$t('kernel.stage')">
           <template slot-scope="{ row }">{{ stageLabel(row.stage) }}</template>
-        </el-table-column>
-        <el-table-column
+        </liquid-table-column>
+        <liquid-table-column
           prop="error"
           :label="$t('kernel.error')"
           min-width="220"
         />
-      </el-table>
+      </liquid-table>
       <liquid-button
         v-if="task.status === 'failed' || task.status === 'partial'"
         type="warning"
@@ -196,33 +196,33 @@
       >
         {{ $t('kernel.retryFailed') }}
       </liquid-button>
-    </el-card>
+    </liquid-card>
 
-    <el-card class="section">
+    <liquid-card class="section">
       <div slot="header">{{ $t('kernel.taskHistory') }}</div>
-      <el-table :data="taskHistory" border>
-        <el-table-column prop="id" label="ID" width="90" />
-        <el-table-column prop="operatorName" :label="$t('kernel.operator')" />
-        <el-table-column :label="$t('table.status')">
+      <liquid-table :data="taskHistory" border>
+        <liquid-table-column prop="id" label="ID" width="90" />
+        <liquid-table-column prop="operatorName" :label="$t('kernel.operator')" />
+        <liquid-table-column :label="$t('table.status')">
           <template slot-scope="{ row }">{{
             statusLabel(row.status)
           }}</template>
-        </el-table-column>
-        <el-table-column prop="createdAt" :label="$t('table.createTime')" />
-        <el-table-column :label="$t('table.actions')" width="100">
+        </liquid-table-column>
+        <liquid-table-column prop="createdAt" :label="$t('table.createTime')" />
+        <liquid-table-column :label="$t('table.actions')" width="100">
           <template slot-scope="{ row }">
             <liquid-button size="mini" @click="openTask(row.id)">
               {{ $t('kernel.viewTask') }}
             </liquid-button>
           </template>
-        </el-table-column>
-      </el-table>
-    </el-card>
+        </liquid-table-column>
+      </liquid-table>
+    </liquid-card>
   </div>
 </template>
 
 <script>
-import { MessageBox } from 'element-ui'
+import { MessageBox } from '@/utils/liquid-feedback'
 import { selectNodeServerList, selectNodeServerById } from '@/api/node-server'
 import {
   createKernelTask,
