@@ -8,6 +8,13 @@
 /* ---------- 设计令牌 ---------- */
 
 :root {
+  /* Explicit schemes prevent browser auto-darkening while keeping native
+     controls aligned with the theme selected by the application. */
+  color-scheme: only light;
+  /* Remove the platform's blue touch overlay; components keep their own
+     active-state feedback and keyboard focus indication. */
+  -webkit-tap-highlight-color: transparent;
+
   --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text',
     'PingFang SC', 'HarmonyOS Sans SC', 'Microsoft YaHei', 'Segoe UI',
     sans-serif;
@@ -68,6 +75,8 @@
 }
 
 [data-theme='dark'] {
+  color-scheme: dark;
+
   --bg-base: #0a0e1c;
   --ink: #eef1f9;
   --ink-2: rgba(222, 229, 246, 0.62);
