@@ -10,13 +10,12 @@
         <el-radio-button label="month">{{ $t('traffic.month') }}</el-radio-button>
         <el-radio-button label="day">{{ $t('traffic.day') }}</el-radio-button>
       </el-radio-group>
-      <el-switch v-model="split" :active-text="$t('traffic.split')" :inactive-text="$t('traffic.combined')" />
     </div>
     <el-table :data="rows" v-loading="loading" style="width:100%">
       <el-table-column prop="username" :label="$t('dashboard.username')" min-width="150" />
       <el-table-column prop="nodeServerName" :label="$t('table.nodeServerName')" min-width="150" />
-      <el-table-column v-if="split" :label="$t('table.upload')" min-width="130"><template slot-scope="s">{{ getFlow(s.row.upload) }}</template></el-table-column>
-      <el-table-column v-if="split" :label="$t('table.download')" min-width="130"><template slot-scope="s">{{ getFlow(s.row.download) }}</template></el-table-column>
+      <el-table-column :label="$t('table.upload')" min-width="130"><template slot-scope="s">{{ getFlow(s.row.upload) }}</template></el-table-column>
+      <el-table-column :label="$t('table.download')" min-width="130"><template slot-scope="s">{{ getFlow(s.row.download) }}</template></el-table-column>
       <el-table-column :label="$t('traffic.combined')" min-width="130"><template slot-scope="s">{{ getFlow(s.row.total) }}</template></el-table-column>
     </el-table>
     <pagination v-if="total>0" :total="total" :page.sync="query.pageNum" :limit.sync="query.pageSize" @pagination="fetchData" />
@@ -30,7 +29,7 @@ import { getFlow } from '@/utils/account'
 import Pagination from '@/components/Pagination'
 export default {
   name: 'ServerTrafficTable', components: { Pagination },
-  data() { return { rows: [], servers: [], total: 0, loading: false, split: true, query: { period: 'day', nodeServerId: undefined, pageNum: 1, pageSize: 20 } } },
+  data() { return { rows: [], servers: [], total: 0, loading: false, query: { period: 'day', nodeServerId: undefined, pageNum: 1, pageSize: 20 } } },
   created() { selectNodeServerList({}).then(r => { this.servers = r.data }); this.fetchData() },
   methods: { getFlow, fetchData() { this.loading = true; serverTrafficUsage(this.query).then(r => { this.rows = r.data.rows; this.total = r.data.total }).finally(() => { this.loading = false }) } }
 }
