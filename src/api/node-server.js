@@ -53,6 +53,19 @@ export function deleteNodeServerById(data) {
 }
 
 /**
+ * 重置指定服务器的流量统计
+ * @param data
+ * @returns
+ */
+export function resetNodeServerTraffic(data) {
+  return request({
+    url: '/nodeServer/resetNodeServerTraffic',
+    method: 'post',
+    data
+  })
+}
+
+/**
  * 更新服务器
  * @param data
  * @returns

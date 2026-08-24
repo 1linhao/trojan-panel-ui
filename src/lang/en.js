@@ -282,6 +282,11 @@ export default {
   },
   traffic: {
     total: 'All time', year: 'This year', month: 'This month', day: 'Today',
+    rankAll: 'All', rankMonth: 'By month', rankDay: 'By day',
+    selectMonth: 'Select month', selectDay: 'Select date',
+    resetServer: 'Reset traffic statistics',
+    resetServerConfirm: 'Permanently clear traffic statistics for server "{name}"? Account rankings are not affected.',
+    resetServerSuccess: 'Server traffic statistics reset',
     allServers: 'All servers', split: 'Split directions', combined: 'Combined',
     serverUsage: 'Per-user server traffic', limitSettings: 'Server traffic limit', period: 'Period',
     limitMode: 'Limit mode', unlimited: 'Unlimited', totalLimitGiB: 'Total limit / GiB',

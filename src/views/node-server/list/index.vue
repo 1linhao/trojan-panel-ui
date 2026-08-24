@@ -203,6 +203,15 @@
             {{ $t('kernel.manage') }}
           </el-button>
           <el-button
+            v-if="checkPermission(['sysadmin', 'admin'])"
+            size="mini"
+            type="warning"
+            :disabled="resettingServerId !== 0"
+            @click="handleResetServerTraffic(row)"
+          >
+            {{ $t('traffic.resetServer') }}
+          </el-button>
+          <el-button
             size="mini"
             type="danger"
             @click="handleDelete(row, $index)"
@@ -250,7 +259,8 @@ import {
   deleteNodeServerById,
   exportNodeServer,
   importNodeServer,
-  selectNodeServerPage
+  selectNodeServerPage,
+  resetNodeServerTraffic
 } from '@/api/node-server'
 import Cookies from 'js-cookie'
 import NodeServerForm from '@/views/node-server/list/compoments/NodeServerForm'
@@ -293,7 +303,8 @@ export default {
         create: this.$t('table.add')
       },
       importVisible: false,
-      dialogStatus: ''
+      dialogStatus: '',
+      resettingServerId: 0
     }
   },
   created() {
@@ -382,6 +393,34 @@ export default {
           })
         })
       })
+    },
+    handleResetServerTraffic(row) {
+      if (this.resettingServerId) return
+      MessageBox.confirm(
+        this.$t('traffic.resetServerConfirm', { name: row.name }),
+        this.$t('confirm.warn'),
+        {
+          confirmButtonText: this.$t('confirm.yes'),
+          cancelButtonText: this.$t('confirm.cancel'),
+          type: 'warning'
+        }
+      )
+        .then(() => {
+          this.resettingServerId = row.id
+          return resetNodeServerTraffic({ id: row.id })
+        })
+        .then(() => {
+          this.$notify({
+            title: 'Success',
+            message: this.$t('traffic.resetServerSuccess'),
+            type: 'success',
+            duration: 2000
+          })
+          this.getList()
+        })
+        .finally(() => {
+          this.resettingServerId = 0
+        })
     },
     handleUpdate(row) {
       this.temp = Object.assign(this.temp, row)

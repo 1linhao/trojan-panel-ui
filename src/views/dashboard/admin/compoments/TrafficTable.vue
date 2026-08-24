@@ -1,10 +1,28 @@
 <template>
   <div>
     <el-radio-group v-model="period" size="small" @change="fetchData">
-      <el-radio-button label="total">{{ $t('traffic.total') }}</el-radio-button>
-      <el-radio-button label="month">{{ $t('traffic.month') }}</el-radio-button>
-      <el-radio-button label="day">{{ $t('traffic.day') }}</el-radio-button>
+      <el-radio-button label="total">{{ $t('traffic.rankAll') }}</el-radio-button>
+      <el-radio-button label="month">{{ $t('traffic.rankMonth') }}</el-radio-button>
+      <el-radio-button label="day">{{ $t('traffic.rankDay') }}</el-radio-button>
     </el-radio-group>
+    <el-date-picker
+      v-if="period === 'month'"
+      v-model="selectedMonth"
+      type="month"
+      value-format="yyyy-MM"
+      :clearable="false"
+      :placeholder="$t('traffic.selectMonth')"
+      @change="fetchData"
+    />
+    <el-date-picker
+      v-if="period === 'day'"
+      v-model="selectedDay"
+      type="date"
+      value-format="yyyy-MM-dd"
+      :clearable="false"
+      :placeholder="$t('traffic.selectDay')"
+      @change="fetchData"
+    />
     <el-table :data="list" style="width: 100%" v-loading="loading">
     <el-table-column
       :label="$t('dashboard.ranking')"
@@ -41,9 +59,16 @@ import { getFlow } from '@/utils/account'
 export default {
   name: 'trafficTable',
   data() {
+    const now = new Date()
+    const year = now.getFullYear()
+    const month = String(now.getMonth() + 1).padStart(2, '0')
+    const day = String(now.getDate()).padStart(2, '0')
     return {
       list: null,
       period: 'total',
+      selectedMonth: `${year}-${month}`,
+      selectedDay: `${year}-${month}-${day}`,
+      requestSerial: 0,
       loading: false
     }
   },
@@ -53,13 +78,21 @@ export default {
   methods: {
     getFlow,
     fetchData() {
+      const requestSerial = ++this.requestSerial
       this.loading = true
-      trafficRank({ period: this.period })
+      const query = { period: this.period }
+      if (this.period === 'month') query.date = this.selectedMonth
+      if (this.period === 'day') query.date = this.selectedDay
+      trafficRank(query)
         .then((response) => {
-          this.list = response.data
+          if (requestSerial === this.requestSerial) {
+            this.list = response.data
+          }
         })
         .finally(() => {
-          this.loading = false
+          if (requestSerial === this.requestSerial) {
+            this.loading = false
+          }
         })
     }
   }

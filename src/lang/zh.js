@@ -281,6 +281,11 @@ export default {
   },
   traffic: {
     total: '累计', year: '本年', month: '本月', day: '今日',
+    rankAll: '全部', rankMonth: '按月', rankDay: '按日',
+    selectMonth: '选择月份', selectDay: '选择日期',
+    resetServer: '重置流量统计',
+    resetServerConfirm: '确认永久清除服务器“{name}”的流量统计？账户排行不受影响。',
+    resetServerSuccess: '服务器流量统计已重置',
     allServers: '全部服务器', split: '上下行拆分', combined: '上下行合计',
     serverUsage: '各用户服务器流量', limitSettings: '服务器流量限制', period: '限制周期',
     limitMode: '限制方式', unlimited: '无限制', totalLimitGiB: '总额度 / GiB',
