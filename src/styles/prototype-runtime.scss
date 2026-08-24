@@ -467,6 +467,22 @@ h3 {
   background: transparent;
 }
 
+.tbl-wrap::-webkit-scrollbar-corner,
+.dd-menu::-webkit-scrollbar-corner,
+.liquid-table__scroll::-webkit-scrollbar-corner,
+.liquid-select-dropdown__wrap::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+.tbl-wrap::-webkit-scrollbar-button,
+.dd-menu::-webkit-scrollbar-button,
+.liquid-table__scroll::-webkit-scrollbar-button,
+.liquid-select-dropdown__wrap::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
 .tbl-wrap::-webkit-scrollbar-thumb,
 .dd-menu::-webkit-scrollbar-thumb,
 .liquid-table__scroll::-webkit-scrollbar-thumb,
@@ -2247,11 +2263,16 @@ h3 {
 }
 .captcha-img {
   overflow: hidden;
+  line-height: 0;
+  letter-spacing: normal;
+  text-indent: 0;
 }
 .captcha-img img {
+  display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: fill;
+  object-position: center;
 }
 
 /* 所有原生 Liquid 控件共享同一输入规范。 */

@@ -12,9 +12,12 @@
           @click="activeName = 'modify-pass'">修改密码</button>
         <button type="button" :class="{ on: activeName === 'modify-property' }"
           @click="activeName = 'modify-property'">账号属性</button>
+        <button type="button" :class="{ on: activeName === 'color-theme' }"
+          @click="activeName = 'color-theme'">颜色主题</button>
       </div>
       <ModifyPass v-if="activeName === 'modify-pass'" />
-      <ModifyProperty v-else />
+      <ModifyProperty v-else-if="activeName === 'modify-property'" />
+      <LiquidPalettePicker v-else inline />
     </div>
   </div>
 </template>
@@ -22,10 +25,11 @@
 <script>
 import ModifyPass from '@/views/account/modify/components/ModifyPass'
 import ModifyProperty from '@/views/account/modify/components/ModifyProperty'
+import LiquidPalettePicker from '@/components/LiquidPalettePicker'
 
 export default {
   name: 'ProfilePage',
-  components: { ModifyProperty, ModifyPass },
+  components: { ModifyProperty, ModifyPass, LiquidPalettePicker },
   data() {
     return {
       activeName: 'modify-pass'

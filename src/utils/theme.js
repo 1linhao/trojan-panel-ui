@@ -1,4 +1,5 @@
 const THEME_KEY = 'trojan-panel-color-scheme'
+const PALETTE_KEY = 'trojan-panel-color-palette'
 const MODES = ['light', 'dark']
 export const COLOR_PALETTES = ['blue', 'violet', 'emerald', 'amber']
 
@@ -40,13 +41,14 @@ export function getInitialTheme() {
 }
 
 export function initializeTheme() {
-  // 旧版本曾将主题写入本地；新逻辑只在当前运行周期内保留手动选择。
+  // 明暗模式只在当前运行周期内保留；颜色主题单独持久化。
   localStorage.removeItem(THEME_KEY)
   const browserTheme = window.matchMedia &&
     window.matchMedia('(prefers-color-scheme: dark)').matches
     ? 'dark'
     : 'light'
-  return applyTheme({ mode: browserTheme, palette: 'blue' })
+  const savedPalette = normalizePalette(localStorage.getItem(PALETTE_KEY))
+  return applyTheme({ mode: browserTheme, palette: savedPalette })
 }
 
 export function toggleTheme() {
@@ -55,5 +57,7 @@ export function toggleTheme() {
 }
 
 export function applyPalette(palette) {
-  return applyTheme({ palette })
+  const next = applyTheme({ palette })
+  localStorage.setItem(PALETTE_KEY, next.palette)
+  return next
 }

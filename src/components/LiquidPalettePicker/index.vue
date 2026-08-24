@@ -1,6 +1,7 @@
 <template>
   <div class="liquid-palette-picker">
     <button
+      v-if="!inline"
       ref="trigger"
       class="liquid-palette-picker__trigger"
       type="button"
@@ -14,17 +15,22 @@
     </button>
     <div
       ref="menu"
-      class="liquid-palette-picker__menu"
-      popover="manual"
+      :class="['liquid-palette-picker__menu', { 'is-inline': inline }]"
+      :popover="inline ? null : 'manual'"
       :style="menuStyle"
+      role="radiogroup"
+      aria-label="颜色主题"
       @click.stop
     >
       <strong>颜色主题</strong>
+      <small v-if="inline">选择会保存在当前浏览器中</small>
       <button
         v-for="option in options"
         :key="option.value"
         type="button"
         :class="{ 'is-selected': palette === option.value }"
+        role="radio"
+        :aria-checked="String(palette === option.value)"
         @click="choose(option.value)"
       >
         <span :data-palette-swatch="option.value" />
@@ -40,6 +46,12 @@ import { applyPalette, getThemeState } from '@/utils/theme'
 
 export default {
   name: 'LiquidPalettePicker',
+  props: {
+    inline: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
       open: false,
@@ -54,10 +66,12 @@ export default {
     }
   },
   mounted() {
+    if (this.inline) return
     document.addEventListener('click', this.handleOutside)
     window.addEventListener('resize', this.updatePosition)
   },
   beforeDestroy() {
+    if (this.inline) return
     this.close()
     document.removeEventListener('click', this.handleOutside)
     window.removeEventListener('resize', this.updatePosition)
@@ -87,7 +101,7 @@ export default {
     },
     choose(palette) {
       this.palette = applyPalette(palette).palette
-      this.close()
+      if (!this.inline) this.close()
     },
     updatePosition() {
       if (!this.open || !this.$refs.trigger) return
@@ -151,6 +165,12 @@ export default {
   color: var(--ink-3);
   font-size: 11px;
 }
+.liquid-palette-picker__menu > small {
+  display: block;
+  padding: 0 10px 9px;
+  color: var(--ink-3);
+  font-size: 11px;
+}
 .liquid-palette-picker__menu button {
   display: grid;
   grid-template-columns: 24px 1fr 18px;
@@ -169,5 +189,26 @@ export default {
 .liquid-palette-picker__menu button.is-selected {
   color: var(--ink);
   background: var(--glass-soft);
+}
+.liquid-palette-picker__menu.is-inline {
+  position: static;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+.liquid-palette-picker__menu.is-inline > strong,
+.liquid-palette-picker__menu.is-inline > small {
+  grid-column: 1 / -1;
+}
+@media (max-width: 520px) {
+  .liquid-palette-picker__menu.is-inline {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

@@ -40,7 +40,6 @@
             <i :class="isAdmin ? 'liquid-icon--user' : 'liquid-icon--setting'" aria-hidden="true" />
             <span>{{ isAdmin ? '普通用户' : '管理员' }}</span>
           </button>
-          <liquid-palette-picker />
           <liquid-theme-toggle />
           <div class="prototype-user-pill prototype-topbar-user">
             <span class="prototype-avatar">{{ initials }}</span>
@@ -79,7 +78,6 @@
 import { mapGetters } from 'vuex'
 import { AppMain } from './components'
 import LiquidThemeToggle from '@/components/LiquidThemeToggle'
-import LiquidPalettePicker from '@/components/LiquidPalettePicker'
 import LiquidNavIcon from '@/components/LiquidNavIcon'
 import { setToken } from '@/utils/auth'
 
@@ -226,7 +224,6 @@ export default {
   components: {
     AppMain,
     LiquidThemeToggle,
-    LiquidPalettePicker,
     LiquidNavIcon
   },
   computed: {
