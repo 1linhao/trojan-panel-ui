@@ -37,9 +37,18 @@ export default {
       theme: getInitialTheme()
     }
   },
+  mounted() {
+    window.addEventListener('trojan-theme-change', this.handleThemeChange)
+  },
+  beforeDestroy() {
+    window.removeEventListener('trojan-theme-change', this.handleThemeChange)
+  },
   methods: {
     handleToggle() {
       this.theme = toggleTheme().mode
+    },
+    handleThemeChange(event) {
+      this.theme = event.detail.mode
     }
   }
 }

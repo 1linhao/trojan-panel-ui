@@ -7,7 +7,7 @@
         @click="go('/dashboard/index')"
       >
         <span class="brand-mark">T</span>
-        <span><strong>Trojan Panel</strong><small>LIQUID GLASS</small></span>
+        <span><strong>Trojan Panel</strong><small>FROSTED GLASS</small></span>
       </button>
       <template v-for="group in visibleGroups">
         <div :key="`${group.label}-label`" class="prototype-nav-group">

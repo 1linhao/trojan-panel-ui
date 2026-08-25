@@ -13,7 +13,7 @@
         <span class="brand-mark">T</span>
         <span class="brand-copy">
           <strong class="sidebar-title">{{ title }}</strong>
-          <small>LIQUID GLASS</small>
+          <small>FROSTED GLASS</small>
         </span>
       </router-link>
     </transition>
