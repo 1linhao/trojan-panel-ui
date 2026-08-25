@@ -35,6 +35,31 @@
       <path d="M7 7h.01M7 17h.01M11 7h6M11 17h6" />
     </template>
 
+    <template v-else-if="name === 'sysinfo'">
+      <rect x="5" y="5" width="14" height="14" rx="3" />
+      <path d="M9 1.8v3.1M15 1.8v3.1M9 19.1v3.1M15 19.1v3.1M1.8 9h3.1M19.1 9h3.1M1.8 15h3.1M19.1 15h3.1M9 9h6v6H9z" />
+    </template>
+
+    <template v-else-if="name === 'task'">
+      <path d="M7 3.5h10a2 2 0 0 1 2 2v15H5v-15a2 2 0 0 1 2-2Z" />
+      <path d="M9 3.5v3h6v-3M8.5 11h7M8.5 15h5" />
+    </template>
+
+    <template v-else-if="name === 'email'">
+      <rect x="3" y="5" width="18" height="14" rx="3" />
+      <path d="m5 7 7 6 7-6" />
+    </template>
+
+    <template v-else-if="name === 'pass'">
+      <circle cx="12" cy="12" r="9" />
+      <path d="m8.8 8.8 6.4 6.4" />
+    </template>
+
+    <template v-else-if="name === 'system'">
+      <circle cx="12" cy="12" r="3" />
+      <path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M18.7 5.3l-1.4 1.4M6.7 17.3l-1.4 1.4" />
+    </template>
+
     <template v-else>
       <circle cx="12" cy="12" r="9" />
       <circle cx="12" cy="9" r="2.7" />

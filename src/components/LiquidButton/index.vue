@@ -46,10 +46,15 @@ export default {
   transition: color 160ms ease, border-color 160ms ease,
     background 160ms ease, transform 160ms ease;
 }
-.liquid-button:hover:not(:disabled) {
-  color: var(--accent);
-  background: var(--glass-strong);
-  transform: translateY(-1px);
+@media (hover: hover) and (pointer: fine) {
+  .liquid-button:hover:not(:disabled) {
+    color: var(--accent);
+    background: var(--glass-strong);
+    transform: translateY(-1px);
+  }
+}
+.liquid-button:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
 }
 .liquid-button.is-primary {
   color: var(--on-accent);

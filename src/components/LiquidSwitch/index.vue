@@ -8,8 +8,20 @@
     :disabled="disabled"
     @click="toggle"
   >
-    <span class="liquid-switch__track"><i /></span>
-    <span class="liquid-switch__label">{{ checked ? activeText : inactiveText }}</span>
+    <span
+      class="liquid-switch__option"
+      :class="{ 'is-current': !checked }"
+      aria-hidden="true"
+    >
+      {{ inactiveText }}
+    </span>
+    <span
+      class="liquid-switch__option"
+      :class="{ 'is-current': checked, 'is-enabled': checked }"
+      aria-hidden="true"
+    >
+      {{ activeText }}
+    </span>
   </button>
 </template>
 
@@ -45,51 +57,50 @@ export default {
 
 <style scoped>
 .liquid-switch {
-  display: inline-flex;
+  display: inline-grid;
+  grid-template-columns: repeat(2, minmax(52px, 1fr));
   align-items: center;
-  gap: 9px;
+  gap: 3px;
   min-height: 38px;
-  padding: 4px 11px 4px 5px;
+  padding: 4px;
   border: 1px solid var(--control-border);
   border-radius: 999px;
   color: var(--ink-2);
   background: var(--control-fill);
-  box-shadow: inset 0 1px 0 var(--spec-soft);
+  box-shadow: inset 0 1px 0 var(--spec-soft), var(--shadow-soft);
   font: inherit;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
-.liquid-switch__track {
-  position: relative;
-  width: 42px;
-  height: 28px;
+.liquid-switch__option {
+  display: grid;
+  place-items: center;
+  min-height: 30px;
+  padding: 0 12px;
   border-radius: 999px;
-  background: var(--neutral-bg);
-  transition: background 160ms ease;
-}
-.liquid-switch__track i {
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: var(--glass-popover);
-  box-shadow: 0 2px 7px rgba(7, 14, 30, 0.28);
-  transition: transform 180ms var(--spring);
-}
-.liquid-switch.is-active {
-  color: var(--accent);
-}
-.liquid-switch.is-active .liquid-switch__track {
-  background: var(--accent);
-}
-.liquid-switch.is-active .liquid-switch__track i {
-  transform: translateX(14px);
-}
-.liquid-switch__label {
-  min-width: 2em;
+  color: var(--ink-3);
   font-size: 12.5px;
   font-weight: 650;
+  line-height: 1;
+  white-space: nowrap;
+  transition: color 160ms ease, background 160ms ease,
+    box-shadow 160ms ease, transform 160ms ease;
+}
+.liquid-switch__option.is-current {
+  color: var(--ink);
+  background: var(--glass-strong);
+  box-shadow: inset 0 1px 0 var(--spec),
+    0 4px 12px -6px rgba(10, 20, 50, 0.4);
+}
+.liquid-switch__option.is-current.is-enabled {
+  color: var(--accent-deep);
+}
+.liquid-switch:active:not(:disabled) .liquid-switch__option.is-current {
+  transform: scale(0.97);
+}
+.liquid-switch:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent) 58%, transparent);
+  outline-offset: 2px;
 }
 .liquid-switch:disabled {
   cursor: not-allowed;

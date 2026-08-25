@@ -59,9 +59,14 @@
       <section class="prototype-content"><app-main /></section>
     </main>
 
-    <nav class="prototype-mobile-nav seg">
+    <nav
+      ref="mobileNav"
+      :class="['prototype-mobile-nav', 'seg', { 'is-scrollable': mobileItems.length > 5 }]"
+      aria-label="移动端功能导航"
+    >
       <button
         v-for="item in mobileItems"
+        ref="mobileNavItems"
         :key="item.path"
         :class="{ on: activePath === item.path }"
         type="button"
@@ -136,6 +141,7 @@ const ADMIN_GROUPS = [
       {
         path: '/taskManage/task-list',
         label: '文件任务',
+        mobileLabel: '任务',
         icon: 'task',
         uiIcon: 'liquid-icon--tickets',
         roles: ['sysadmin']
@@ -143,6 +149,7 @@ const ADMIN_GROUPS = [
       {
         path: '/emailManage/email-record',
         label: '邮件记录',
+        mobileLabel: '邮件',
         icon: 'email',
         uiIcon: 'liquid-icon--message',
         roles: ['sysadmin', 'admin']
@@ -150,6 +157,7 @@ const ADMIN_GROUPS = [
       {
         path: '/system/black-list',
         label: '黑名单',
+        mobileLabel: '黑名单',
         icon: 'pass',
         uiIcon: 'liquid-icon--circle-close',
         roles: ['sysadmin']
@@ -162,6 +170,7 @@ const ADMIN_GROUPS = [
       {
         path: '/system/base-config',
         label: '系统配置',
+        mobileLabel: '设置',
         icon: 'system',
         uiIcon: 'liquid-icon--setting',
         roles: ['sysadmin']
@@ -169,6 +178,7 @@ const ADMIN_GROUPS = [
       {
         path: '/modify/index',
         label: '个人资料',
+        mobileLabel: '我的',
         icon: 'username',
         uiIcon: 'liquid-icon--user'
       }
@@ -255,18 +265,7 @@ export default {
       )
     },
     mobileItems() {
-      const paths = this.isAdmin
-        ? [
-            '/dashboard/index',
-            '/account-manage/account-list',
-            '/node-manage/node-list',
-            '/server-manage/server-list',
-            '/modify/index'
-          ]
-        : ['/dashboard/index', '/node-manage/node-list', '/modify/index']
-      return paths
-        .map((path) => this.flatItems.find((item) => item.path === path))
-        .filter(Boolean)
+      return this.flatItems
     },
     activePath() {
       return this.$route.path
@@ -289,7 +288,31 @@ export default {
       return '普通用户'
     }
   },
+  watch: {
+    activePath() {
+      this.$nextTick(this.revealActiveMobileItem)
+    }
+  },
+  mounted() {
+    this.revealActiveMobileItem()
+  },
   methods: {
+    revealActiveMobileItem() {
+      const nav = this.$refs.mobileNav
+      const items = this.$refs.mobileNavItems || []
+      if (!nav || !items.length || nav.scrollWidth <= nav.clientWidth) return
+      const activeIndex = this.mobileItems.findIndex(
+        (item) => item.path === this.activePath
+      )
+      const activeItem = items[activeIndex]
+      if (!activeItem) return
+      const targetLeft =
+        activeItem.offsetLeft - (nav.clientWidth - activeItem.offsetWidth) / 2
+      nav.scrollTo({
+        left: Math.max(0, targetLeft),
+        behavior: 'smooth'
+      })
+    },
     switchPreviewRole() {
       const target = this.isAdmin ? 'user' : 'admin'
       setToken(`Bearer ${target === 'user' ? 'user-token' : 'mock-token'}`)

@@ -2132,8 +2132,20 @@ h3 {
 }
 .prototype-mobile-nav {
   @extend .mobile-nav;
-  justify-content: stretch;
+  justify-content: flex-start;
   gap: 3px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  touch-action: pan-x;
+}
+.prototype-mobile-nav::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 .prototype-app-main {
   min-height: 1px;
@@ -2161,8 +2173,13 @@ h3 {
 .prototype-mobile-nav button {
   flex: 1 1 0;
   min-width: 0;
-  padding: 5px 6px;
+  padding: 5px 4px;
   color: var(--ink-2);
+  scroll-snap-align: center;
+}
+.prototype-mobile-nav.is-scrollable button {
+  flex: 0 0 62px;
+  min-width: 62px;
 }
 .prototype-mobile-nav button.on {
   color: var(--ink);
