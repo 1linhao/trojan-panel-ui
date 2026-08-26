@@ -36,7 +36,7 @@
       <liquid-button @click="$emit('update:dialogVisibleProps', false)"
         >{{ $t('table.cancel') }}
       </liquid-button>
-      <liquid-button type="primary" @click="createData()">
+      <liquid-button tone="accent" @click="createData()">
         {{ $t('table.confirm') }}
       </liquid-button>
     </div>

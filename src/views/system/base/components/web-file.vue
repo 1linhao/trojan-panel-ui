@@ -8,7 +8,7 @@
         accept=".zip"
         @change="handleNativeFile"
       />
-      <liquid-button type="primary" @click="$refs.upload.click()">
+      <liquid-button tone="accent" @click="$refs.upload.click()">
         {{ $t('config.webFileSelect') }}
       </liquid-button>
       <liquid-button

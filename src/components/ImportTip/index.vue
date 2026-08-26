@@ -25,7 +25,7 @@
             accept=".json"
             @change="handleNativeFile"
           />
-          <liquid-button type="primary" @click="$refs.upload.click()">
+          <liquid-button tone="accent" @click="$refs.upload.click()">
             {{ $t('config.webFileSelect') }}
           </liquid-button>
           <liquid-button
@@ -48,7 +48,7 @@
         {{ $t('table.cancel') }}
       </liquid-button>
       <liquid-button
-        type="primary"
+        tone="accent"
         @click="submitImport"
         :disabled="fileList.length === 0"
       >

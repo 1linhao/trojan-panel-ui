@@ -8,7 +8,7 @@
     <img class="node-qrcode" :src="qrCodeSrcProps" alt="二维码" />
     <div slot="footer" class="dialog-footer">
       <liquid-button
-        type="primary"
+        tone="accent"
         @click="$emit('update:dialogVisibleProps', false)"
       >
         {{ $t('table.confirm') }}

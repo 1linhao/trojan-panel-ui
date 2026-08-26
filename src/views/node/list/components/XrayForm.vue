@@ -190,8 +190,8 @@
       </liquid-tag>
       <liquid-button
           class="liquid-add-button"
-          type="primary"
-          size="mini"
+          tone="accent"
+          size="small"
           icon="liquid-icon--plus"
           @click="handleCreateFallbackProps"
       ></liquid-button>
