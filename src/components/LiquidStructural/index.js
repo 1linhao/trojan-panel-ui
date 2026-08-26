@@ -65,8 +65,9 @@ export const LiquidTable = {
     const head = h('thead', [h('tr', columns.map((column) => h('th', {
       style: { textAlign: column.align || 'left', width: px(column.width), minWidth: px(column.minWidth) }
     }, [String(column.label == null ? '' : column.label)])))])
-    const rows = this.data.length
-      ? this.data.map((row, index) => h('tr', { key: row.id == null ? index : row.id }, columns.map((column) => {
+    const sourceRows = Array.isArray(this.data) ? this.data : []
+    const rows = sourceRows.length
+      ? sourceRows.map((row, index) => h('tr', { key: row.id == null ? index : row.id }, columns.map((column) => {
         let content
         if (column.slot) content = column.slot({ row, $index: index, column })
         else if (column.type === 'index') content = String(index + 1)

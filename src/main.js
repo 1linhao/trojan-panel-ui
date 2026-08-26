@@ -7,10 +7,23 @@ import router from '@/router'
 import '@/icons'
 import '@/permission'
 import i18n from '@/lang'
-import { initializeTheme } from '@/utils/theme'
+import {
+  configureLiquidTheme,
+  getInitialTheme,
+  initializeTheme
+} from '@/utils/theme'
+import { createLiquidUI } from '@liqui/liquid-ui'
+import { createLiquidAppShell } from '@liqui/liquid-app-shell'
+import '@liqui/liquid-ui/styles.css'
+import '@liqui/liquid-app-shell/styles.css'
 import LiquidLoading from '@/directives/liquid-loading'
 import { structuralComponents } from '@/components/LiquidStructural'
 import { Message, MessageBox, Notification } from '@/utils/liquid-feedback'
+
+const liquidUI = createLiquidUI({ initialMode: getInitialTheme() })
+Vue.use(liquidUI)
+Vue.use(createLiquidAppShell())
+configureLiquidTheme(liquidUI.theme)
 
 const LiquidNumberInput = () =>
   import(/* webpackChunkName: "liquid-controls" */ '@/components/LiquidNumberInput')

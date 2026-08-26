@@ -38,6 +38,8 @@ const captchaSvg =
     '<svg xmlns="http://www.w3.org/2000/svg" width="236" height="84" viewBox="0 0 236 84"><path d="M4 62C42 7 76 79 118 28s74 39 114-6" fill="none" stroke="#0a7cff" stroke-opacity=".28" stroke-width="3"/><path d="M8 24l218 42M18 72L216 14" stroke="#8d56d9" stroke-opacity=".2" stroke-width="2"/><text x="118" y="57" text-anchor="middle" font-family="ui-monospace,monospace" font-size="39" font-weight="700" font-style="italic" letter-spacing="10" fill="#1767ba">K7M4</text></svg>'
   )
 
+const captchaEnable = process.env.MOCK_CAPTCHA === '0' ? 0 : 1
+
 const node = {
   id: 1,
   nodeServerId: 1,
@@ -132,7 +134,7 @@ const server = http.createServer((req, res) => {
       registerQuota: 10240,
       registerExpireDays: 30,
       trafficRankEnable: 1,
-      captchaEnable: 1,
+      captchaEnable,
       emailEnable: 0,
       systemName: 'Trojan Panel'
     },
@@ -175,7 +177,7 @@ const server = http.createServer((req, res) => {
     },
     '/dashboard/trafficRank': [
       {
-        username: 'glassdemo',
+        username: `rank-${url.searchParams.get('date') || 'total'}`,
         upload: 4294967296,
         download: 12884901888,
         trafficUsed: 17179869184
@@ -279,7 +281,7 @@ const server = http.createServer((req, res) => {
       registerExpireDays: 30,
       resetDownloadAndUploadMonth: 0,
       trafficRankEnable: 1,
-      captchaEnable: 1,
+      captchaEnable,
       expireWarnEnable: 0,
       expireWarnDay: 0,
       emailEnable: 0,

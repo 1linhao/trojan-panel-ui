@@ -13,6 +13,8 @@
     "lint:prettier": "prettier --write \"**/*.{js,cjs,ts,json,tsx,css,less,scss,vue,html,md}\""
   },
   "dependencies": {
+    "@liqui/liquid-app-shell": "file:../../liqui/liquid-app-shell",
+    "@liqui/liquid-ui": "file:../../liqui/liquid-ui",
     "axios": "0.25.0",
     "copy-to-clipboard": "^3.3.3",
     "core-js": "3.20.3",
