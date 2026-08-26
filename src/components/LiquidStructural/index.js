@@ -276,8 +276,8 @@ export const LiquidBreadcrumbItem = { name: 'LiquidBreadcrumbItem', functional: 
 
 export const structuralComponents = {
   LiquidBreadcrumb, LiquidBreadcrumbItem, LiquidCard, LiquidCol,
-  LiquidDescriptions, LiquidDescriptionsItem, LiquidDialog, LiquidDropdown,
-  LiquidDropdownItem, LiquidDropdownMenu, LiquidForm, LiquidFormItem,
+  LiquidDescriptions, LiquidDescriptionsItem, LiquidDropdown,
+  LiquidDropdownItem, LiquidDropdownMenu,
   LiquidMenu, LiquidMenuItem, LiquidRow, LiquidScrollbar, LiquidSubmenu,
-  LiquidTable, LiquidTableColumn, LiquidTooltip
+  LiquidTooltip
 }
