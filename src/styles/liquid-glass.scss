@@ -821,11 +821,6 @@ body {
   color: var(--ink-2) !important;
 }
 
-/* Dark mode gaps in third-party widgets */
-[data-theme='dark'] #app .jsoneditor-vue,
-[data-theme='dark'] #app .vanilla-jsoneditor {
-  filter: invert(0.88) hue-rotate(180deg);
-}
 [data-theme='dark'] .liquid-picker-panel__footer {
   border-color: var(--hairline);
   background: var(--glass-popover);

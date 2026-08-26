@@ -70,10 +70,8 @@
               :label="$t('config.singBoxTunTemplate')"
               prop="singBoxTun"
             >
-              <JsonEditorVue
+              <liquid-json-editor
                 v-model="systemConfig.singBoxTunEntity"
-                v-bind="systemConfig.singBoxTunEntity"
-                mode="text"
               />
             </liquid-form-item>
           </template>
@@ -92,10 +90,8 @@
               :label="$t('config.singBoxOutboundTemplate')"
               prop="singBoxOutbound"
             >
-              <JsonEditorVue
+              <liquid-json-editor
                 v-model="systemConfig.singBoxOutboundEntity"
-                v-bind="systemConfig.singBoxOutboundEntity"
-                mode="text"
               />
             </liquid-form-item>
           </template>
@@ -109,10 +105,8 @@
             <liquid-input v-model="systemConfig.xrayTemplateName" clearable />
           </liquid-form-item>
           <liquid-form-item :label="$t('config.xrayTemplate')" prop="xrayTemplate">
-            <JsonEditorVue
+            <liquid-json-editor
               v-model="systemConfig.xrayTemplateEntity"
-              v-bind="systemConfig.xrayTemplateEntity"
-              mode="text"
             />
           </liquid-form-item>
       </template>
@@ -128,12 +122,12 @@
 
 <script>
 import { updateSystemById } from '@/api/system'
-import JsonEditorVue from 'json-editor-vue'
 import UploadLogo from '@/components/UploadLogo'
+import LiquidJsonEditor from '@/components/LiquidJsonEditor'
 
 export default {
   name: 'templateConfig',
-  components: { JsonEditorVue, UploadLogo },
+  components: { LiquidJsonEditor, UploadLogo },
   props: {
     systemConfig: {
       type: Object,

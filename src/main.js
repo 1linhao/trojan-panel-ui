@@ -8,22 +8,24 @@ import '@/icons'
 import '@/permission'
 import i18n from '@/lang'
 import { initializeTheme } from '@/utils/theme'
-import LiquidNumberInput from '@/components/LiquidNumberInput'
-import LiquidInput from '@/components/LiquidInput'
-import LiquidSelect from '@/components/LiquidSelect'
-import LiquidSwitch from '@/components/LiquidSwitch'
-import LiquidButton from '@/components/LiquidButton'
-import LiquidTag from '@/components/LiquidTag'
-import LiquidDatePicker from '@/components/LiquidDatePicker'
 import LiquidLoading from '@/directives/liquid-loading'
 import { structuralComponents } from '@/components/LiquidStructural'
 import { Message, MessageBox, Notification } from '@/utils/liquid-feedback'
 
-import VCA from '@vue/composition-api'
-import JsonEditorVue from 'json-editor-vue'
-
-Vue.use(VCA)
-Vue.use(JsonEditorVue)
+const LiquidNumberInput = () =>
+  import(/* webpackChunkName: "liquid-controls" */ '@/components/LiquidNumberInput')
+const LiquidInput = () =>
+  import(/* webpackChunkName: "liquid-controls" */ '@/components/LiquidInput')
+const LiquidSelect = () =>
+  import(/* webpackChunkName: "liquid-controls" */ '@/components/LiquidSelect')
+const LiquidSwitch = () =>
+  import(/* webpackChunkName: "liquid-controls" */ '@/components/LiquidSwitch')
+const LiquidButton = () =>
+  import(/* webpackChunkName: "liquid-controls" */ '@/components/LiquidButton')
+const LiquidTag = () =>
+  import(/* webpackChunkName: "liquid-controls" */ '@/components/LiquidTag')
+const LiquidDatePicker = () =>
+  import(/* webpackChunkName: "liquid-controls" */ '@/components/LiquidDatePicker')
 
 Object.entries(structuralComponents).forEach(([name, component]) => {
   Vue.component(name, component)

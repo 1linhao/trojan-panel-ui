@@ -35,6 +35,11 @@ module.exports = {
     process.env.NODE_ENV === 'production'
       ? {
           name: name,
+          performance: {
+            hints: 'warning',
+            maxAssetSize: 300000,
+            maxEntrypointSize: 650000
+          },
           resolve: {
             alias: {
               '@': resolve('src')
@@ -46,7 +51,11 @@ module.exports = {
               {
                 rotateStringArray: true
               },
-              []
+              [
+                'static/js/runtime.*.js',
+                'static/js/vendor-*.js',
+                'static/js/chunk-vendors.*.js'
+              ]
             )
           ]
         }
@@ -59,6 +68,38 @@ module.exports = {
           }
         },
   chainWebpack(config) {
+    // Route chunks stay truly on demand instead of being fetched immediately
+    // after the first screen becomes idle.
+    config.plugins.delete('prefetch')
+    config.optimization.runtimeChunk('single')
+    config.optimization.splitChunks({
+      chunks: 'all',
+      cacheGroups: {
+        framework: {
+          name: 'vendor-framework',
+          test: /[\\/]node_modules[\\/](?:vue|vue-i18n|vue-router|vuex)[\\/]/,
+          chunks: 'initial',
+          priority: 20,
+          enforce: true,
+          reuseExistingChunk: true
+        },
+        vendors: {
+          name: 'chunk-vendors',
+          test: /[\\/]node_modules[\\/]/,
+          chunks: 'initial',
+          priority: 10,
+          enforce: true,
+          reuseExistingChunk: true
+        },
+        common: {
+          name: 'chunk-common',
+          minChunks: 2,
+          priority: 0,
+          reuseExistingChunk: true
+        }
+      }
+    })
+
     // set svg-sprite-loader
     config.module.rule('svg').exclude.add(resolve('src/icons')).end()
     config.module
