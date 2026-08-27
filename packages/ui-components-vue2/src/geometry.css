@@ -1,0 +1,55 @@
+.tp-ui-button,
+.tp-ui-input {
+  box-sizing: border-box;
+  min-height: var(--ui-control-height);
+  border: 1px solid var(--ui-control-border);
+  border-radius: var(--ui-radius-md);
+  background: var(--ui-control-bg);
+  color: var(--ui-ink);
+  font: inherit;
+  transition: transform var(--ui-motion-fast),
+    border-color var(--ui-motion-fast), box-shadow var(--ui-motion-fast);
+}
+
+.tp-ui-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ui-space-2);
+  padding: 0 var(--ui-space-4);
+  cursor: pointer;
+}
+
+.tp-ui-input {
+  width: 100%;
+  padding: 0 var(--ui-space-3);
+  outline: none;
+}
+
+.tp-ui-button:focus-visible,
+.tp-ui-input:focus-visible {
+  box-shadow: 0 0 0 3px var(--ui-focus-ring);
+}
+
+.tp-ui-button[data-ui-tone='accent'] {
+  background: var(--ui-accent);
+  border-color: var(--ui-accent);
+  color: var(--ui-on-accent);
+}
+
+.tp-ui-button:not(:disabled):active {
+  transform: translateY(1px);
+}
+
+.tp-ui-button:disabled,
+.tp-ui-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.56;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tp-ui-button,
+  .tp-ui-input {
+    transition-duration: 0s;
+  }
+}

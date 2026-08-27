@@ -1,0 +1,26 @@
+:root {
+  --ui-motion-fast: 120ms;
+  --ui-motion-normal: 180ms;
+  --ui-motion-slow: 300ms;
+  --ui-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ui-motion-easing-emphasized: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ui-motion-distance-sm: 0.25rem;
+  --ui-motion-distance-md: 0.75rem;
+}
+
+:root[data-ui-motion='reduced'] {
+  --ui-motion-fast: 1ms;
+  --ui-motion-normal: 1ms;
+  --ui-motion-slow: 1ms;
+  --ui-motion-distance-sm: 0;
+  --ui-motion-distance-md: 0;
+}
+
+:root[data-ui-motion='none'] *,
+:root[data-ui-motion='none'] *::before,
+:root[data-ui-motion='none'] *::after {
+  animation-duration: 0s;
+  animation-delay: 0s;
+  transition-duration: 0s;
+  scroll-behavior: auto;
+}

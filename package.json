@@ -4,13 +4,22 @@
   "private": true,
   "description": "Trojan Panel UI",
   "author": "jonssonyan <https://jonssonyan.com>",
+  "workspaces": [
+    "packages/*",
+    "examples/*"
+  ],
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "lint:kernel-upgrade": "eslint --ext .js,.vue src/api/kernel-upgrade.js src/lang/en.js src/lang/index.js src/lang/zh.js src/router/index.js src/views/node-server/list/compoments/NodeServerForm.vue src/views/node-server/list/index.vue src/views/kernel-upgrade",
     "svgo": "svgo -f src/icons/svg --config=src/icons/svgo.yml",
-    "lint:prettier": "prettier --write \"**/*.{js,cjs,ts,json,tsx,css,less,scss,vue,html,md}\""
+    "lint:prettier": "prettier --write \"**/*.{js,cjs,ts,json,tsx,css,less,scss,vue,html,md}\"",
+    "test:ui-libraries": "node scripts/check-ui-workspace.mjs",
+    "build:ui-labs": "node scripts/build-ui-labs.mjs",
+    "serve:ui-labs": "node scripts/serve-ui-labs.mjs",
+    "test:ui-labs:e2e": "node tests/ui-labs.e2e.js",
+    "test:live-stack:e2e": "node tests/live-stack.e2e.js"
   },
   "dependencies": {
     "axios": "0.25.0",
