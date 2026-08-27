@@ -13,23 +13,23 @@
     </div>
     <liquid-date-picker
       v-if="period === 'month'"
-      v-model="selectedMonth"
+      :value="selectedMonth"
       class="traffic-rank-date"
       type="month"
       value-format="yyyy-MM"
       :clearable="false"
       :placeholder="$t('traffic.selectMonth')"
-      @change="fetchData"
+      @input="setSelectedDate('month', $event)"
     />
     <liquid-date-picker
       v-if="period === 'day'"
-      v-model="selectedDay"
+      :value="selectedDay"
       class="traffic-rank-date"
       type="date"
       value-format="yyyy-MM-dd"
       :clearable="false"
       :placeholder="$t('traffic.selectDay')"
-      @change="fetchData"
+      @input="setSelectedDate('day', $event)"
     />
     <liquid-table :data="list" style="width: 100%" v-liquid-loading="loading">
       <liquid-table-column
@@ -39,6 +39,7 @@
         type="index"
       />
       <liquid-table-column
+        prop="username"
         :label="$t('dashboard.username')"
         width="200"
         align="center"
@@ -48,6 +49,7 @@
         </template>
       </liquid-table-column>
       <liquid-table-column
+        prop="trafficUsed"
         :label="$t('dashboard.trafficUsed')"
         min-width="200"
         align="center"
@@ -98,6 +100,12 @@ export default {
       if (period === this.period) return
       this.period = period
       this.fetchData()
+    },
+    setSelectedDate(period, value) {
+      const property = period === 'month' ? 'selectedMonth' : 'selectedDay'
+      if (this[property] === value) return
+      this[property] = value
+      if (this.period === period) this.fetchData()
     },
     fetchData() {
       const requestSerial = ++this.requestSerial

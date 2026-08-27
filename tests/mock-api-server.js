@@ -307,6 +307,7 @@ const server = http.createServer((req, res) => {
   res.end(ok(data))
 })
 
-server.listen(8081, '127.0.0.1', () => {
-  process.stdout.write('Mock API listening on http://127.0.0.1:8081\n')
+const port = Number(process.env.MOCK_API_PORT || 8081)
+server.listen(port, '127.0.0.1', () => {
+  process.stdout.write(`Mock API listening on http://127.0.0.1:${port}\n`)
 })

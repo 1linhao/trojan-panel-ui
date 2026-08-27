@@ -38,19 +38,20 @@
         :label="$t('table.nodeServerName')"
         min-width="150"
       />
-      <liquid-table-column :label="$t('table.upload')" min-width="130"
+      <liquid-table-column prop="upload" :label="$t('table.upload')" min-width="130"
         ><template slot-scope="s">{{
           getFlow(s.row.upload)
         }}</template></liquid-table-column
       >
       <liquid-table-column
+        prop="download"
         :label="$t('table.download')"
         min-width="130"
         ><template slot-scope="s">{{
           getFlow(s.row.download)
         }}</template></liquid-table-column
       >
-      <liquid-table-column :label="$t('traffic.combined')" min-width="130"
+      <liquid-table-column prop="total" :label="$t('traffic.combined')" min-width="130"
         ><template slot-scope="s">{{
           getFlow(s.row.total)
         }}</template></liquid-table-column
