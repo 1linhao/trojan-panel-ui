@@ -1,7 +1,8 @@
-import { mkdtemp, readFile, rm } from 'node:fs/promises'
+import { mkdir, mkdtemp, readFile, rm } from 'node:fs/promises'
 import { spawnSync } from 'node:child_process'
 import os from 'node:os'
 import path from 'node:path'
+import { pathToFileURL } from 'node:url'
 
 const packageDirectory = path.resolve(process.argv[2] || process.cwd())
 const temporaryDirectory = await mkdtemp(path.join(os.tmpdir(), 'tp-ui-pack-'))
@@ -33,6 +34,25 @@ try {
     if (!files.has(packedPath))
       throw new Error(`${manifest.name}: packed tarball misses ${packedPath}`)
   }
+  const extractionDirectory = path.join(temporaryDirectory, 'consumer')
+  await mkdir(extractionDirectory)
+  const archive = path.join(temporaryDirectory, packed.filename)
+  const extraction = spawnSync('tar', [
+    '-xzf',
+    archive,
+    '-C',
+    extractionDirectory
+  ])
+  if (extraction.status !== 0)
+    throw new Error(`${manifest.name}: cannot unpack tarball`)
+  const rootExport = manifest.exports['.']
+  const rootTarget =
+    typeof rootExport === 'string' ? rootExport : rootExport.import
+  await import(
+    `${pathToFileURL(
+      path.join(extractionDirectory, 'package', rootTarget)
+    )}?pack-smoke`
+  )
   process.stdout.write(
     `PASS pack smoke ${manifest.name} (${packed.files.length} files)\n`
   )

@@ -212,14 +212,21 @@ export function createUiRuntime({
   }
   if (typeof environment.subscribeSystemMode === 'function') {
     releaseSystemSubscription = environment.subscribeSystemMode((mode) => {
-      if (state.mode === 'system')
-        setTheme({ mode: 'system', resolvedMode: mode })
+      if (state.mode === 'system') {
+        state = normalizeTheme(state, mode)
+        apply()
+      }
     })
   }
   if (typeof environment.subscribeReducedMotion === 'function') {
-    releaseMotionSubscription = environment.subscribeReducedMotion(() => {
-      if (motionState.mode === 'system') setMotion({ mode: 'system' })
-    })
+    releaseMotionSubscription = environment.subscribeReducedMotion(
+      (reduced) => {
+        if (motionState.mode === 'system') {
+          motionState = normalizeMotion(motionState, reduced)
+          applyMotion()
+        }
+      }
+    )
   }
   apply()
   applyMotion()

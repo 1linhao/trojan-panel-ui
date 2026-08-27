@@ -38,6 +38,8 @@ test('normalizes, freezes, and validates shell models', () => {
 
 test('runtime composes theme and material without owning DOM', () => {
   const applications = []
+  let systemListener
+  let motionListener
   const runtime = createUiRuntime({
     material: {
       apply: (theme) => applications.push(theme),
@@ -49,13 +51,26 @@ test('runtime composes theme and material without owning DOM', () => {
       apply: (motion) => applications.push(motion),
       getCapabilities: () => ({ available: true, reducedMotion: true })
     },
-    environment: { getSystemMode: () => 'dark', getReducedMotion: () => true }
+    environment: {
+      getSystemMode: () => 'dark',
+      getReducedMotion: () => true,
+      subscribeSystemMode: (listener) => {
+        systemListener = listener
+      },
+      subscribeReducedMotion: (listener) => {
+        motionListener = listener
+      }
+    }
   })
   assert.equal(runtime.theme.getState().resolvedMode, 'dark')
   assert.equal(runtime.theme.setPalette('amber').palette, 'amber')
   assert.equal(applications.length, 3)
   assert.equal(runtime.material.getCapabilities().backdropFilter, true)
   assert.equal(runtime.motion.getState().resolvedMode, 'reduced')
+  systemListener('light')
+  assert.equal(runtime.theme.getState().resolvedMode, 'light')
+  motionListener(false)
+  assert.equal(runtime.motion.getState().resolvedMode, 'full')
   assert.equal(runtime.motion.setMode('none').resolvedMode, 'none')
   assert.equal(runtime.motion.getCapabilities().available, true)
   assert.ok(UI_CUSTOM_PROPERTIES.includes('--ui-surface-bg'))

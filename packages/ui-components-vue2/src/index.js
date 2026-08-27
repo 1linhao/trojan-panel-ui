@@ -1,4 +1,4 @@
-function semanticData(component) {
+function semanticData(component, overrides = {}) {
   const state = component.disabled
     ? 'disabled'
     : component.loading
@@ -7,7 +7,7 @@ function semanticData(component) {
     ? 'invalid'
     : 'idle'
   return {
-    'data-ui-surface': component.surface || 'control',
+    'data-ui-surface': overrides.surface || component.surface || 'control',
     'data-ui-tone': component.tone || 'neutral',
     'data-ui-state': state,
     'data-ui-size': component.size || 'md'
@@ -68,7 +68,7 @@ export const UiInput = {
       class: 'tp-ui-input',
       attrs: {
         ...this.$attrs,
-        ...semanticData({ ...this, surface: 'control' }),
+        ...semanticData(this, { surface: 'control' }),
         disabled: this.disabled,
         'aria-invalid': this.invalid ? 'true' : null
       },
