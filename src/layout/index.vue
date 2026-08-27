@@ -20,7 +20,10 @@
           type="button"
           @click="go(item.path)"
         >
-          <i :class="['prototype-menu-icon', item.uiIcon]" aria-hidden="true" />
+          <liquid-nav-icon
+            :name="item.icon"
+            class="prototype-nav-icon prototype-desktop-nav-icon"
+          />
           <span>{{ item.label }}</span>
         </button>
       </template>
@@ -72,7 +75,10 @@
         type="button"
         @click="go(item.path)"
       >
-        <liquid-nav-icon :name="item.icon" class="prototype-mobile-icon" />
+        <liquid-nav-icon
+          :name="item.icon"
+          class="prototype-nav-icon prototype-mobile-icon"
+        />
         <span>{{ item.mobileLabel || item.label }}</span>
       </button>
     </nav>
@@ -94,8 +100,7 @@ const ADMIN_GROUPS = [
         path: '/dashboard/index',
         label: '仪表板',
         mobileLabel: '首页',
-        icon: 'dashboard',
-        uiIcon: 'liquid-icon--data-analysis'
+        icon: 'dashboard'
       }
     ]
   },
@@ -107,22 +112,19 @@ const ADMIN_GROUPS = [
         label: '账号管理',
         mobileLabel: '账号',
         icon: 'account',
-        uiIcon: 'liquid-icon--user',
         roles: ['sysadmin', 'admin']
       },
       {
         path: '/node-manage/node-list',
         label: '节点管理',
         mobileLabel: '节点',
-        icon: 'node',
-        uiIcon: 'liquid-icon--connection'
+        icon: 'node'
       },
       {
         path: '/server-manage/server-list',
         label: '服务器',
         mobileLabel: '服务器',
         icon: 'server',
-        uiIcon: 'liquid-icon--monitor',
         roles: ['sysadmin', 'admin']
       },
       {
@@ -130,7 +132,6 @@ const ADMIN_GROUPS = [
         label: '内核升级',
         mobileLabel: '内核',
         icon: 'sysinfo',
-        uiIcon: 'liquid-icon--cpu',
         roles: ['sysadmin']
       }
     ]
@@ -143,7 +144,6 @@ const ADMIN_GROUPS = [
         label: '文件任务',
         mobileLabel: '任务',
         icon: 'task',
-        uiIcon: 'liquid-icon--tickets',
         roles: ['sysadmin']
       },
       {
@@ -151,7 +151,6 @@ const ADMIN_GROUPS = [
         label: '邮件记录',
         mobileLabel: '邮件',
         icon: 'email',
-        uiIcon: 'liquid-icon--message',
         roles: ['sysadmin', 'admin']
       },
       {
@@ -159,7 +158,6 @@ const ADMIN_GROUPS = [
         label: '黑名单',
         mobileLabel: '黑名单',
         icon: 'pass',
-        uiIcon: 'liquid-icon--circle-close',
         roles: ['sysadmin']
       }
     ]
@@ -172,15 +170,13 @@ const ADMIN_GROUPS = [
         label: '系统配置',
         mobileLabel: '设置',
         icon: 'system',
-        uiIcon: 'liquid-icon--setting',
         roles: ['sysadmin']
       },
       {
         path: '/modify/index',
         label: '个人资料',
         mobileLabel: '我的',
-        icon: 'username',
-        uiIcon: 'liquid-icon--user'
+        icon: 'username'
       }
     ]
   }
@@ -194,22 +190,19 @@ const USER_GROUPS = [
         path: '/dashboard/index',
         label: '我的首页',
         mobileLabel: '首页',
-        icon: 'dashboard',
-        uiIcon: 'liquid-icon--data-analysis'
+        icon: 'dashboard'
       },
       {
         path: '/node-manage/node-list',
         label: '我的节点',
         mobileLabel: '节点',
-        icon: 'node',
-        uiIcon: 'liquid-icon--connection'
+        icon: 'node'
       },
       {
         path: '/modify/index',
         label: '个人资料',
         mobileLabel: '我的',
-        icon: 'username',
-        uiIcon: 'liquid-icon--user'
+        icon: 'username'
       }
     ]
   }
