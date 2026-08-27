@@ -1,0 +1,59 @@
+.liquid-shell {
+  min-height: 100dvh;
+  height: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(232px, 268px) minmax(0, 1fr);
+  gap: 18px;
+  padding: 18px;
+  overflow: hidden;
+}
+.liquid-shell__side-surface, .liquid-shell__side { min-height: 0; height: 100%; }
+.liquid-shell__side {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 18px 14px;
+  border: 0;
+  border-radius: inherit;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: normal;
+}
+.liquid-shell__brand { display: flex; align-items: center; gap: 12px; padding: 8px 10px 22px; }
+.liquid-shell__brand-mark, .liquid-shell__avatar { display: grid; place-items: center; flex: 0 0 auto; width: 38px; height: 38px; border-radius: 50%; background: var(--liquid-accent); color: var(--liquid-on-accent); font-weight: 800; }
+.liquid-shell__brand-copy { display: grid; gap: 2px; min-width: 0; }
+.liquid-shell__brand-copy strong, .liquid-shell__brand-copy small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.liquid-shell__brand-copy small { color: var(--liquid-ink-muted); font-size: .68rem; letter-spacing: .13em; }
+.liquid-shell__nav { min-height: 0; overflow: auto; scrollbar-gutter: stable; }
+.liquid-shell__nav-group + .liquid-shell__nav-group { margin-top: 18px; }
+.liquid-shell__nav-label { margin: 0 10px 6px; color: var(--liquid-ink-muted); font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.liquid-shell__nav-item { width: 100%; min-height: 42px; display: flex; align-items: center; gap: 10px; padding: 0 12px; border: 0; border-radius: 16px; background: transparent; color: inherit; cursor: pointer; text-align: left; }
+.liquid-shell__nav-item:hover { background: color-mix(in srgb, var(--liquid-tint) 64%, transparent); }
+.liquid-shell__nav-item.is-active { background: color-mix(in srgb, var(--liquid-accent) 22%, var(--liquid-tint)); box-shadow: inset 0 1px 1px var(--liquid-rim-high); }
+.liquid-shell__main { min-width: 0; min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); gap: 18px; }
+.liquid-shell__topbar { min-height: 70px; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 18px; }
+.liquid-shell__header-start, .liquid-shell__header-actions, .liquid-shell__user { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.liquid-shell__title { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: clamp(1.15rem, 2vw, 1.55rem); }
+.liquid-shell__user { padding: 5px 6px; border-radius: 999px; background: color-mix(in srgb, var(--liquid-tint) 68%, transparent); }
+.liquid-shell__avatar { width: 32px; height: 32px; font-size: .75rem; }
+.liquid-shell__logout { width: 34px; height: 34px; border: 0; border-radius: 50%; background: transparent; color: inherit; cursor: pointer; }
+.liquid-shell__logout:hover { background: color-mix(in srgb, var(--liquid-danger) 18%, transparent); }
+.liquid-shell__content { min-width: 0; min-height: 0; overflow: auto; scrollbar-gutter: stable; }
+.liquid-shell__mobile-surface { display: none; }
+.liquid-shell__overlay-root { position: fixed; inset: 0; z-index: 1000; pointer-events: none; }
+.liquid-shell__overlay-root > * { pointer-events: auto; }
+
+@media (max-width: 760px) {
+  .liquid-shell { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; gap: 10px; padding: max(10px, env(safe-area-inset-top)) 10px max(10px, env(safe-area-inset-bottom)); }
+  .liquid-shell__side-surface { display: none; }
+  .liquid-shell__main { gap: 10px; }
+  .liquid-shell__topbar { min-height: 58px; padding: 8px 12px; }
+  .liquid-shell__user strong { display: none; }
+  .liquid-shell__mobile-surface { display: block; }
+  .liquid-shell__mobile-nav { display: flex; align-items: center; gap: 4px; min-height: 62px; padding: 5px; overflow-x: auto; scrollbar-width: none; }
+  .liquid-shell__mobile-nav::-webkit-scrollbar { display: none; }
+  .liquid-shell__mobile-item { position: relative; min-width: 64px; flex: 1 0 64px; min-height: 52px; display: grid; place-items: center; align-content: center; gap: 3px; border: 0; border-radius: 999px; background: transparent; color: inherit; font-size: .7rem; cursor: pointer; }
+  .liquid-shell__mobile-item.is-active { background: color-mix(in srgb, var(--liquid-accent) 22%, var(--liquid-tint)); box-shadow: inset 0 1px 1px var(--liquid-rim-high); color: var(--liquid-accent); }
+}
