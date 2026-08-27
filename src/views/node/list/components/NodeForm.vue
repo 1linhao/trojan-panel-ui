@@ -36,8 +36,8 @@
             </liquid-select>
             <liquid-button
               class="liquid-add-button"
-              tone="accent"
-              size="small"
+              type="primary"
+              size="mini"
               icon="liquid-icon--plus"
               aria-label="添加服务器"
               @click="toAddNodeServer"
@@ -120,7 +120,7 @@
           >{{ $t('table.cancel') }}
         </liquid-button>
         <liquid-button
-          tone="accent"
+          type="primary"
           @click="dialogStatusProps === 'create' ? createData() : updateData()"
         >
           {{ $t('table.confirm') }}

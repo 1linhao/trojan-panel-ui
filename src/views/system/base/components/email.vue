@@ -82,7 +82,7 @@
       </liquid-form-item>
 
       <liquid-form-item>
-        <liquid-button tone="accent" @click="updateData()"
+        <liquid-button type="primary" @click="updateData()"
           >{{ $t('table.confirm') }}
         </liquid-button>
       </liquid-form-item>

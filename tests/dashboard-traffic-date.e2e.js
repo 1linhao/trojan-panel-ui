@@ -106,7 +106,11 @@ async function main() {
 
   step('等待隔离服务')
   await waitFor(() => request('http://127.0.0.1:18081/auth/setting'), 'mock API')
-  await waitFor(() => web.output.includes('Compiled successfully'), 'Vue 编译', 60000)
+  await waitFor(
+    () => web.output.includes('Compiled successfully') || web.output.includes('Compiled with'),
+    'Vue 编译',
+    60000
+  )
   await waitFor(() => request(WEB_URL), '开发服务器', 60000)
   await waitFor(() => request(`${DRIVER_URL}/status`), 'ChromeDriver')
 
@@ -117,7 +121,12 @@ async function main() {
         browserName: 'chrome',
         'goog:chromeOptions': {
           binary: '/usr/bin/chromium',
-          args: ['--headless=new', '--no-sandbox', '--disable-dev-shm-usage']
+          args: [
+            '--headless=new',
+            '--no-sandbox',
+            '--disable-dev-shm-usage',
+            '--window-size=1440,1200'
+          ]
         }
       }
     }
@@ -151,12 +160,18 @@ async function main() {
       '.dashboard-detail-grid > .glass.card:first-child .dashboard-segment button:nth-child(2)'
     )
     await click(monthButton)
-    await waitFor(
-      () => find('css selector', '.dashboard-detail-grid > .glass.card:first-child .traffic-rank-date .liquid-date-picker__native'),
+    const monthTrigger = await waitFor(
+      () => find('css selector', '.dashboard-detail-grid > .glass.card:first-child .traffic-rank-date .liquid-date-picker__trigger'),
       '月份选择器'
     )
-    const selectedMonth = await execute("const input = document.querySelector('.dashboard-detail-grid > .glass.card:first-child .traffic-rank-date .liquid-date-picker__native'); input.value = '2026-07'; input.dispatchEvent(new Event('input', { bubbles: true })); return input.value")
+    await click(monthTrigger)
+    const selectedMonth = await execute("const input = document.querySelector('.dashboard-detail-grid > .glass.card:first-child .traffic-rank-date .liquid-date-picker__manual input'); input.value = '2026-07'; input.dispatchEvent(new Event('input', { bubbles: true })); return input.value")
     if (selectedMonth !== '2026-07') throw new Error(`月份输入未更新：${selectedMonth}`)
+    const monthConfirm = await find(
+      'css selector',
+      '.dashboard-detail-grid > .glass.card:first-child .traffic-rank-date .liquid-date-picker__popover footer .is-primary'
+    )
+    await click(monthConfirm)
 
     step('等待新月份排行数据')
     await waitFor(
@@ -176,8 +191,13 @@ async function main() {
       '日期选择器'
     )
     await click(dayTrigger)
-    const selectedDay = await execute("const input = document.querySelector('.liquid-date-picker__manual input'); input.value = '2026-07-15'; input.dispatchEvent(new Event('input', { bubbles: true })); input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })); return input.value")
+    const selectedDay = await execute("const input = document.querySelector('.liquid-date-picker__manual input'); input.value = '2026-07-15'; input.dispatchEvent(new Event('input', { bubbles: true })); return input.value")
     if (selectedDay !== '2026-07-15') throw new Error(`日期输入未更新：${selectedDay}`)
+    const dayConfirm = await find(
+      'css selector',
+      '.dashboard-detail-grid > .glass.card:first-child .traffic-rank-date .liquid-date-picker__popover footer .is-primary'
+    )
+    await click(dayConfirm)
     await waitFor(
       async () => (await execute("return document.body.innerText.includes('rank-2026-07-15')")),
       '切换日期后的排行数据',

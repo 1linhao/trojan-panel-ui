@@ -43,7 +43,7 @@
       <liquid-button @click="$emit('update:dialogFormVisibleProps', false)"
         >{{ $t('table.cancel') }}
       </liquid-button>
-      <liquid-button tone="accent" @click="createAccountBatch">
+      <liquid-button type="primary" @click="createAccountBatch">
         {{ $t('table.confirm') }}
       </liquid-button>
     </div>

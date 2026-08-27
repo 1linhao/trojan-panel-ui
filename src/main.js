@@ -7,23 +7,25 @@ import router from '@/router'
 import '@/icons'
 import '@/permission'
 import i18n from '@/lang'
-import {
-  configureLiquidTheme,
-  getInitialTheme,
-  initializeTheme
-} from '@/utils/theme'
-import { createLiquidUI } from '@liqui/liquid-ui'
-import { createLiquidAppShell } from '@liqui/liquid-app-shell'
-import '@liqui/liquid-ui/styles.css'
-import '@liqui/liquid-app-shell/styles.css'
+import { initializeTheme } from '@/utils/theme'
 import LiquidLoading from '@/directives/liquid-loading'
 import { structuralComponents } from '@/components/LiquidStructural'
 import { Message, MessageBox, Notification } from '@/utils/liquid-feedback'
 
-const liquidUI = createLiquidUI({ initialMode: getInitialTheme() })
-Vue.use(liquidUI)
-Vue.use(createLiquidAppShell())
-configureLiquidTheme(liquidUI.theme)
+const LiquidNumberInput = () =>
+  import(/* webpackChunkName: "liquid-controls" */ '@/components/LiquidNumberInput')
+const LiquidInput = () =>
+  import(/* webpackChunkName: "liquid-controls" */ '@/components/LiquidInput')
+const LiquidSelect = () =>
+  import(/* webpackChunkName: "liquid-controls" */ '@/components/LiquidSelect')
+const LiquidSwitch = () =>
+  import(/* webpackChunkName: "liquid-controls" */ '@/components/LiquidSwitch')
+const LiquidButton = () =>
+  import(/* webpackChunkName: "liquid-controls" */ '@/components/LiquidButton')
+const LiquidTag = () =>
+  import(/* webpackChunkName: "liquid-controls" */ '@/components/LiquidTag')
+const LiquidDatePicker = () =>
+  import(/* webpackChunkName: "liquid-controls" */ '@/components/LiquidDatePicker')
 
 Object.entries(structuralComponents).forEach(([name, component]) => {
   Vue.component(name, component)
@@ -31,6 +33,13 @@ Object.entries(structuralComponents).forEach(([name, component]) => {
 
 Vue.config.productionTip = false
 
+Vue.component('LiquidNumberInput', LiquidNumberInput)
+Vue.component('LiquidInput', LiquidInput)
+Vue.component('LiquidSelect', LiquidSelect)
+Vue.component('LiquidSwitch', LiquidSwitch)
+Vue.component('LiquidButton', LiquidButton)
+Vue.component('LiquidTag', LiquidTag)
+Vue.component('LiquidDatePicker', LiquidDatePicker)
 Vue.directive('liquid-loading', LiquidLoading)
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

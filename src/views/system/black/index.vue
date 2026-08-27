@@ -78,7 +78,7 @@
         <liquid-button @click="dialogFormVisible = false"
           >{{ $t('table.cancel') }}
         </liquid-button>
-        <liquid-button tone="accent" @click="createData()">
+        <liquid-button type="primary" @click="createData()">
           {{ $t('table.confirm') }}
         </liquid-button>
       </div>

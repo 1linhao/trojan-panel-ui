@@ -65,9 +65,8 @@ export const LiquidTable = {
     const head = h('thead', [h('tr', columns.map((column) => h('th', {
       style: { textAlign: column.align || 'left', width: px(column.width), minWidth: px(column.minWidth) }
     }, [String(column.label == null ? '' : column.label)])))])
-    const sourceRows = Array.isArray(this.data) ? this.data : []
-    const rows = sourceRows.length
-      ? sourceRows.map((row, index) => h('tr', { key: row.id == null ? index : row.id }, columns.map((column) => {
+    const rows = this.data.length
+      ? this.data.map((row, index) => h('tr', { key: row.id == null ? index : row.id }, columns.map((column) => {
         let content
         if (column.slot) content = column.slot({ row, $index: index, column })
         else if (column.type === 'index') content = String(index + 1)
@@ -276,8 +275,8 @@ export const LiquidBreadcrumbItem = { name: 'LiquidBreadcrumbItem', functional: 
 
 export const structuralComponents = {
   LiquidBreadcrumb, LiquidBreadcrumbItem, LiquidCard, LiquidCol,
-  LiquidDescriptions, LiquidDescriptionsItem, LiquidDropdown,
-  LiquidDropdownItem, LiquidDropdownMenu,
+  LiquidDescriptions, LiquidDescriptionsItem, LiquidDialog, LiquidDropdown,
+  LiquidDropdownItem, LiquidDropdownMenu, LiquidForm, LiquidFormItem,
   LiquidMenu, LiquidMenuItem, LiquidRow, LiquidScrollbar, LiquidSubmenu,
-  LiquidTooltip
+  LiquidTable, LiquidTableColumn, LiquidTooltip
 }

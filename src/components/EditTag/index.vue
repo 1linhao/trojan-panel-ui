@@ -22,7 +22,7 @@
       icon="liquid-icon--plus"
       v-else
       class="edit-tag-add liquid-add-button"
-      tone="accent"
+      type="primary"
       aria-label="添加"
       title="添加"
       @click="showInput"

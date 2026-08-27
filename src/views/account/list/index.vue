@@ -270,7 +270,7 @@
           >{{ $t('table.cancel') }}
         </liquid-button>
         <liquid-button
-          tone="accent"
+          type="primary"
           @click="dialogStatus === 'create' ? createData() : updateData()"
         >
           {{ $t('table.confirm') }}

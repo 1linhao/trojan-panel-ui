@@ -18,11 +18,6 @@ const BROWSER_THEME_COLORS = {
 }
 
 let systemThemeMedia
-let liquidThemeController
-
-export function configureLiquidTheme(controller) {
-  liquidThemeController = controller
-}
 
 function normalizeMode(mode) {
   return MODES.includes(mode) ? mode : 'light'
@@ -64,8 +59,6 @@ export function applyTheme({ mode, palette } = {}) {
   }
   document.documentElement.setAttribute('data-theme', next.mode)
   document.documentElement.setAttribute('data-palette', next.palette)
-  liquidThemeController?.setMode(next.mode)
-  liquidThemeController?.setPalette(next.palette)
   updateBrowserThemeColor(next)
   notifyThemeChange(next)
   return next

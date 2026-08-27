@@ -487,7 +487,7 @@
 
       <div slot="footer" class="dialog-footer">
         <liquid-button
-          tone="accent"
+          type="primary"
           @click="$emit('update:dialogVisibleProps', false)"
           >{{ $t('table.confirm') }}
         </liquid-button>
