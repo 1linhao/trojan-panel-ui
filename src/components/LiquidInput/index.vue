@@ -129,7 +129,7 @@ export default {
   min-height: 32px;
 }
 .liquid-input__textarea {
-  min-height: 92px;
+  min-height: var(--ui-editor-body-min-height, 92px);
   padding: 10px 4px;
   resize: vertical;
 }
@@ -154,6 +154,13 @@ export default {
   .liquid-input {
     width: 100%;
     max-width: none;
+  }
+
+  .liquid-input__textarea {
+    min-height: var(
+      --ui-editor-mobile-body-min-height,
+      var(--ui-editor-body-min-height, 92px)
+    );
   }
 }
 </style>

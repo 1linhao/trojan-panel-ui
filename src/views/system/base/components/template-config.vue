@@ -55,6 +55,7 @@
           </liquid-form-item>
           <liquid-form-item :label="$t('config.clashRule')" prop="clashRule">
             <liquid-input
+              class="subscription-config-editor"
               v-model="systemConfig.clashRule"
               type="textarea"
               :autosize="{ minRows: 10, maxRows: 24 }"
@@ -79,6 +80,7 @@
               prop="singBoxTun"
             >
               <liquid-json-editor
+                class="subscription-config-editor"
                 v-model="systemConfig.singBoxTunEntity"
               />
             </liquid-form-item>
@@ -99,6 +101,7 @@
               prop="singBoxOutbound"
             >
               <liquid-json-editor
+                class="subscription-config-editor"
                 v-model="systemConfig.singBoxOutboundEntity"
               />
             </liquid-form-item>
@@ -114,6 +117,7 @@
           </liquid-form-item>
           <liquid-form-item :label="$t('config.xrayTemplate')" prop="xrayTemplate">
             <liquid-json-editor
+              class="subscription-config-editor"
               v-model="systemConfig.xrayTemplateEntity"
             />
           </liquid-form-item>
@@ -276,6 +280,11 @@ export default {
 
 .mode-switch {
   grid-row: 2;
+}
+
+.subscription-config-editor {
+  --ui-editor-body-min-height: 320px;
+  --ui-editor-mobile-body-min-height: 260px;
 }
 
 .nested-mode-switch-enter-active,

@@ -117,16 +117,24 @@ export default {
   color: var(--ink-3);
   background: var(--glass-soft);
   font-size: 12px;
+  line-height: 1.2;
   letter-spacing: 0.08em;
 }
 
 .liquid-json-editor__toolbar button {
-  padding: 5px 10px;
+  min-height: 30px;
+  padding: 0 11px;
   border: 1px solid var(--rim);
   border-radius: 10px;
   color: var(--ink-2);
   background: var(--glass-input);
+  font: inherit;
+  line-height: 1.2;
+  letter-spacing: 0;
   cursor: pointer;
+  transition: color var(--ui-motion-fast) var(--ui-motion-easing-standard),
+    border-color var(--ui-motion-fast) var(--ui-motion-easing-standard),
+    background-color var(--ui-motion-fast) var(--ui-motion-easing-standard);
 }
 
 .liquid-json-editor__toolbar button:hover {
@@ -137,7 +145,7 @@ export default {
 .liquid-json-editor textarea {
   display: block;
   width: 100%;
-  min-height: 320px;
+  min-height: var(--ui-editor-body-min-height, 320px);
   padding: 14px;
   border: 0;
   outline: 0;
@@ -158,7 +166,10 @@ export default {
 
 @media (max-width: 720px) {
   .liquid-json-editor textarea {
-    min-height: 260px;
+    min-height: var(
+      --ui-editor-mobile-body-min-height,
+      var(--ui-editor-body-min-height, 260px)
+    );
   }
 }
 </style>
