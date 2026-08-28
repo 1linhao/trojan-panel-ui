@@ -1,6 +1,6 @@
 <template>
   <div class="prototype-page">
-    <div class="glass card profile-card">
+    <ui-panel class="profile-card" motion-key="account-profile">
       <div class="card-head">
         <div>
           <span class="kicker">Account Security</span>
@@ -18,7 +18,7 @@
       <ModifyPass v-if="activeName === 'modify-pass'" />
       <ModifyProperty v-else-if="activeName === 'modify-property'" />
       <LiquidPalettePicker v-else inline />
-    </div>
+    </ui-panel>
   </div>
 </template>
 

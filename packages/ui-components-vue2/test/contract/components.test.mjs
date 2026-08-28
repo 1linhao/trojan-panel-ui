@@ -5,7 +5,10 @@ import {
   COMPONENTS,
   BUTTON_INTERACTION,
   UiButton,
+  UiDialog,
   UiInput,
+  UiPanel,
+  UiSheet,
   createButtonInteractionController,
   createCssButtonInteractionAdapter,
   createVue2Components
@@ -17,11 +20,92 @@ test('exports named components and selective plugin registration', () => {
     component: (name) => names.push(name)
   })
   assert.deepEqual(names, ['UiButton'])
-  assert.deepEqual(Object.keys(COMPONENTS), ['UiButton', 'UiInput'])
+  assert.deepEqual(Object.keys(COMPONENTS), [
+    'UiButton',
+    'UiInput',
+    'UiPanel',
+    'UiSheet',
+    'UiDialog'
+  ])
   assert.throws(
     () => createVue2Components({ include: ['Missing'] }),
     /Unknown UI components/
   )
+})
+
+test('panel variants expose stable anatomy and motion identity', () => {
+  const vnode = UiPanel.render(
+    (tag, data, children) => ({ tag, data, children }),
+    {
+      props: {
+        variant: 'auth',
+        tag: 'section',
+        tone: 'neutral',
+        density: 'comfortable',
+        state: 'idle',
+        motionRole: 'shared',
+        motionKey: 'auth-primary'
+      },
+      data: { attrs: {}, class: 'consumer-class' },
+      slots: () => ({ default: ['form'], header: ['brand'] })
+    }
+  )
+  assert.equal(vnode.tag, 'section')
+  assert.equal(vnode.data.attrs['data-ui-panel-variant'], 'auth')
+  assert.equal(vnode.data.attrs['data-ui-motion-role'], 'shared')
+  assert.equal(vnode.data.attrs['data-ui-motion-key'], 'auth-primary')
+  assert.deepEqual(vnode.data.style[1], {
+    viewTransitionName: 'ui-auth-primary'
+  })
+  assert.equal(vnode.children[0].data.attrs['data-ui-part'], 'header')
+  assert.equal(vnode.children[1].data.attrs['data-ui-part'], 'body')
+})
+
+test('sheet uses the raised surface recipe', () => {
+  const vnode = UiSheet.render(
+    (tag, data, children) => ({ tag, data, children }),
+    {
+      props: {
+        tag: 'aside',
+        tone: 'neutral',
+        density: 'comfortable',
+        state: 'idle',
+        motionRole: 'panel',
+        motionKey: 'node-1'
+      },
+      data: { attrs: {} },
+      slots: () => ({ default: ['detail'] })
+    }
+  )
+  assert.equal(vnode.data.attrs['data-ui-surface'], 'raised')
+  assert.equal(vnode.children[1].data.attrs['data-ui-part'], 'body')
+})
+
+test('dialog exposes overlay anatomy and close events', () => {
+  const emitted = []
+  const vnode = UiDialog.render.call(
+    {
+      visible: true,
+      title: 'Edit',
+      width: 480,
+      customClass: '',
+      showClose: true,
+      tone: 'neutral',
+      motionRole: 'overlay',
+      motionKey: 'edit-node',
+      $slots: { default: ['form'], footer: ['save'] },
+      close: () => emitted.push('close'),
+      modalClick() {},
+      $refs: {}
+    },
+    (tag, data, children) => ({ tag, data, children })
+  )
+  const surface = vnode.children[0]
+  assert.equal(surface.data.attrs['data-ui-surface'], 'overlay')
+  assert.equal(surface.data.style.viewTransitionName, 'ui-edit-node')
+  assert.equal(surface.children[1].data.attrs['data-ui-part'], 'body')
+  surface.children[0].children[1].data.on.click()
+  assert.deepEqual(emitted, ['close'])
 })
 
 test('button anatomy exposes semantic attributes and loading behavior', () => {

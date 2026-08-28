@@ -1,6 +1,6 @@
 <template>
   <div class="prototype-page">
-    <div class="glass card prototype-config-card">
+    <ui-panel class="prototype-config-card" motion-key="system-config">
       <div class="card-head">
         <div>
           <span class="kicker">System Preferences</span>
@@ -17,7 +17,7 @@
       <email v-else-if="activeName === 'config-email'" :system-config="systemConfig" />
       <web-file v-else-if="activeName === 'config-web-file'" />
       <template-config v-else :system-config="systemConfig" />
-    </div>
+    </ui-panel>
   </div>
 </template>
 

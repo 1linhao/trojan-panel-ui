@@ -1,6 +1,6 @@
 <template>
   <div class="prototype-page grid">
-    <div class="glass card">
+    <ui-panel motion-key="server-filters">
       <div class="toolbar">
         <div class="search-box">
           <i class="liquid-icon--search"></i
@@ -60,9 +60,9 @@
           <i class="liquid-icon--plus"></i>添加服务器
         </button>
       </div>
-    </div>
+    </ui-panel>
 
-    <div class="glass card">
+    <ui-panel motion-key="server-list">
       <div class="tbl-wrap" v-liquid-loading="listLoading">
         <table class="tbl">
           <thead>
@@ -215,9 +215,13 @@
         :limit.sync="listQuery.pageSize"
         @pagination="getList"
       />
-    </div>
+    </ui-panel>
 
-    <div v-if="detailServer" class="glass sheet">
+    <ui-sheet
+      v-if="detailServer"
+      motion-role="shared"
+      :motion-key="'server-' + detailServer.id"
+    >
       <div class="card-head">
         <div>
           <span class="kicker">Server State</span>
@@ -277,7 +281,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </ui-sheet>
 
     <NodeServerForm
       ref="nodeServerForm"

@@ -1,7 +1,7 @@
 <template>
   <div class="prototype-page grid">
     <div class="grid cols-2">
-      <div class="glass hero">
+      <ui-panel variant="metric" class="hero" motion-key="subscription-usage">
         <span class="kicker">剩余流量</span>
         <b class="big"
           >{{ flowParts[0] }} <em>{{ flowParts[1] }}</em></b
@@ -25,8 +25,8 @@
           </div>
           <div><b>每月 1 日</b><span>流量自动重置</span></div>
         </div>
-      </div>
-      <div class="glass card subscription-card">
+      </ui-panel>
+      <ui-panel class="subscription-card" motion-key="subscription-export">
         <div class="card-head">
           <div>
             <span class="kicker">Subscription</span>
@@ -50,9 +50,9 @@
             <i class="liquid-icon--connection"></i>查看我的节点
           </button>
         </div>
-      </div>
+      </ui-panel>
     </div>
-    <div class="glass card">
+    <ui-panel motion-key="traffic-rank">
       <div class="card-head">
         <div>
           <span class="kicker">Traffic Rank</span>
@@ -60,7 +60,7 @@
         </div>
       </div>
       <traffic-table />
-    </div>
+    </ui-panel>
     <export-node-dialog :dialog-visible-props.sync="exportVisible" />
   </div>
 </template>

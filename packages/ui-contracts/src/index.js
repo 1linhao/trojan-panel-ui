@@ -28,6 +28,13 @@ export const STATES = Object.freeze([
 export const THEME_MODES = Object.freeze(['system', 'light', 'dark'])
 export const PALETTES = Object.freeze(['blue', 'violet', 'emerald', 'amber'])
 export const MOTION_MODES = Object.freeze(['system', 'full', 'reduced', 'none'])
+export const MOTION_ROLES = Object.freeze([
+  'none',
+  'page',
+  'panel',
+  'shared',
+  'overlay'
+])
 
 export const UI_CUSTOM_PROPERTIES = Object.freeze([
   '--ui-canvas-bg',
@@ -78,6 +85,8 @@ export const validateSize = (value) => assertEnumValue('size', value, SIZES)
 export const validateDensity = (value) =>
   assertEnumValue('density', value, DENSITIES)
 export const validateState = (value) => assertEnumValue('state', value, STATES)
+export const validateMotionRole = (value) =>
+  assertEnumValue('motion role', value, MOTION_ROLES)
 
 function deepFreeze(value) {
   if (!value || typeof value !== 'object' || Object.isFrozen(value))

@@ -1,6 +1,6 @@
 <template>
   <div class="prototype-page grid">
-    <div class="glass card">
+    <ui-panel motion-key="node-filters">
       <div class="toolbar">
         <div class="search-box">
           <i class="liquid-icon--search"></i
@@ -41,11 +41,17 @@
           <i class="liquid-icon--plus"></i>新建节点
         </button>
       </div>
-    </div>
+    </ui-panel>
 
     <div class="node-grid" v-liquid-loading="listLoading">
       <template v-for="(row, index) in list">
-        <div :key="'node-' + row.id" class="glass node-card">
+        <ui-panel
+          :key="'node-' + row.id"
+          variant="metric"
+          class="node-card"
+          motion-role="shared"
+          :motion-key="detailId === row.id ? '' : 'node-' + row.id"
+        >
           <div class="node-top">
             <span
               class="proto-badge tone-blue"
@@ -134,11 +140,13 @@
               </button>
             </template>
           </div>
-        </div>
-        <div
+        </ui-panel>
+        <ui-sheet
           v-if="detailId === row.id"
           :key="'detail-' + row.id"
-          class="glass sheet node-detail"
+          class="node-detail"
+          motion-role="shared"
+          :motion-key="'node-' + row.id"
         >
           <div class="card-head">
             <div>
@@ -177,7 +185,7 @@
               <span>UUID</span><b class="mono">{{ nodeDetail.uuid }}</b>
             </div>
           </div>
-        </div>
+        </ui-sheet>
       </template>
     </div>
     <Pagination

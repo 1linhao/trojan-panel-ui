@@ -1,6 +1,12 @@
 # @tp-ui/components-vue2
 
-Vue 2 control anatomy, interaction, accessibility, and geometry. The initial Phase 1 surface exports `UiButton`, `UiInput`, and the selective `createVue2Components()` plugin.
+Vue 2 control and surface anatomy, interaction, accessibility, and geometry. The public surface exports `UiButton`, `UiInput`, `UiPanel`, `UiSheet`, `UiDialog`, and the selective `createVue2Components()` plugin.
+
+`UiPanel` owns the common `auth | content | metric` panel recipes. `UiSheet`
+owns in-page detail surfaces and `UiDialog` owns modal lifecycle, focus return,
+Escape/backdrop closing, and overlay anatomy. Their stable animation Interface is
+`motion-role`, `motion-key`, and `data-ui-part`; animation engines stay outside
+the components package.
 
 `createButtonInteractionController()` discovers native buttons and semantic
 `role="button"` controls, then connects them through an injected Adapter. The

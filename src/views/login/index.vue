@@ -1,7 +1,7 @@
 <template>
   <div class="auth">
     <liquid-theme-toggle class="auth-theme-toggle" />
-    <div class="auth-card glass raised">
+    <ui-panel variant="auth" motion-role="shared" motion-key="auth-primary">
       <div class="auth-brand">
         <span class="brand-mark">T</span>
         <h1>{{ systemName || 'Trojan Panel' }}</h1>
@@ -74,7 +74,7 @@
           </button></template
         >
       </liquid-form>
-    </div>
+    </ui-panel>
   </div>
 </template>
 

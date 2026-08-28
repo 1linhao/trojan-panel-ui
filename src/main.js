@@ -12,6 +12,7 @@ import LiquidLoading from '@/directives/liquid-loading'
 import { structuralComponents } from '@/components/LiquidStructural'
 import { Message, MessageBox, Notification } from '@/utils/liquid-feedback'
 import { installUiInteractions } from '@/adapters/ui-interactions'
+import { createVue2Components } from '@tp-ui/components-vue2'
 
 const LiquidNumberInput = () =>
   import(/* webpackChunkName: "liquid-controls" */ '@/components/LiquidNumberInput')
@@ -31,6 +32,10 @@ const LiquidDatePicker = () =>
 Object.entries(structuralComponents).forEach(([name, component]) => {
   Vue.component(name, component)
 })
+
+Vue.use(
+  createVue2Components({ include: ['UiPanel', 'UiSheet', 'UiDialog'] })
+)
 
 Vue.config.productionTip = false
 

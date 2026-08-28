@@ -1,19 +1,19 @@
 <template>
   <div class="prototype-page grid">
     <div class="grid cols-4">
-      <div class="glass stat-tile">
+      <ui-panel variant="metric" class="stat-tile" motion-key="account-count">
         <span class="icon-wrap tone-blue"><i class="liquid-icon--user-solid" /></span>
         <b class="num">{{ panelGroupData.accountCount }}</b
         ><span>账号总数</span>
-      </div>
-      <div class="glass stat-tile">
+      </ui-panel>
+      <ui-panel variant="metric" class="stat-tile" motion-key="node-count">
         <span class="icon-wrap tone-violet"><i class="liquid-icon--connection" /></span>
         <b class="num">{{
           panelGroupData.nodeCount || panelGroupData.nodeNum
         }}</b
         ><span>节点数量</span>
-      </div>
-      <div class="glass card span-2">
+      </ui-panel>
+      <ui-panel class="span-2" motion-key="server-resources">
         <span class="kicker">面板服务器资源</span>
         <div class="rings-row">
           <div v-for="ring in rings" :key="ring.label">
@@ -26,10 +26,10 @@
             <div class="ring-label">{{ ring.label }}</div>
           </div>
         </div>
-      </div>
+      </ui-panel>
     </div>
     <div class="grid cols-2 dashboard-detail-grid">
-      <div class="glass card">
+      <ui-panel motion-key="traffic-rank">
         <div class="card-head">
           <div>
             <span class="kicker">Traffic Rank</span>
@@ -37,8 +37,8 @@
           </div>
         </div>
         <traffic-table />
-      </div>
-      <div class="glass card">
+      </ui-panel>
+      <ui-panel motion-key="server-traffic">
         <div class="card-head">
           <div>
             <span class="kicker">Per-Server Usage</span>
@@ -46,7 +46,7 @@
           </div>
         </div>
         <server-traffic-table />
-      </div>
+      </ui-panel>
     </div>
   </div>
 </template>

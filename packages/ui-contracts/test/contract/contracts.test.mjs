@@ -4,6 +4,7 @@ import {
   UI_CUSTOM_PROPERTIES,
   createShellModel,
   createUiRuntime,
+  validateMotionRole,
   validateSurface
 } from '../../src/index.js'
 
@@ -13,6 +14,8 @@ test('validates semantic enum values', () => {
     () => validateSurface('business-card'),
     /surface must be one of/
   )
+  assert.equal(validateMotionRole('shared'), 'shared')
+  assert.throws(() => validateMotionRole('bounce'), /motion role must be one of/)
 })
 
 test('normalizes, freezes, and validates shell models', () => {

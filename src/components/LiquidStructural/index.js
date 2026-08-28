@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { UiDialog } from '@tp-ui/components-vue2'
 
 const px = (value) => {
   if (value === undefined || value === null || value === '') return undefined
@@ -190,36 +191,9 @@ export const LiquidFormItem = {
   }
 }
 
-export const LiquidDialog = {
-  name: 'LiquidDialog',
-  props: {
-    visible: Boolean,
-    title: [String, Number],
-    width: { type: [String, Number], default: '50%' },
-    customClass: String,
-    closeOnClickModal: { type: Boolean, default: true },
-    showClose: { type: Boolean, default: true },
-    appendToBody: Boolean
-  },
-  watch: { visible(value) { if (value) this.$nextTick(() => this.$emit('open')) } },
-  methods: {
-    close() { this.$emit('update:visible', false); this.$emit('close') },
-    modalClick(event) { if (this.closeOnClickModal && event.target === event.currentTarget) this.close() }
-  },
-  render(h) {
-    if (!this.visible) return null
-    return h('div', { class: 'liquid-dialog-layer', on: { mousedown: this.modalClick } }, [
-      h('section', { class: ['liquid-dialog', this.customClass], style: { width: px(this.width) }, attrs: { role: 'dialog', 'aria-modal': 'true' } }, [
-        h('header', { class: 'liquid-dialog__header' }, [
-          h('span', { class: 'liquid-dialog__title' }, [String(this.title == null ? '' : this.title)]),
-          this.showClose ? h('button', { class: 'liquid-dialog__close', attrs: { type: 'button', 'aria-label': '关闭' }, on: { click: this.close } }, ['×']) : null
-        ]),
-        h('div', { class: 'liquid-dialog__body' }, this.$slots.default),
-        this.$slots.footer ? h('footer', { class: 'liquid-dialog__footer' }, this.$slots.footer) : null
-      ])
-    ])
-  }
-}
+// Compatibility Adapter: existing business views keep the LiquidDialog name
+// while modal lifecycle and animation anatomy live in the shared Module.
+export const LiquidDialog = { ...UiDialog, name: 'LiquidDialog' }
 
 export const LiquidCard = {
   name: 'LiquidCard',

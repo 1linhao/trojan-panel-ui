@@ -1,6 +1,6 @@
 <template>
   <div class="prototype-page grid">
-    <div class="glass card">
+    <ui-panel motion-key="email-filters">
       <div class="toolbar">
         <div class="search-box">
           <i class="liquid-icon--search"></i
@@ -24,8 +24,8 @@
           搜索记录
         </button>
       </div>
-    </div>
-    <div class="glass card">
+    </ui-panel>
+    <ui-panel motion-key="email-list">
       <div class="tbl-wrap" v-liquid-loading="listLoading">
         <table class="tbl">
           <thead>
@@ -69,7 +69,7 @@
         :limit.sync="listQuery.pageSize"
         @pagination="getList"
       />
-    </div>
+    </ui-panel>
   </div>
 </template>
 

@@ -1,6 +1,6 @@
 <template>
   <div class="prototype-page grid">
-    <div class="glass card">
+    <ui-panel motion-key="account-filters">
       <div class="toolbar">
         <div class="search-box">
           <i class="liquid-icon--search"></i>
@@ -65,9 +65,9 @@
           <i class="liquid-icon--plus"></i>新建账号
         </button>
       </div>
-    </div>
+    </ui-panel>
 
-    <div class="glass card">
+    <ui-panel motion-key="account-list">
       <div class="tbl-wrap" v-liquid-loading="listLoading">
         <table class="tbl">
           <thead>
@@ -201,7 +201,7 @@
         :limit.sync="listQuery.pageSize"
         @pagination="getList"
       />
-    </div>
+    </ui-panel>
     <liquid-dialog
       append-to-body
       :title="textMap[dialogStatus]"

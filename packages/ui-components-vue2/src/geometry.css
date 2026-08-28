@@ -11,6 +11,31 @@
     border-color var(--ui-motion-fast), box-shadow var(--ui-motion-fast);
 }
 
+.tp-ui-panel,
+.tp-ui-sheet,
+.tp-ui-dialog {
+  box-sizing: border-box;
+}
+
+.tp-ui-panel__body,
+.tp-ui-sheet__body {
+  display: contents;
+}
+
+.tp-ui-dialog-layer {
+  position: fixed;
+  inset: 0;
+  z-index: var(--ui-overlay-z);
+  display: grid;
+  place-items: center;
+}
+
+.tp-ui-dialog {
+  max-width: calc(100vw - 2 * var(--ui-space-4));
+  max-height: calc(100vh - 2 * var(--ui-space-4));
+  outline: none;
+}
+
 .tp-ui-button {
   display: inline-flex;
   align-items: center;
