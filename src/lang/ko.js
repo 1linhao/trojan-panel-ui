@@ -252,7 +252,9 @@ export default {
     singBoxTemplate: 'sing-box Template',
     singBoxTunTemplate: 'TUN 모드 템플릿',
     singBoxOutboundTemplate: '아웃바운드 전용 템플릿',
+    templateSelect: '구성 템플릿',
     templateName: '템플릿 이름',
+    formatTemplate: '서식 지정',
     xrayTemplate: 'Xray 템플릿',
     modifyPass: '비밀번호 변경',
     modifyProperty: '정보 수정'

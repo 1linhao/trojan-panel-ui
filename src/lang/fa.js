@@ -255,7 +255,9 @@ export default {
     singBoxTemplate: 'sing-box Template',
     singBoxTunTemplate: 'TUN mode template',
     singBoxOutboundTemplate: 'Outbound-only template',
+    templateSelect: 'Configuration template',
     templateName: 'Template name',
+    formatTemplate: 'Format',
     xrayTemplate: 'قالب Xray',
     modifyPass: 'تغییر رمز عبور',
     modifyProperty: 'اطلاعات را اصلاح کنید'

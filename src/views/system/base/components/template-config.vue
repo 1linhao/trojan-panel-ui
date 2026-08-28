@@ -22,106 +22,19 @@
             {{ client.label }}
           </button>
         </div>
-        <transition name="nested-mode-switch">
-          <div
-            v-if="activeClient === 'sing-box'"
-            class="seg mode-switch"
-            role="group"
-            aria-label="sing-box 模板模式"
-          >
-            <button
-              type="button"
-              :class="{ on: activeSingBoxTemplate === 'tun' }"
-              @click="activeSingBoxTemplate = 'tun'"
-            >
-              {{ systemConfig.singBoxTunTemplateName || 'TUN' }}
-            </button>
-            <button
-              type="button"
-              :class="{ on: activeSingBoxTemplate === 'outbound' }"
-              @click="activeSingBoxTemplate = 'outbound'"
-            >
-              {{ systemConfig.singBoxOutboundTemplateName || 'Outbound only' }}
-            </button>
-          </div>
-        </transition>
       </div>
-      <template v-if="activeClient === 'clash-meta'">
-          <liquid-form-item
-            :label="$t('config.templateName')"
-            prop="clashTemplateName"
-          >
-            <liquid-input v-model="systemConfig.clashTemplateName" clearable />
-          </liquid-form-item>
-          <liquid-form-item :label="$t('config.clashRule')" prop="clashRule">
-            <liquid-input
-              class="subscription-config-editor"
-              v-model="systemConfig.clashRule"
-              type="textarea"
-              :autosize="{ minRows: 10, maxRows: 24 }"
-              clearable
-            />
-          </liquid-form-item>
-      </template>
 
-      <template v-else-if="activeClient === 'sing-box'">
-          <template v-if="activeSingBoxTemplate === 'tun'">
-            <liquid-form-item
-              :label="$t('config.templateName')"
-              prop="singBoxTunTemplateName"
-            >
-              <liquid-input
-                v-model="systemConfig.singBoxTunTemplateName"
-                clearable
-              />
-            </liquid-form-item>
-            <liquid-form-item
-              :label="$t('config.singBoxTunTemplate')"
-              prop="singBoxTun"
-            >
-              <liquid-json-editor
-                class="subscription-config-editor"
-                v-model="systemConfig.singBoxTunEntity"
-              />
-            </liquid-form-item>
-          </template>
-
-          <template v-else>
-            <liquid-form-item
-              :label="$t('config.templateName')"
-              prop="singBoxOutboundTemplateName"
-            >
-              <liquid-input
-                v-model="systemConfig.singBoxOutboundTemplateName"
-                clearable
-              />
-            </liquid-form-item>
-            <liquid-form-item
-              :label="$t('config.singBoxOutboundTemplate')"
-              prop="singBoxOutbound"
-            >
-              <liquid-json-editor
-                class="subscription-config-editor"
-                v-model="systemConfig.singBoxOutboundEntity"
-              />
-            </liquid-form-item>
-          </template>
-      </template>
-
-      <template v-else>
-          <liquid-form-item
-            :label="$t('config.templateName')"
-            prop="xrayTemplateName"
-          >
-            <liquid-input v-model="systemConfig.xrayTemplateName" clearable />
-          </liquid-form-item>
-          <liquid-form-item :label="$t('config.xrayTemplate')" prop="xrayTemplate">
-            <liquid-json-editor
-              class="subscription-config-editor"
-              v-model="systemConfig.xrayTemplateEntity"
-            />
-          </liquid-form-item>
-      </template>
+      <client-template-editor
+        :client-id="activeClient"
+        :templates="activeTemplates"
+        :active-template-id="activeTemplateId"
+        :template-select-label="$t('config.templateSelect')"
+        :template-name-label="$t('config.templateName')"
+        :format-button-label="$t('config.formatTemplate')"
+        :format-error-prefix="$t('valid.jsonFormat')"
+        @select-template="selectTemplate"
+        @update-template="updateTemplate"
+      />
 
       <liquid-form-item class="actions">
         <liquid-button type="primary" icon="liquid-icon--check" @click="updateData">
@@ -135,11 +48,11 @@
 <script>
 import { updateSystemById } from '@/api/system'
 import UploadLogo from '@/components/UploadLogo'
-import LiquidJsonEditor from '@/components/LiquidJsonEditor'
+import ClientTemplateEditor from '@/components/ClientTemplateEditor'
 
 export default {
   name: 'TemplateConfigForm',
-  components: { LiquidJsonEditor, UploadLogo },
+  components: { ClientTemplateEditor, UploadLogo },
   inject: {
     systemConfig: {
       from: 'systemConfigModel'
@@ -166,7 +79,11 @@ export default {
         { name: 'sing-box', label: 'sing-box' },
         { name: 'xray', label: 'Xray' }
       ],
-      activeSingBoxTemplate: 'tun',
+      activeTemplateIds: {
+        'clash-meta': 'default',
+        'sing-box': 'tun',
+        xray: 'default'
+      },
       updateRules: {
         systemName: [
           {
@@ -220,7 +137,84 @@ export default {
       }
     }
   },
+  computed: {
+    templateCatalog() {
+      return {
+        'clash-meta': [
+          {
+            id: 'default',
+            name: this.systemConfig.clashTemplateName,
+            nameProp: 'clashTemplateName',
+            content: this.systemConfig.clashRule,
+            contentProp: 'clashRule',
+            contentLabel: this.$t('config.clashRule'),
+            languageLabel: 'YAML',
+            format: ''
+          }
+        ],
+        'sing-box': [
+          {
+            id: 'tun',
+            name: this.systemConfig.singBoxTunTemplateName,
+            nameProp: 'singBoxTunTemplateName',
+            content: this.systemConfig.singBoxTunEntity,
+            contentProp: 'singBoxTun',
+            contentLabel: this.$t('config.singBoxTunTemplate'),
+            languageLabel: 'JSON',
+            format: 'json'
+          },
+          {
+            id: 'outbound',
+            name: this.systemConfig.singBoxOutboundTemplateName,
+            nameProp: 'singBoxOutboundTemplateName',
+            content: this.systemConfig.singBoxOutboundEntity,
+            contentProp: 'singBoxOutbound',
+            contentLabel: this.$t('config.singBoxOutboundTemplate'),
+            languageLabel: 'JSON',
+            format: 'json'
+          }
+        ],
+        xray: [
+          {
+            id: 'default',
+            name: this.systemConfig.xrayTemplateName,
+            nameProp: 'xrayTemplateName',
+            content: this.systemConfig.xrayTemplateEntity,
+            contentProp: 'xrayTemplate',
+            contentLabel: this.$t('config.xrayTemplate'),
+            languageLabel: 'JSON',
+            format: 'json'
+          }
+        ]
+      }
+    },
+    activeTemplates() {
+      return this.templateCatalog[this.activeClient]
+    },
+    activeTemplateId() {
+      return this.activeTemplateIds[this.activeClient]
+    }
+  },
   methods: {
+    selectTemplate(templateId) {
+      this.$set(this.activeTemplateIds, this.activeClient, templateId)
+    },
+    updateTemplate({ templateId, patch }) {
+      const template = this.activeTemplates.find(
+        (candidate) => candidate.id === templateId
+      )
+      if (!template) return
+      if (Object.prototype.hasOwnProperty.call(patch, 'name')) {
+        this.systemConfig[template.nameProp] = patch.name
+      }
+      if (Object.prototype.hasOwnProperty.call(patch, 'content')) {
+        this.systemConfig[
+          template.format === 'json'
+            ? `${template.contentProp}Entity`
+            : template.contentProp
+        ] = patch.content
+      }
+    },
     serializeEditor(field) {
       const value = this.systemConfig[field]
       const entity = typeof value === 'object' ? value : JSON.parse(value)
@@ -270,34 +264,11 @@ export default {
 .template-mode-switches {
   display: grid;
   justify-items: start;
-  gap: 12px;
   margin-bottom: 20px;
 }
 
 .template-mode-switches > .liquid-tabs {
   margin-bottom: 0;
-}
-
-.mode-switch {
-  grid-row: 2;
-}
-
-.subscription-config-editor {
-  --ui-editor-body-min-height: 320px;
-  --ui-editor-mobile-body-min-height: 260px;
-}
-
-.nested-mode-switch-enter-active,
-.nested-mode-switch-leave-active {
-  transition: opacity var(--ui-motion-fast) var(--ui-motion-easing-standard),
-    transform var(--ui-motion-fast) var(--ui-motion-easing-standard);
-  transform-origin: top left;
-}
-
-.nested-mode-switch-enter,
-.nested-mode-switch-leave-to {
-  opacity: 0;
-  transform: translateY(-6px) scale(0.98);
 }
 
 .actions {

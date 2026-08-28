@@ -1,11 +1,17 @@
 <template>
-  <div class="liquid-json-editor" :class="{ 'is-focused': focused, 'is-error': error }">
-    <div class="liquid-json-editor__toolbar">
-      <span>JSON</span>
-      <button type="button" @click="format">格式化</button>
+  <div
+    class="liquid-code-editor"
+    :class="{ 'is-focused': focused, 'is-error': error }"
+  >
+    <div class="liquid-code-editor__toolbar">
+      <span>{{ languageLabel }}</span>
+      <button v-if="format === 'json'" type="button" @click="formatContent">
+        {{ formatButtonLabel }}
+      </button>
     </div>
     <textarea
       :value="text"
+      :aria-label="`${languageLabel} 配置编辑器`"
       :aria-invalid="String(Boolean(error))"
       spellcheck="false"
       autocomplete="off"
@@ -25,11 +31,27 @@ function toText(value) {
 }
 
 export default {
-  name: 'LiquidJsonEditor',
+  name: 'LiquidCodeEditor',
   props: {
     value: {
       type: [Object, Array, String],
       default: ''
+    },
+    languageLabel: {
+      type: String,
+      default: 'TEXT'
+    },
+    format: {
+      type: String,
+      default: ''
+    },
+    formatButtonLabel: {
+      type: String,
+      default: '格式化'
+    },
+    formatErrorPrefix: {
+      type: String,
+      default: 'JSON 格式错误'
     }
   },
   data() {
@@ -59,7 +81,7 @@ export default {
       this.validate()
     },
     validate() {
-      if (!this.text.trim()) {
+      if (this.format !== 'json' || !this.text.trim()) {
         this.error = ''
         return true
       }
@@ -68,18 +90,18 @@ export default {
         this.error = ''
         return true
       } catch (error) {
-        this.error = `JSON 格式错误：${error.message}`
+        this.error = `${this.formatErrorPrefix}：${error.message}`
         return false
       }
     },
-    format() {
+    formatContent() {
       if (!this.text.trim()) return
       try {
         this.text = JSON.stringify(JSON.parse(this.text), null, 2)
         this.error = ''
         this.$emit('input', this.text)
       } catch (error) {
-        this.error = `JSON 格式错误：${error.message}`
+        this.error = `${this.formatErrorPrefix}：${error.message}`
       }
     }
   }
@@ -87,7 +109,7 @@ export default {
 </script>
 
 <style scoped>
-.liquid-json-editor {
+.liquid-code-editor {
   width: 100%;
   overflow: hidden;
   border: 1px solid var(--control-border);
@@ -97,17 +119,17 @@ export default {
   transition: border-color 160ms ease, box-shadow 160ms ease;
 }
 
-.liquid-json-editor.is-focused {
+.liquid-code-editor.is-focused {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent),
     inset 0 1px 0 var(--spec-soft);
 }
 
-.liquid-json-editor.is-error {
+.liquid-code-editor.is-error {
   border-color: var(--bad-fg);
 }
 
-.liquid-json-editor__toolbar {
+.liquid-code-editor__toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -121,7 +143,7 @@ export default {
   letter-spacing: 0.08em;
 }
 
-.liquid-json-editor__toolbar button {
+.liquid-code-editor__toolbar button {
   min-height: 30px;
   padding: 0 11px;
   border: 1px solid var(--rim);
@@ -137,19 +159,19 @@ export default {
     background-color var(--ui-motion-fast) var(--ui-motion-easing-standard);
 }
 
-.liquid-json-editor__toolbar button:hover {
+.liquid-code-editor__toolbar button:hover {
   border-color: var(--accent);
   color: var(--accent);
 }
 
-.liquid-json-editor textarea {
+.liquid-code-editor textarea {
   display: block;
   width: 100%;
   min-height: var(--ui-editor-body-min-height, 320px);
   padding: 14px;
   border: 0;
   outline: 0;
-  resize: vertical;
+  resize: none;
   color: var(--ink);
   background: transparent;
   font: 13px/1.6 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
@@ -157,7 +179,7 @@ export default {
   tab-size: 2;
 }
 
-.liquid-json-editor small {
+.liquid-code-editor small {
   display: block;
   padding: 0 14px 10px;
   color: var(--bad-fg);
@@ -165,7 +187,7 @@ export default {
 }
 
 @media (max-width: 720px) {
-  .liquid-json-editor textarea {
+  .liquid-code-editor textarea {
     min-height: var(
       --ui-editor-mobile-body-min-height,
       var(--ui-editor-body-min-height, 260px)

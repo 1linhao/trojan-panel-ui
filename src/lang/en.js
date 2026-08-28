@@ -337,7 +337,9 @@ export default {
     singBoxTemplate: 'sing-box Template',
     singBoxTunTemplate: 'TUN mode template',
     singBoxOutboundTemplate: 'Outbound-only template',
+    templateSelect: 'Configuration template',
     templateName: 'Template name',
+    formatTemplate: 'Format',
     xrayTemplate: 'Xray Template',
     modifyPass: 'Modify Pass',
     modifyProperty: 'Modify Info'

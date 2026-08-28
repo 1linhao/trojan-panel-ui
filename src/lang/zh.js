@@ -332,7 +332,9 @@ export default {
     singBoxTemplate: 'sing-box模板',
     singBoxTunTemplate: 'TUN模式模板',
     singBoxOutboundTemplate: '仅出站模板',
+    templateSelect: '配置模板',
     templateName: '模板名称',
+    formatTemplate: '格式化',
     xrayTemplate: 'Xray模板',
     modifyPass: '修改密码',
     modifyProperty: '修改信息'
