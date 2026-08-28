@@ -70,17 +70,17 @@
   --neutral-fg: rgba(38, 44, 60, 0.62);
   --neutral-bg: rgba(38, 44, 60, 0.09);
 
-  --blob-a: #a8c6ff;
-  --blob-b: #d4bbff;
-  --blob-c: #9fe6d8;
-  --blob-d: #ffd7ae;
-  --blob-e: #ffb7cf;
+  --blob-a: #9fc5ff;
+  --blob-b: #b7d8ff;
+  --blob-c: #8dd9f5;
+  --blob-d: #c8e6ff;
+  --blob-e: #91b8ee;
 
   --chart-1: #0a84ff;
-  --chart-2: #af52de;
-  --chart-3: #30c76e;
-  --chart-4: #ff9f0a;
-  --chart-5: #ff453a;
+  --chart-2: #2f9ee8;
+  --chart-3: #1677c8;
+  --chart-4: #63b7ff;
+  --chart-5: #356fd3;
 }
 
 [data-theme='dark'] {
@@ -122,17 +122,17 @@
   --neutral-fg: rgba(222, 229, 246, 0.6);
   --neutral-bg: rgba(222, 229, 246, 0.08);
 
-  --blob-a: #1e50c8;
-  --blob-b: #6a2fbf;
-  --blob-c: #0e8b7f;
-  --blob-d: #b0632a;
-  --blob-e: #b23a6b;
+  --blob-a: #194fae;
+  --blob-b: #245f9f;
+  --blob-c: #0f6f92;
+  --blob-d: #2b5f91;
+  --blob-e: #183f7a;
 
   --chart-1: #64a9ff;
-  --chart-2: #cf8bff;
-  --chart-3: #56dc91;
-  --chart-4: #ffb84d;
-  --chart-5: #ff746b;
+  --chart-2: #72c7f2;
+  --chart-3: #4d91df;
+  --chart-4: #8bcfff;
+  --chart-5: #708ee8;
 }
 
 /* 色系只负责品牌强调、环境光和数据图表；明暗表面与状态语义保持独立。 */
@@ -832,7 +832,9 @@ h3 {
   font-weight: 600;
   text-align: left;
   white-space: nowrap;
-  transition: background var(--dur), color var(--dur);
+  transition: background-color var(--ui-motion-fast)
+      var(--ui-motion-easing-standard),
+    color var(--ui-motion-fast) var(--ui-motion-easing-standard);
 }
 
 .dd-item:hover {
@@ -2435,23 +2437,23 @@ h3 {
 /* ---------- 统一的原生 Liquid 控件层 ---------- */
 
 #app .liquid-form-item__label,
-.liquid-dialog .liquid-form-item__label {
+.tp-ui-dialog .liquid-form-item__label {
   color: var(--ink-2);
   font-size: 12px;
   font-weight: 650;
 }
 
 #app .liquid-form-item,
-.liquid-dialog .liquid-form-item {
+.tp-ui-dialog .liquid-form-item {
   margin-bottom: 18px;
 }
 
 #app .liquid-select,
 #app .liquid-date-picker,
 #app .liquid-number-input,
-.liquid-dialog .liquid-select,
-.liquid-dialog .liquid-date-picker,
-.liquid-dialog .liquid-number-input {
+.tp-ui-dialog .liquid-select,
+.tp-ui-dialog .liquid-date-picker,
+.tp-ui-dialog .liquid-number-input {
   width: min(100%, var(--control-max-width));
   max-width: var(--control-max-width);
 }
@@ -2500,11 +2502,11 @@ h3 {
   border-radius: 13px !important;
 }
 
-.liquid-dialog .liquid-input__inner,
-.liquid-dialog .liquid-textarea__inner,
-.liquid-dialog .liquid-range-editor.liquid-input__inner,
-.liquid-dialog .liquid-input-number,
-.liquid-dialog .liquid-input-number .liquid-input__inner {
+.tp-ui-dialog .liquid-input__inner,
+.tp-ui-dialog .liquid-textarea__inner,
+.tp-ui-dialog .liquid-range-editor.liquid-input__inner,
+.tp-ui-dialog .liquid-input-number,
+.tp-ui-dialog .liquid-input-number .liquid-input__inner {
   border: 1px solid var(--control-border) !important;
   border-radius: 14px;
   color: var(--ink) !important;
@@ -2530,15 +2532,15 @@ h3 {
   line-height: 1.45;
 }
 
-.liquid-dialog .liquid-input__prefix,
-.liquid-dialog .liquid-input__suffix,
-.liquid-dialog .liquid-input__icon,
-.liquid-dialog .liquid-select__caret {
+.tp-ui-dialog .liquid-input__prefix,
+.tp-ui-dialog .liquid-input__suffix,
+.tp-ui-dialog .liquid-input__icon,
+.tp-ui-dialog .liquid-select__caret {
   color: var(--ink-2);
 }
 
-.liquid-dialog .liquid-input-number__decrease,
-.liquid-dialog .liquid-input-number__increase {
+.tp-ui-dialog .liquid-input-number__decrease,
+.tp-ui-dialog .liquid-input-number__increase {
   right: 6px;
   width: 28px;
   height: 14px;
@@ -2550,23 +2552,23 @@ h3 {
   line-height: 12px;
 }
 
-.liquid-dialog .liquid-input-number.is-controls-right .liquid-input__inner {
+.tp-ui-dialog .liquid-input-number.is-controls-right .liquid-input__inner {
   padding-right: 48px;
   text-align: left;
 }
 
-.liquid-dialog .liquid-input-number.is-controls-right .liquid-input-number__increase {
+.tp-ui-dialog .liquid-input-number.is-controls-right .liquid-input-number__increase {
   top: 5px;
   bottom: auto;
 }
 
-.liquid-dialog .liquid-input-number.is-controls-right .liquid-input-number__decrease {
+.tp-ui-dialog .liquid-input-number.is-controls-right .liquid-input-number__decrease {
   top: auto;
   bottom: 5px;
 }
 
-.liquid-dialog .liquid-input-number__decrease:hover,
-.liquid-dialog .liquid-input-number__increase:hover {
+.tp-ui-dialog .liquid-input-number__decrease:hover,
+.tp-ui-dialog .liquid-input-number__increase:hover {
   color: var(--accent);
   border-color: color-mix(in srgb, var(--accent) 48%, var(--rim)) !important;
   background: color-mix(in srgb, var(--accent) 10%, var(--glass-strong));
@@ -2591,15 +2593,15 @@ h3 {
   background: var(--hairline);
 }
 
-.liquid-dialog input::placeholder,
-.liquid-dialog textarea::placeholder {
+.tp-ui-dialog input::placeholder,
+.tp-ui-dialog textarea::placeholder {
   color: var(--ink-3);
   font-size: 13px;
   font-weight: 500;
   opacity: 1;
 }
 
-.liquid-dialog .liquid-button,
+.tp-ui-dialog .liquid-button,
 .liquid-message-box .liquid-button {
   min-height: 36px;
   padding: 9px 16px;
@@ -2612,7 +2614,7 @@ h3 {
   font-weight: 650;
 }
 
-.liquid-dialog .liquid-button--primary,
+.tp-ui-dialog .liquid-button--primary,
 .liquid-message-box .liquid-button--primary {
   color: var(--on-accent);
   border-color: transparent;
@@ -2620,7 +2622,7 @@ h3 {
 }
 
 #app .liquid-radio-button__inner,
-.liquid-dialog .liquid-radio-button__inner {
+.tp-ui-dialog .liquid-radio-button__inner {
   min-height: 36px;
   padding: 10px 14px;
   border-color: var(--hairline) !important;
@@ -2634,18 +2636,18 @@ h3 {
 
 #app .liquid-radio-button:first-child .liquid-radio-button__inner,
 #app .liquid-radio-button:last-child .liquid-radio-button__inner,
-.liquid-dialog .liquid-radio-button:first-child .liquid-radio-button__inner,
-.liquid-dialog .liquid-radio-button:last-child .liquid-radio-button__inner {
+.tp-ui-dialog .liquid-radio-button:first-child .liquid-radio-button__inner,
+.tp-ui-dialog .liquid-radio-button:last-child .liquid-radio-button__inner {
   border-radius: 999px !important;
 }
 
 #app .liquid-radio-button,
-.liquid-dialog .liquid-radio-button {
+.tp-ui-dialog .liquid-radio-button {
   margin-right: 4px;
 }
 
 #app .liquid-radio-button__orig-radio:checked + .liquid-radio-button__inner,
-.liquid-dialog .liquid-radio-button__orig-radio:checked + .liquid-radio-button__inner {
+.tp-ui-dialog .liquid-radio-button__orig-radio:checked + .liquid-radio-button__inner {
   color: var(--ink);
   border-color: var(--rim) !important;
   background: var(--glass-strong);
@@ -2653,19 +2655,19 @@ h3 {
 }
 
 #app .liquid-switch__label,
-.liquid-dialog .liquid-switch__label {
+.tp-ui-dialog .liquid-switch__label {
   color: var(--ink-3);
   font-size: 11.5px;
   font-weight: 650;
 }
 
 #app .liquid-switch__label.is-active,
-.liquid-dialog .liquid-switch__label.is-active {
+.tp-ui-dialog .liquid-switch__label.is-active {
   color: var(--ink);
 }
 
 #app .liquid-switch__core,
-.liquid-dialog .liquid-switch__core {
+.tp-ui-dialog .liquid-switch__core {
   width: 46px !important;
   height: 28px;
   border-color: var(--hairline) !important;
@@ -2674,7 +2676,7 @@ h3 {
 }
 
 #app .liquid-switch__core::after,
-.liquid-dialog .liquid-switch__core::after {
+.tp-ui-dialog .liquid-switch__core::after {
   top: 2px;
   left: 2px;
   width: 22px;
@@ -2683,21 +2685,21 @@ h3 {
 }
 
 #app .liquid-switch.is-checked .liquid-switch__core,
-.liquid-dialog .liquid-switch.is-checked .liquid-switch__core {
+.tp-ui-dialog .liquid-switch.is-checked .liquid-switch__core {
   border-color: transparent !important;
   background: var(--accent) !important;
 }
 
 #app .liquid-switch.is-checked .liquid-switch__core::after,
-.liquid-dialog .liquid-switch.is-checked .liquid-switch__core::after {
+.tp-ui-dialog .liquid-switch.is-checked .liquid-switch__core::after {
   left: 100%;
   margin-left: -24px;
 }
 
 #app .liquid-checkbox__inner,
 #app .liquid-radio__inner,
-.liquid-dialog .liquid-checkbox__inner,
-.liquid-dialog .liquid-radio__inner {
+.tp-ui-dialog .liquid-checkbox__inner,
+.tp-ui-dialog .liquid-radio__inner {
   border-color: var(--rim);
   background: var(--glass-input);
   box-shadow: inset 0 1px 0 var(--spec-soft);
@@ -2705,8 +2707,8 @@ h3 {
 
 #app .liquid-checkbox__label,
 #app .liquid-radio__label,
-.liquid-dialog .liquid-checkbox__label,
-.liquid-dialog .liquid-radio__label {
+.tp-ui-dialog .liquid-checkbox__label,
+.tp-ui-dialog .liquid-radio__label {
   color: var(--ink-2);
   font-size: 13px;
 }
@@ -2746,12 +2748,12 @@ h3 {
 }
 
 #app .liquid-divider,
-.liquid-dialog .liquid-divider {
+.tp-ui-dialog .liquid-divider {
   background: var(--hairline);
 }
 
 #app .liquid-divider__text,
-.liquid-dialog .liquid-divider__text {
+.tp-ui-dialog .liquid-divider__text {
   color: var(--ink-3);
   background: var(--glass-popover);
   font-size: 11px;
@@ -2788,7 +2790,7 @@ h3 {
   background: var(--glass-input);
 }
 
-.liquid-dialog__wrapper,
+.tp-ui-dialog__wrapper,
 .liquid-message-box__wrapper {
   backdrop-filter: none;
 }
@@ -2879,15 +2881,15 @@ h3 {
 }
 
 #app .liquid-select .liquid-input__inner,
-.liquid-dialog .liquid-select .liquid-input__inner {
+.tp-ui-dialog .liquid-select .liquid-input__inner {
   border-color: var(--control-border) !important;
   background: var(--control-fill) !important;
 }
 
 #app .liquid-select .liquid-input.is-focus .liquid-input__inner,
 #app .liquid-select:hover .liquid-input__inner,
-.liquid-dialog .liquid-select .liquid-input.is-focus .liquid-input__inner,
-.liquid-dialog .liquid-select:hover .liquid-input__inner {
+.tp-ui-dialog .liquid-select .liquid-input.is-focus .liquid-input__inner,
+.tp-ui-dialog .liquid-select:hover .liquid-input__inner {
   border-color: color-mix(
     in srgb,
     var(--accent) 56%,
@@ -3035,6 +3037,10 @@ h3 {
   min-width: 150px;
 }
 @media (max-width: 1060px) {
+  .prototype-main:has(.tp-ui-dialog-layer) {
+    z-index: 50;
+  }
+
   .prototype-mobile-nav {
     bottom: 12px;
   }

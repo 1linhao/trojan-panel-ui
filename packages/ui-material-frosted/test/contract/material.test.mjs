@@ -55,5 +55,10 @@ test('defines required material tokens, modes, palettes, surfaces, and fallback'
   ])
     assert.match(css, new RegExp(value))
   assert.match(css, /@supports not/)
+  assert.doesNotMatch(
+    css,
+    /data-ui-material='frosted'[\s\S]*rgba\(129, 85, 231, 0\.18\)/,
+    'the default blue canvas must not mix in the violet palette'
+  )
   assert.doesNotMatch(css, /#app|\.prototype-|\.dashboard-|\.account-/)
 })

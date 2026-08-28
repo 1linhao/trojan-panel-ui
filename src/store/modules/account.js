@@ -52,7 +52,8 @@ const actions = {
   },
 
   // account register
-  register({ commit }, accountInfo) {
+  register(...actionArguments) {
+    const accountInfo = actionArguments[1]
     const { username, pass, captchaId, captchaCode } = accountInfo
     return new Promise((resolve, reject) => {
       register({
@@ -61,7 +62,7 @@ const actions = {
         captchaId: captchaId,
         captchaCode: captchaCode
       })
-        .then((response) => {
+        .then(() => {
           resolve()
         })
         .catch((error) => {
@@ -97,7 +98,7 @@ const actions = {
   logout({ commit }) {
     return new Promise((resolve, reject) => {
       logout()
-        .then((response) => {
+        .then(() => {
           removeToken()
           resetRouter()
           commit('RESET_STATE')

@@ -55,7 +55,7 @@
 .liquid-form.is-label-top .liquid-form-item__label { float: none; display: block; width: 100% !important; padding: 0 0 7px; text-align: left; }
 .liquid-form.is-label-top .liquid-form-item__content { margin-left: 0 !important; }
 
-.liquid-dialog-layer,
+.tp-ui-dialog-layer,
 .liquid-feedback-layer {
   position: fixed;
   z-index: 5000;
@@ -68,7 +68,7 @@
   backdrop-filter: blur(10px) saturate(115%);
 }
 
-.liquid-dialog,
+.tp-ui-dialog,
 .liquid-message-box {
   width: min(94vw, 720px);
   max-height: min(90vh, 920px);
@@ -80,11 +80,24 @@
   box-shadow: var(--shadow);
   backdrop-filter: blur(28px) saturate(135%);
 }
-.liquid-dialog__header { display: flex; align-items: center; justify-content: space-between; min-height: 62px; padding: 18px 22px; border-bottom: 1px solid var(--hairline); }
-.liquid-dialog__title { font-size: 18px; font-weight: 700; }
-.liquid-dialog__close { display: grid; width: 32px; height: 32px; padding: 0; border: 1px solid var(--control-border); border-radius: 11px; color: var(--ink); background: var(--control-fill); place-items: center; font-size: 24px; line-height: 1; cursor: pointer; }
-.liquid-dialog__body { max-height: calc(90vh - 132px); overflow: auto; padding: 22px; }
-.liquid-dialog__footer { padding: 16px 22px 20px; border-top: 1px solid var(--hairline); }
+.tp-ui-dialog__header { display: flex; align-items: center; justify-content: space-between; min-height: 62px; padding: 18px 22px; border-bottom: 1px solid var(--hairline); }
+.tp-ui-dialog__title { font-size: 18px; font-weight: 700; }
+.tp-ui-dialog__close { display: grid; width: 32px; height: 32px; padding: 0; border: 1px solid var(--control-border); border-radius: 11px; color: var(--ink); background: var(--control-fill); place-items: center; font-size: 24px; line-height: 1; cursor: pointer; }
+.tp-ui-dialog__body { max-height: calc(90vh - 132px); overflow: auto; padding: 22px; }
+.tp-ui-dialog__footer { padding: 16px 22px 20px; border-top: 1px solid var(--hairline); }
+
+.liquid-select-dropdown__item,
+.liquid-dropdown-menu__item {
+  transition: color var(--ui-motion-fast) var(--ui-motion-easing-standard),
+    background-color var(--ui-motion-fast) var(--ui-motion-easing-standard);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .liquid-select-dropdown__item,
+  .liquid-dropdown-menu__item {
+    transition-duration: 1ms;
+  }
+}
 
 .liquid-card { overflow: hidden; border: 1px solid var(--rim); border-radius: 20px; background: var(--glass); box-shadow: var(--shadow-soft); }
 .liquid-card__header { padding: 16px 20px; border-bottom: 1px solid var(--hairline); }
@@ -204,9 +217,9 @@
 @keyframes liquid-icon-spin { to { transform: rotate(360deg); } }
 
 @media (max-width: 760px) {
-  .liquid-dialog-layer { align-items: flex-end; padding: 10px; }
-  .liquid-dialog { width: 100% !important; max-height: 94vh; border-radius: 22px; }
-  .liquid-dialog__body { max-height: calc(94vh - 132px); padding: 18px; }
+  .tp-ui-dialog-layer { align-items: flex-end; padding: 10px 10px max(10px, env(safe-area-inset-bottom)); }
+  .tp-ui-dialog { width: 100% !important; max-height: calc(100dvh - max(30px, env(safe-area-inset-top)) - max(10px, env(safe-area-inset-bottom))); border-radius: 22px; }
+  .tp-ui-dialog__body { max-height: calc(100dvh - 162px - max(30px, env(safe-area-inset-top)) - max(10px, env(safe-area-inset-bottom))); padding: 18px; }
   .liquid-form-item__label { float: none; display: block; width: 100% !important; min-height: auto; padding: 0 0 7px; text-align: left !important; }
   .liquid-form-item__content { margin-left: 0 !important; }
   .liquid-descriptions { grid-template-columns: 1fr !important; }

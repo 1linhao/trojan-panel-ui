@@ -23,6 +23,7 @@ import { generateTitle } from '@/utils/i18n'
 import pathToRegexp from 'path-to-regexp'
 
 export default {
+  name: 'AppBreadcrumb',
   data() {
     return {
       levelList: null

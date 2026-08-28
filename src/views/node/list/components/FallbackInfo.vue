@@ -1,5 +1,5 @@
 <template>
-  <liquid-dialog
+  <ui-dialog
     append-to-body
     :title="$t('table.detail').toString()"
     :visible="dialogVisibleProps"
@@ -30,7 +30,7 @@
         >{{ $t('table.confirm') }}
       </liquid-button>
     </div>
-  </liquid-dialog>
+  </ui-dialog>
 </template>
 
 <script>

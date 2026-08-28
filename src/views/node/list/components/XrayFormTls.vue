@@ -5,7 +5,7 @@
       prop="xrayStreamSettingsEntity.tlsSettings.serverName"
     >
       <liquid-input
-        v-model="nodeProps.xrayStreamSettingsEntity.tlsSettings.serverName"
+        v-model="nodeForm.xrayStreamSettingsEntity.tlsSettings.serverName"
       />
     </liquid-form-item>
     <liquid-form-item
@@ -13,7 +13,7 @@
       prop="xrayStreamSettingsEntity.tlsSettings.allowInsecure"
     >
       <liquid-switch
-        v-model="nodeProps.xrayStreamSettingsEntity.tlsSettings.allowInsecure"
+        v-model="nodeForm.xrayStreamSettingsEntity.tlsSettings.allowInsecure"
         :active-text="$t('table.yes').toString()"
         :inactive-text="$t('table.no').toString()"
         :active-value="true"
@@ -23,7 +23,7 @@
     </liquid-form-item>
     <liquid-form-item label="alpn" prop="xrayStreamSettingsEntity.tlsSettings.alpn">
       <liquid-select
-        v-model="nodeProps.xrayStreamSettingsEntity.tlsSettings.alpn"
+        v-model="nodeForm.xrayStreamSettingsEntity.tlsSettings.alpn"
         multiple
       >
         <option
@@ -40,7 +40,7 @@
       prop="fingerprint"
     >
       <liquid-select
-        v-model="nodeProps.xrayStreamSettingsEntity.tlsSettings.fingerprint"
+        v-model="nodeForm.xrayStreamSettingsEntity.tlsSettings.fingerprint"
         controls-position="right"
       >
         <option
@@ -59,11 +59,12 @@ import { fingerprints } from '@/utils/node'
 
 export default {
   name: 'XrayFormTls',
+  inject: {
+    nodeForm: {
+      from: 'nodeFormModel'
+    }
+  },
   props: {
-    nodeProps: {
-      type: Object,
-      require: true
-    },
     formVisibleProps: {
       type: Boolean,
       require: true

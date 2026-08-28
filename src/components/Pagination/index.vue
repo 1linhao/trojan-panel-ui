@@ -46,7 +46,7 @@
 import { scrollTo } from '@/utils/scroll-to'
 
 export default {
-  name: 'Pagination',
+  name: 'TablePagination',
   props: {
     total: {
       required: true,

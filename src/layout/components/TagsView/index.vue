@@ -48,6 +48,7 @@ import path from 'path'
 import { mapGetters } from 'vuex'
 
 export default {
+  name: 'RouteTagsView',
   components: { ScrollPane },
   data() {
     return {

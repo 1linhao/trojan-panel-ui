@@ -5,7 +5,7 @@
       prop="hysteriaProtocol"
     >
       <liquid-select
-        v-model="nodeProps.hysteriaProtocol"
+        v-model="nodeForm.hysteriaProtocol"
         :placeholder="$t('table.hysteriaProtocol').toString()"
         controls-position="right"
       >
@@ -21,14 +21,14 @@
       :label="$t('table.hysteriaObfs').toString()"
       prop="hysteriaObfs"
     >
-      <liquid-input v-model="nodeProps.hysteriaObfs" />
+      <liquid-input v-model="nodeForm.hysteriaObfs" />
     </liquid-form-item>
     <liquid-form-item
       :label="$t('table.hysteriaUpMbps').toString()"
       prop="hysteriaUpMbps"
     >
       <liquid-number-input
-        v-model.number="nodeProps.hysteriaUpMbps"
+        v-model.number="nodeForm.hysteriaUpMbps"
         controls-position="right"
         type="number"
       />
@@ -38,7 +38,7 @@
       prop="hysteriaDownMbps"
     >
       <liquid-number-input
-        v-model.number="nodeProps.hysteriaDownMbps"
+        v-model.number="nodeForm.hysteriaDownMbps"
         controls-position="right"
         type="number"
       />
@@ -47,14 +47,14 @@
       :label="$t('table.hysteriaServerName').toString()"
       prop="hysteriaServerName"
     >
-      <liquid-input v-model="nodeProps.hysteriaServerName" />
+      <liquid-input v-model="nodeForm.hysteriaServerName" />
     </liquid-form-item>
     <liquid-form-item
       :label="$t('table.hysteriaInsecure').toString()"
       prop="hysteriaInsecure"
     >
       <liquid-switch
-        v-model="nodeProps.hysteriaInsecure"
+        v-model="nodeForm.hysteriaInsecure"
         :active-text="$t('table.enable').toString()"
         :inactive-text="$t('table.disable').toString()"
         :active-value="1"
@@ -67,7 +67,7 @@
       prop="hysteriaFastOpen"
     >
       <liquid-switch
-        v-model="nodeProps.hysteriaFastOpen"
+        v-model="nodeForm.hysteriaFastOpen"
         :active-text="$t('table.enable').toString()"
         :inactive-text="$t('table.disable').toString()"
         :active-value="1"
@@ -86,11 +86,12 @@
 <script>
 export default {
   name: 'HysteriaForm',
+  inject: {
+    nodeForm: {
+      from: 'nodeFormModel'
+    }
+  },
   props: {
-    nodeProps: {
-      type: Object,
-      require: true
-    },
     formVisibleProps: {
       type: Boolean,
       require: true

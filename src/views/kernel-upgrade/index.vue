@@ -415,7 +415,7 @@ export default {
     loadReleases(refresh) {
       const calls = []
       ;['xray', 'hysteria2'].forEach((kernel) => {
-        ;['stable', 'prerelease'].forEach((channel) => {
+        ['stable', 'prerelease'].forEach((channel) => {
           calls.push(
             kernelReleases({ kernel, channel, refresh }).then((response) => {
               this.releases[kernel][channel] = response.data.releases || []

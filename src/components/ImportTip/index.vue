@@ -1,5 +1,5 @@
 <template>
-  <liquid-dialog
+  <ui-dialog
     append-to-body
     :title="$t('table.import')"
     :visible="dialogFormVisible"
@@ -55,14 +55,14 @@
         {{ $t('table.confirm') }}
       </liquid-button>
     </div>
-  </liquid-dialog>
+  </ui-dialog>
 </template>
 
 <script>
 import { Message } from '@/utils/liquid-feedback'
 
 export default {
-  name: 'index',
+  name: 'ImportDataTip',
   props: {
     dialogFormVisible: {
       type: Boolean,

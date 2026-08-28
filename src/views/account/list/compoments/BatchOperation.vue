@@ -1,5 +1,5 @@
 <template>
-  <liquid-dialog
+  <ui-dialog
     append-to-body
     :title="$t('table.createBatch').toString()"
     :visible="dialogFormVisibleProps"
@@ -47,7 +47,7 @@
         {{ $t('table.confirm') }}
       </liquid-button>
     </div>
-  </liquid-dialog>
+  </ui-dialog>
 </template>
 
 <script>

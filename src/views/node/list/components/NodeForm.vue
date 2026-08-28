@@ -1,22 +1,22 @@
 <template>
   <div>
-    <liquid-dialog
+    <ui-dialog
       append-to-body
       :title="textMap[dialogStatusProps]"
       :visible="dialogFormVisibleProps"
-      custom-class="liquid-node-editor"
+      custom-class="ui-node-editor"
       @close="$emit('update:dialogFormVisibleProps', false)"
     >
       <liquid-form
         ref="dataForm"
         :rules="dialogStatusProps === 'create' ? createRules : updateRules"
-        :model="nodeProps"
+        :model="formModel"
         class="uniform-dialog-form"
         label-width="132px"
         label-position="left"
       >
         <liquid-form-item :label="$t('table.nodeName').toString()" prop="name">
-          <liquid-input v-model="nodeProps.name" clearable />
+          <liquid-input v-model="formModel.name" clearable />
         </liquid-form-item>
         <liquid-form-item
           :label="$t('table.nodeServer').toString()"
@@ -24,7 +24,7 @@
         >
           <div class="uniform-control-with-action">
             <liquid-select
-              v-model="nodeProps.nodeServerId"
+              v-model="formModel.nodeServerId"
               controls-position="right"
             >
               <option
@@ -45,11 +45,11 @@
           </div>
         </liquid-form-item>
         <liquid-form-item :label="$t('table.nodeDomain').toString()" prop="domain">
-          <liquid-input v-model="nodeProps.domain" clearable />
+          <liquid-input v-model="formModel.domain" clearable />
         </liquid-form-item>
         <liquid-form-item :label="$t('table.nodePort').toString()" prop="port">
           <liquid-number-input
-            v-model.number="nodeProps.port"
+            v-model.number="formModel.port"
             controls-position="right"
             type="number"
           />
@@ -60,7 +60,7 @@
           prop="priority"
         >
           <liquid-number-input
-            v-model.number="nodeProps.priority"
+            v-model.number="formModel.priority"
             controls-position="right"
             type="number"
           />
@@ -70,7 +70,7 @@
           :label="$t('table.nodeType').toString()"
           prop="nodeTypeId"
         >
-          <liquid-select v-model="nodeProps.nodeTypeId">
+          <liquid-select v-model="formModel.nodeTypeId">
             <option
               :label="item.name"
               :value="item.id"
@@ -84,35 +84,30 @@
           :label="$t('table.nodeClients').toString()"
           prop="clients"
         >
-          <NodeClientSelector :node-props="nodeProps" />
+          <NodeClientSelector />
         </liquid-form-item>
 
         <XrayForm
-          :node-props="nodeProps"
-          :form-visible-props="isXray(nodeProps)"
+          :form-visible-props="isXray(formModel)"
           :handle-create-fallback-props="handleCreateFallback"
           :handle-fallback-detail-props="handleFallbackDetail"
           :delete-fallback-props="deleteFallback"
         />
 
         <TrojanGoForm
-          :node-props="nodeProps"
-          :form-visible-props="isTrojanGo(nodeProps)"
+          :form-visible-props="isTrojanGo(formModel)"
         />
 
         <HysteriaForm
-          :node-props="nodeProps"
-          :form-visible-props="isHysteria(nodeProps)"
+          :form-visible-props="isHysteria(formModel)"
         />
 
         <NaiveProxyForm
-          :node-props="nodeProps"
-          :form-visible-props="isNaiveProxy(nodeProps)"
+          :form-visible-props="isNaiveProxy(formModel)"
         />
 
         <Hysteria2Form
-          :node-props="nodeProps"
-          :form-visible-props="isHysteria2(nodeProps)"
+          :form-visible-props="isHysteria2(formModel)"
         />
       </liquid-form>
       <div slot="footer" class="dialog-footer">
@@ -126,7 +121,7 @@
           {{ $t('table.confirm') }}
         </liquid-button>
       </div>
-    </liquid-dialog>
+    </ui-dialog>
 
     <FallbackInfo
       :dialog-visible-props.sync="dialogFallbackDetailVisible"
@@ -202,12 +197,17 @@ export default {
       required: true
     }
   },
+  provide() {
+    return {
+      nodeFormModel: this.formModel
+    }
+  },
   data() {
     const validateXraySettingsEntityNetwork = (rule, value, callback) => {
       if (
-        (isXrayShadowsocksAEAD(this.nodeProps) ||
-          isXrayShadowsocks2022(this.nodeProps)) &&
-        this.nodeProps.xraySettingsEntity.network.trim().length === 0
+        (isXrayShadowsocksAEAD(this.formModel) ||
+          isXrayShadowsocks2022(this.formModel)) &&
+        this.formModel.xraySettingsEntity.network.trim().length === 0
       ) {
         callback(new Error(this.$t('valid.xraySSNetwork').toString()))
       } else {
@@ -216,9 +216,9 @@ export default {
     }
     const validateXrayStreamSettingsEntityNetwork = (rule, value, callback) => {
       if (
-        !isXrayShadowsocksAEAD(this.nodeProps) &&
-        !isXrayShadowsocks2022(this.nodeProps) &&
-        this.nodeProps.xrayStreamSettingsEntity.network.trim().length === 0
+        !isXrayShadowsocksAEAD(this.formModel) &&
+        !isXrayShadowsocks2022(this.formModel) &&
+        this.formModel.xrayStreamSettingsEntity.network.trim().length === 0
       ) {
         callback(new Error(this.$t('valid.xrayNetwork').toString()))
       } else {
@@ -231,8 +231,8 @@ export default {
       callback
     ) => {
       if (
-        isXrayStreamSettingsSecurityReality(this.nodeProps) &&
-        !this.nodeProps.xrayStreamSettingsEntity.realitySettings.dest
+        isXrayStreamSettingsSecurityReality(this.formModel) &&
+        !this.formModel.xrayStreamSettingsEntity.realitySettings.dest
       ) {
         callback(
           new Error(
@@ -250,12 +250,11 @@ export default {
       value,
       callback
     ) => {
-      console.log(this.nodeProps)
       if (
-        isXrayStreamSettingsSecurityReality(this.nodeProps) &&
-        this.nodeProps.xrayStreamSettingsEntity.realitySettings.xver !== 0 &&
-        this.nodeProps.xrayStreamSettingsEntity.realitySettings.xver !== 1 &&
-        this.nodeProps.xrayStreamSettingsEntity.realitySettings.xver !== 2
+        isXrayStreamSettingsSecurityReality(this.formModel) &&
+        this.formModel.xrayStreamSettingsEntity.realitySettings.xver !== 0 &&
+        this.formModel.xrayStreamSettingsEntity.realitySettings.xver !== 1 &&
+        this.formModel.xrayStreamSettingsEntity.realitySettings.xver !== 2
       ) {
         callback(
           new Error(
@@ -274,9 +273,9 @@ export default {
       callback
     ) => {
       if (
-        isXrayStreamSettingsSecurityReality(this.nodeProps) &&
-        (!this.nodeProps.xrayStreamSettingsEntity.realitySettings.serverNames ||
-          this.nodeProps.xrayStreamSettingsEntity.realitySettings.serverNames
+        isXrayStreamSettingsSecurityReality(this.formModel) &&
+        (!this.formModel.xrayStreamSettingsEntity.realitySettings.serverNames ||
+          this.formModel.xrayStreamSettingsEntity.realitySettings.serverNames
             .length === 0)
       ) {
         callback(
@@ -296,8 +295,8 @@ export default {
       callback
     ) => {
       if (
-        isXrayStreamSettingsSecurityReality(this.nodeProps) &&
-        !this.nodeProps.xrayStreamSettingsEntity.realitySettings.privateKey
+        isXrayStreamSettingsSecurityReality(this.formModel) &&
+        !this.formModel.xrayStreamSettingsEntity.realitySettings.privateKey
       ) {
         callback(
           new Error(
@@ -316,9 +315,9 @@ export default {
       callback
     ) => {
       if (
-        isXrayStreamSettingsSecurityReality(this.nodeProps) &&
-        (!this.nodeProps.xrayStreamSettingsEntity.realitySettings.shortIds ||
-          this.nodeProps.xrayStreamSettingsEntity.realitySettings.shortIds
+        isXrayStreamSettingsSecurityReality(this.formModel) &&
+        (!this.formModel.xrayStreamSettingsEntity.realitySettings.shortIds ||
+          this.formModel.xrayStreamSettingsEntity.realitySettings.shortIds
             .length === 0)
       ) {
         callback(
@@ -365,13 +364,14 @@ export default {
     }
     const validateNodeClients = (rule, value, callback) => {
       const selected = Array.isArray(value) ? value : []
-      if (isNaiveProxy(this.nodeProps) && selected.includes('clash-meta')) {
+      if (isNaiveProxy(this.formModel) && selected.includes('clash-meta')) {
         callback(new Error(this.$t('valid.naiveClashUnsupported').toString()))
         return
       }
       callback()
     }
     return {
+      formModel: JSON.parse(JSON.stringify(this.nodeProps)),
       fallback: {
         name: '',
         alpn: '',
@@ -1195,7 +1195,21 @@ export default {
       }
     }
   },
+  watch: {
+    dialogFormVisibleProps(visible) {
+      if (visible) this.resetFormModel()
+    }
+  },
   methods: {
+    resetFormModel() {
+      const source = JSON.parse(JSON.stringify(this.nodeProps))
+      Object.keys(this.formModel).forEach((key) => {
+        this.$delete(this.formModel, key)
+      })
+      Object.entries(source).forEach(([key, value]) => {
+        this.$set(this.formModel, key, value)
+      })
+    },
     isXray,
     isTrojanGo,
     isHysteria,
@@ -1204,11 +1218,11 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          this.nodeProps.xraySettings = handleXraySettings(this.nodeProps)
-          this.nodeProps.xrayStreamSettings = handleXrayStreamSettings(
-            this.nodeProps
+          this.formModel.xraySettings = handleXraySettings(this.formModel)
+          this.formModel.xrayStreamSettings = handleXrayStreamSettings(
+            this.formModel
           )
-          createNode(this.nodeProps).then(() => {
+          createNode(this.formModel).then(() => {
             this.getListProps()
             this.$emit('update:dialogFormVisibleProps', false)
             this.$notify({
@@ -1224,12 +1238,12 @@ export default {
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          this.nodeProps.xraySettings = handleXraySettings(this.nodeProps)
-          this.nodeProps.xrayStreamSettings = handleXrayStreamSettings(
-            this.nodeProps
+          this.formModel.xraySettings = handleXraySettings(this.formModel)
+          this.formModel.xrayStreamSettings = handleXrayStreamSettings(
+            this.formModel
           )
-          const nodePropsData = Object.assign({}, this.nodeProps)
-          updateNodeById(nodePropsData).then(() => {
+          const formModelData = Object.assign({}, this.formModel)
+          updateNodeById(formModelData).then(() => {
             this.getListProps()
             this.$emit('update:dialogFormVisibleProps', false)
             this.$notify({
@@ -1253,23 +1267,23 @@ export default {
     deleteFallback(fallback) {
       for (
         let i = 0;
-        i < this.nodeProps.xraySettingsEntity.fallbacks.length;
+        i < this.formModel.xraySettingsEntity.fallbacks.length;
         i++
       ) {
-        let nodeProps = this.nodeProps.xraySettingsEntity.fallbacks[i]
+        let formModel = this.formModel.xraySettingsEntity.fallbacks[i]
         if (
-          fallback.alpn === nodeProps.alpn &&
-          fallback.name === nodeProps.name &&
-          fallback.path === nodeProps.path &&
-          fallback.dest === nodeProps.dest &&
-          fallback.xver === nodeProps.xver
+          fallback.alpn === formModel.alpn &&
+          fallback.name === formModel.name &&
+          fallback.path === formModel.path &&
+          fallback.dest === formModel.dest &&
+          fallback.xver === formModel.xver
         ) {
-          this.nodeProps.xraySettingsEntity.fallbacks.splice(i, 1)
+          this.formModel.xraySettingsEntity.fallbacks.splice(i, 1)
         }
       }
     },
     createFallback(fallback) {
-      this.nodeProps.xraySettingsEntity.fallbacks.push(fallback)
+      this.formModel.xraySettingsEntity.fallbacks.push(fallback)
     },
     toAddNodeServer() {
       this.$router.push({ path: '/server-manage/server-list' })

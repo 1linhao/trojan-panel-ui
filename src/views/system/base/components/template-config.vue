@@ -126,12 +126,11 @@ import UploadLogo from '@/components/UploadLogo'
 import LiquidJsonEditor from '@/components/LiquidJsonEditor'
 
 export default {
-  name: 'templateConfig',
+  name: 'TemplateConfigForm',
   components: { LiquidJsonEditor, UploadLogo },
-  props: {
+  inject: {
     systemConfig: {
-      type: Object,
-      required: true
+      from: 'systemConfigModel'
     }
   },
   data() {

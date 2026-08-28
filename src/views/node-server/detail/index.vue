@@ -10,7 +10,7 @@ import { nodeServerState } from '@/api/node-server'
 import Cookies from 'js-cookie'
 
 export default {
-  name: 'index',
+  name: 'NodeServerDetailPage',
   components: { NodeServerGroup },
   data() {
     return {

@@ -94,11 +94,10 @@
 import { updateSystemById } from '@/api/system'
 
 export default {
-  name: 'email',
-  props: {
+  name: 'EmailSettingsForm',
+  inject: {
     systemConfig: {
-      type: Object,
-      required: true
+      from: 'systemConfigModel'
     }
   },
   computed: {

@@ -233,7 +233,7 @@ import { selectNodeServerList } from '@/api/node-server'
 import NodeForm from '@/views/node/list/components/NodeForm'
 
 export default {
-  name: 'index',
+  name: 'NodeListPage',
   components: {
     NodeForm,
     ExportNodeDialog,

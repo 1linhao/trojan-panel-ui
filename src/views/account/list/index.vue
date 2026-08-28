@@ -202,7 +202,7 @@
         @pagination="getList"
       />
     </ui-panel>
-    <liquid-dialog
+    <ui-dialog
       append-to-body
       :title="textMap[dialogStatus]"
       :visible.sync="dialogFormVisible"
@@ -276,7 +276,7 @@
           {{ $t('table.confirm') }}
         </liquid-button>
       </div>
-    </liquid-dialog>
+    </ui-dialog>
     <import-tip
       ref="importTip"
       :dialog-form-visible.sync="importVisible"
@@ -318,7 +318,7 @@ import BatchOperation from '@/views/account/list/compoments/BatchOperation'
 import copy from 'copy-to-clipboard'
 
 export default {
-  name: 'List',
+  name: 'AccountListPage',
   filters: {
     deletedFilter(deleted) {
       const deletedMap = {

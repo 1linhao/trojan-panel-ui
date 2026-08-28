@@ -36,10 +36,9 @@ import { isNaiveProxy } from '@/utils/node'
 
 export default {
   name: 'NodeClientSelector',
-  props: {
-    nodeProps: {
-      type: Object,
-      required: true
+  inject: {
+    nodeForm: {
+      from: 'nodeFormModel'
     }
   },
   data() {
@@ -54,29 +53,29 @@ export default {
   },
   computed: {
     showNaiveWarning() {
-      const selected = Array.isArray(this.nodeProps.clients)
-        ? this.nodeProps.clients
+      const selected = Array.isArray(this.nodeForm.clients)
+        ? this.nodeForm.clients
         : []
       return (
-        isNaiveProxy(this.nodeProps) &&
+        isNaiveProxy(this.nodeForm) &&
         (selected.includes('clash-meta') || selected.includes('v2ray'))
       )
     }
   },
   methods: {
     isClientSelected(value) {
-      return Array.isArray(this.nodeProps.clients)
-        ? this.nodeProps.clients.includes(value)
+      return Array.isArray(this.nodeForm.clients)
+        ? this.nodeForm.clients.includes(value)
         : false
     },
     toggleClient(value) {
       const selected = new Set(
-        Array.isArray(this.nodeProps.clients) ? this.nodeProps.clients : []
+        Array.isArray(this.nodeForm.clients) ? this.nodeForm.clients : []
       )
       if (selected.has(value)) selected.delete(value)
       else selected.add(value)
       this.$set(
-        this.nodeProps,
+        this.nodeForm,
         'clients',
         this.clients
           .map((client) => client.value)

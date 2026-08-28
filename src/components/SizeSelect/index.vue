@@ -20,6 +20,7 @@
 import { mapGetters } from 'vuex'
 
 export default {
+  name: 'TableSizeSelect',
   data() {
     return {
       sizeOptions: [

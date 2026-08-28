@@ -2,16 +2,16 @@
   <div v-if="formVisibleProps">
     <liquid-form-item :label="$t('table.naiveUotEnable').toString()">
       <liquid-switch
-        v-model="nodeProps.naiveUotEnable"
+        v-model="nodeForm.naiveUotEnable"
         :active-value="1"
         :inactive-value="0"
       />
     </liquid-form-item>
     <liquid-form-item
       :label="$t('table.naiveUotVersion').toString()"
-      v-if="nodeProps.naiveUotEnable === 1"
+      v-if="nodeForm.naiveUotEnable === 1"
     >
-      <liquid-select v-model="nodeProps.naiveUotVersion">
+      <liquid-select v-model="nodeForm.naiveUotVersion">
         <option label="v2" :value="2" />
         <option label="v1" :value="1" />
       </liquid-select>
@@ -27,11 +27,12 @@
 <script>
 export default {
   name: 'NaiveProxyForm',
+  inject: {
+    nodeForm: {
+      from: 'nodeFormModel'
+    }
+  },
   props: {
-    nodeProps: {
-      type: Object,
-      require: true
-    },
     formVisibleProps: {
       type: Boolean,
       require: true

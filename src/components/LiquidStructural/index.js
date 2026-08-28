@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import { UiDialog } from '@tp-ui/components-vue2'
 
 const px = (value) => {
   if (value === undefined || value === null || value === '') return undefined
@@ -191,10 +190,6 @@ export const LiquidFormItem = {
   }
 }
 
-// Compatibility Adapter: existing business views keep the LiquidDialog name
-// while modal lifecycle and animation anatomy live in the shared Module.
-export const LiquidDialog = { ...UiDialog, name: 'LiquidDialog' }
-
 export const LiquidCard = {
   name: 'LiquidCard',
   functional: true,
@@ -249,7 +244,7 @@ export const LiquidBreadcrumbItem = { name: 'LiquidBreadcrumbItem', functional: 
 
 export const structuralComponents = {
   LiquidBreadcrumb, LiquidBreadcrumbItem, LiquidCard, LiquidCol,
-  LiquidDescriptions, LiquidDescriptionsItem, LiquidDialog, LiquidDropdown,
+  LiquidDescriptions, LiquidDescriptionsItem, LiquidDropdown,
   LiquidDropdownItem, LiquidDropdownMenu, LiquidForm, LiquidFormItem,
   LiquidMenu, LiquidMenuItem, LiquidRow, LiquidScrollbar, LiquidSubmenu,
   LiquidTable, LiquidTableColumn, LiquidTooltip

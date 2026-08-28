@@ -66,6 +66,7 @@ import LiquidThemeToggle from '@/components/LiquidThemeToggle'
 import checkPermission from '@/utils/permission' // 权限判断指令
 
 export default {
+  name: 'LayoutNavbar',
   components: {
     Breadcrumb,
     Hamburger,

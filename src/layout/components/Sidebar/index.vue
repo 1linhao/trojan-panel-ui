@@ -27,6 +27,7 @@ import Logo from './Logo'
 import SidebarItem from './SidebarItem'
 
 export default {
+  name: 'LayoutSidebar',
   components: { SidebarItem, Logo },
   computed: {
     ...mapGetters(['permission_routes', 'sidebar']),

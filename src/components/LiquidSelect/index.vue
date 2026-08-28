@@ -398,6 +398,8 @@ export default {
   font: inherit;
   text-align: left;
   cursor: pointer;
+  transition: color var(--ui-motion-fast) var(--ui-motion-easing-standard),
+    background-color var(--ui-motion-fast) var(--ui-motion-easing-standard);
 }
 .liquid-select__option:hover:not(:disabled) {
   color: var(--ink);
@@ -411,6 +413,11 @@ export default {
 .liquid-select__option:disabled {
   cursor: not-allowed;
   opacity: 0.45;
+}
+@media (prefers-reduced-motion: reduce) {
+  .liquid-select__option {
+    transition-duration: 1ms;
+  }
 }
 .liquid-select__empty {
   padding: 14px 10px;

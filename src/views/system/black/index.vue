@@ -59,7 +59,7 @@
         @pagination="getList"
       />
     </ui-panel>
-    <liquid-dialog
+    <ui-dialog
       append-to-body
       :title="$t('table.add')"
       :visible.sync="dialogFormVisible"
@@ -82,7 +82,7 @@
           {{ $t('table.confirm') }}
         </liquid-button>
       </div>
-    </liquid-dialog>
+    </ui-dialog>
   </div>
 </template>
 
@@ -98,7 +98,7 @@ import {
 import checkPermission from '@/utils/permission' // 权限判断指令
 
 export default {
-  name: 'Black',
+  name: 'BlacklistPage',
   components: { Pagination },
   data() {
     const validateIp = (rule, value, callback) => {

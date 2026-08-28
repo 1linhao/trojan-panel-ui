@@ -13,10 +13,10 @@
           {{ tab.label }}
         </button>
       </div>
-      <account v-if="activeName === 'account-config'" :system-config="systemConfig" />
-      <email v-else-if="activeName === 'config-email'" :system-config="systemConfig" />
+      <account v-if="activeName === 'account-config'" />
+      <email v-else-if="activeName === 'config-email'" />
       <web-file v-else-if="activeName === 'config-web-file'" />
-      <template-config v-else :system-config="systemConfig" />
+      <template-config v-else />
     </ui-panel>
   </div>
 </template>
@@ -29,8 +29,13 @@ import TemplateConfig from './components/template-config'
 import { selectSystemByName } from '@/api/system'
 
 export default {
-  name: 'index',
+  name: 'SystemSettingsPage',
   components: { Account, WebFile, Email, TemplateConfig },
+  provide() {
+    return {
+      systemConfigModel: this.systemConfig
+    }
+  },
   data() {
     return {
       activeName: 'account-config',
@@ -76,7 +81,7 @@ export default {
   methods: {
     selectDate() {
       selectSystemByName().then((response) => {
-        this.systemConfig = response.data
+        Object.assign(this.systemConfig, response.data)
         this.systemConfig.singBoxTunEntity = JSON.parse(
           this.systemConfig.singBoxTun
         )

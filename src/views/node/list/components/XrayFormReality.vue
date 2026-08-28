@@ -5,7 +5,7 @@
       prop="xrayStreamSettingsEntity.realitySettings.dest"
     >
       <liquid-input
-        v-model="nodeProps.xrayStreamSettingsEntity.realitySettings.dest"
+        v-model="nodeForm.xrayStreamSettingsEntity.realitySettings.dest"
       />
     </liquid-form-item>
     <liquid-form-item
@@ -13,7 +13,7 @@
       prop="xrayStreamSettingsEntity.realitySettings.xver"
     >
       <liquid-number-input
-        v-model="nodeProps.xrayStreamSettingsEntity.realitySettings.xver"
+        v-model="nodeForm.xrayStreamSettingsEntity.realitySettings.xver"
         controls-position="right"
         type="number"
       />
@@ -24,7 +24,10 @@
     >
       <EditTag
         :dynamic-tags-props="
-          nodeProps.xrayStreamSettingsEntity.realitySettings.serverNames
+          nodeForm.xrayStreamSettingsEntity.realitySettings.serverNames
+        "
+        @update:dynamic-tags-props="
+          nodeForm.xrayStreamSettingsEntity.realitySettings.serverNames = $event
         "
       />
     </liquid-form-item>
@@ -34,7 +37,7 @@
       prop="fingerprint"
     >
       <liquid-select
-        v-model="nodeProps.xrayStreamSettingsEntity.realitySettings.fingerprint"
+        v-model="nodeForm.xrayStreamSettingsEntity.realitySettings.fingerprint"
         controls-position="right"
       >
         <option
@@ -47,14 +50,14 @@
     </liquid-form-item>
 
     <liquid-form-item label="publicKey" prop="realityPbk">
-      <liquid-input v-model="nodeProps.realityPbk" />
+      <liquid-input v-model="nodeForm.realityPbk" />
     </liquid-form-item>
     <liquid-form-item
       label="privateKey"
       prop="xrayStreamSettingsEntity.realitySettings.privateKey"
     >
       <liquid-input
-        v-model="nodeProps.xrayStreamSettingsEntity.realitySettings.privateKey"
+        v-model="nodeForm.xrayStreamSettingsEntity.realitySettings.privateKey"
       />
     </liquid-form-item>
     <liquid-form-item
@@ -63,7 +66,10 @@
     >
       <EditTag
         :dynamic-tags-props="
-          nodeProps.xrayStreamSettingsEntity.realitySettings.shortIds
+          nodeForm.xrayStreamSettingsEntity.realitySettings.shortIds
+        "
+        @update:dynamic-tags-props="
+          nodeForm.xrayStreamSettingsEntity.realitySettings.shortIds = $event
         "
         :value-can-empty="true"
       />
@@ -73,7 +79,7 @@
       prop="xrayStreamSettingsEntity.realitySettings.spiderX"
     >
       <liquid-input
-        v-model="nodeProps.xrayStreamSettingsEntity.realitySettings.spiderX"
+        v-model="nodeForm.xrayStreamSettingsEntity.realitySettings.spiderX"
       />
     </liquid-form-item>
   </div>
@@ -88,11 +94,12 @@ export default {
   components: {
     EditTag
   },
+  inject: {
+    nodeForm: {
+      from: 'nodeFormModel'
+    }
+  },
   props: {
-    nodeProps: {
-      type: Object,
-      require: true
-    },
     formVisibleProps: {
       type: Boolean,
       require: true

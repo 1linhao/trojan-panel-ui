@@ -29,7 +29,7 @@ import { Message } from '@/utils/liquid-feedback'
 import { uploadLogo } from '@/api/system'
 
 export default {
-  name: 'index',
+  name: 'LogoUploader',
   data() {
     return {
       fileList: [{ name: 'logo.png', url: '/api/image/logo' }],

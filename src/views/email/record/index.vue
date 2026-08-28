@@ -79,7 +79,7 @@ import { timeStampToDate } from '@/utils'
 import { selectEmailRecordPage } from '@/api/email-record'
 
 export default {
-  name: 'Record',
+  name: 'EmailRecordPage',
   components: { Pagination },
 
   filters: {

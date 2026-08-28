@@ -1,5 +1,5 @@
 <template>
-  <liquid-dialog
+  <ui-dialog
     append-to-body
     :title="$t('exportNode.title').toString()"
     :visible.sync="dialogVisible"
@@ -45,7 +45,7 @@
     <div v-if="qrCodeSrc" class="qrcode">
       <img :src="qrCodeSrc" :alt="$t('exportNode.qrcode').toString()" />
     </div>
-  </liquid-dialog>
+  </ui-dialog>
 </template>
 
 <script>
@@ -204,13 +204,13 @@ export default {
 }
 
 @media (max-width: 640px) {
-  .liquid-dialog.export-node-dialog {
+  .tp-ui-dialog.export-node-dialog {
     align-self: flex-start;
     max-height: calc(100dvh - 20px);
     margin-top: max(10px, env(safe-area-inset-top));
   }
 
-  .liquid-dialog.export-node-dialog .liquid-dialog__body {
+  .tp-ui-dialog.export-node-dialog .tp-ui-dialog__body {
     max-height: calc(100dvh - 152px);
   }
 }

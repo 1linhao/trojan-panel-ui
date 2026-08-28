@@ -5,7 +5,7 @@
         prop="xrayProtocol"
     >
       <liquid-select
-          v-model="nodeProps.xrayProtocol"
+          v-model="nodeForm.xrayProtocol"
           controls-position="right"
           @change="xrayProtocolChange"
       >
@@ -19,10 +19,10 @@
     </liquid-form-item>
     <liquid-form-item
         :label="$t('table.xrayUotEnable').toString()"
-        v-if="isXrayShadowsocks(nodeProps)"
+        v-if="isXrayShadowsocks(nodeForm)"
     >
       <liquid-switch
-          v-model="nodeProps.xrayUotEnable"
+          v-model="nodeForm.xrayUotEnable"
           :active-text="$t('table.enable').toString()"
           :inactive-text="$t('table.disable').toString()"
           :active-value="1"
@@ -32,19 +32,19 @@
     </liquid-form-item>
     <liquid-form-item
         :label="$t('table.xrayUotVersion').toString()"
-        v-if="isXrayShadowsocks(nodeProps) && nodeProps.xrayUotEnable === 1"
+        v-if="isXrayShadowsocks(nodeForm) && nodeForm.xrayUotEnable === 1"
     >
-      <liquid-select v-model="nodeProps.xrayUotVersion">
+      <liquid-select v-model="nodeForm.xrayUotVersion">
         <option :value="1" label="1" />
         <option :value="2" label="2" />
       </liquid-select>
     </liquid-form-item>
     <liquid-form-item
         :label="$t('table.xrayXudpEnable').toString()"
-        v-if="isXrayVless(nodeProps) || isXrayVmess(nodeProps)"
+        v-if="isXrayVless(nodeForm) || isXrayVmess(nodeForm)"
     >
       <liquid-switch
-          v-model="nodeProps.xrayXudpEnable"
+          v-model="nodeForm.xrayXudpEnable"
           :active-text="$t('table.enable').toString()"
           :inactive-text="$t('table.disable').toString()"
           :active-value="1"
@@ -53,10 +53,10 @@
     </liquid-form-item>
     <liquid-form-item
         :label="$t('table.xrayMuxEnable').toString()"
-        v-if="isXrayVless(nodeProps) || isXrayVmess(nodeProps) || isXrayTrojan(nodeProps)"
+        v-if="isXrayVless(nodeForm) || isXrayVmess(nodeForm) || isXrayTrojan(nodeForm)"
     >
       <liquid-switch
-          v-model="nodeProps.xrayMuxEnable"
+          v-model="nodeForm.xrayMuxEnable"
           :active-text="$t('table.enable').toString()"
           :inactive-text="$t('table.disable').toString()"
           :active-value="1"
@@ -67,11 +67,11 @@
         :label="$t('table.xrayStreamSettingsNetwork').toString()"
         prop="xrayStreamSettingsEntity.network"
         v-if="
-        !(isXrayShadowsocksAEAD(nodeProps) || isXrayShadowsocks2022(nodeProps))
+        !(isXrayShadowsocksAEAD(nodeForm) || isXrayShadowsocks2022(nodeForm))
       "
     >
       <liquid-select
-          v-model="nodeProps.xrayStreamSettingsEntity.network"
+          v-model="nodeForm.xrayStreamSettingsEntity.network"
           controls-position="right"
           @change="xrayStreamSettingsNetworkChange"
       >
@@ -85,17 +85,16 @@
     </liquid-form-item>
 
     <XrayFormWebSocket
-        :form-visible-props="isXrayWs(nodeProps) && !isXrayShadowsocks(nodeProps)"
-        :node-props="nodeProps"
+        :form-visible-props="isXrayWs(nodeForm) && !isXrayShadowsocks(nodeForm)"
     />
 
     <liquid-form-item
         :label="$t('table.xrayStreamSettingsSecurity').toString()"
         prop="xrayStreamSettingsEntity.security"
-        v-if="!isXrayShadowsocks(nodeProps)"
+        v-if="!isXrayShadowsocks(nodeForm)"
     >
       <liquid-select
-          v-model="nodeProps.xrayStreamSettingsEntity.security"
+          v-model="nodeForm.xrayStreamSettingsEntity.security"
           controls-position="right"
           @change="xrayStreamSettingsSecurityChange"
       >
@@ -109,21 +108,19 @@
     </liquid-form-item>
 
     <XrayFormTls
-        :form-visible-props="isXrayStreamSettingsSecurityTls(nodeProps)"
-        :node-props="nodeProps"
+        :form-visible-props="isXrayStreamSettingsSecurityTls(nodeForm)"
     />
 
     <XrayFormReality
-        :form-visible-props="isXrayStreamSettingsSecurityReality(nodeProps)"
-        :node-props="nodeProps"
+        :form-visible-props="isXrayStreamSettingsSecurityReality(nodeForm)"
     />
 
     <liquid-form-item
         :label="$t('table.xrayFlow').toString()"
         prop="xrayFlow"
-        v-if="showXrayFlow(nodeProps)"
+        v-if="showXrayFlow(nodeForm)"
     >
-      <liquid-select v-model="nodeProps.xrayFlow">
+      <liquid-select v-model="nodeForm.xrayFlow">
         <option
             :label="item"
             :value="item"
@@ -136,12 +133,12 @@
         :label="$t('table.xraySSMethod').toString()"
         prop="xraySSMethod"
         v-if="
-        isXrayShadowsocks(nodeProps) ||
-        isXrayShadowsocksAEAD(nodeProps) ||
-        isXrayShadowsocks2022(nodeProps)
+        isXrayShadowsocks(nodeForm) ||
+        isXrayShadowsocksAEAD(nodeForm) ||
+        isXrayShadowsocks2022(nodeForm)
       "
     >
-      <liquid-select v-model="nodeProps.xraySSMethod">
+      <liquid-select v-model="nodeForm.xraySSMethod">
         <option
             :label="item"
             :value="item"
@@ -154,12 +151,12 @@
         :label="$t('table.xraySSNetwork').toString()"
         prop="xraySettingsEntity.network"
         v-if="
-        isXrayShadowsocksAEAD(nodeProps) ||
-        isXrayShadowsocks2022(nodeProps)
+        isXrayShadowsocksAEAD(nodeForm) ||
+        isXrayShadowsocks2022(nodeForm)
       "
     >
       <liquid-select
-          v-model="nodeProps.xraySettingsEntity.network"
+          v-model="nodeForm.xraySettingsEntity.network"
           controls-position="right"
       >
         <option
@@ -173,10 +170,10 @@
     <liquid-form-item
         :label="$t('table.xrayFallbacks').toString()"
         prop="xraySettingsEntity.fallbacks"
-        v-if="showFallback(nodeProps)"
+        v-if="showFallback(nodeForm)"
     >
       <liquid-tag
-          v-for="(item, index) in nodeProps.xraySettingsEntity.fallbacks"
+          v-for="(item, index) in nodeForm.xraySettingsEntity.fallbacks"
           :key="index"
           :disable-transitions="true"
           type="default"
@@ -196,19 +193,19 @@
           @click="handleCreateFallbackProps"
       ></liquid-button>
     </liquid-form-item>
-    <liquid-form-item :label="$t('table.xraySocksUser').toString()" prop="xraySettingsEntity.accounts[0].user" v-if="isXraySocks(nodeProps)">
-      <liquid-input v-model="nodeProps.xraySettingsEntity.accounts[0].user" />
+    <liquid-form-item :label="$t('table.xraySocksUser').toString()" prop="xraySettingsEntity.accounts[0].user" v-if="isXraySocks(nodeForm)">
+      <liquid-input v-model="nodeForm.xraySettingsEntity.accounts[0].user" />
     </liquid-form-item>
-    <liquid-form-item :label="$t('table.xraySocksPass').toString()" prop="xraySettingsEntity.accounts[0].pass" v-if="isXraySocks(nodeProps)">
-      <liquid-input v-model="nodeProps.xraySettingsEntity.accounts[0].pass" />
+    <liquid-form-item :label="$t('table.xraySocksPass').toString()" prop="xraySettingsEntity.accounts[0].pass" v-if="isXraySocks(nodeForm)">
+      <liquid-input v-model="nodeForm.xraySettingsEntity.accounts[0].pass" />
     </liquid-form-item>
     <liquid-form-item
         :label="$t('table.xraySocksUdp').toString()"
         prop="xraySettingsEntity.udp"
-        v-if="isXraySocks(nodeProps)"
+        v-if="isXraySocks(nodeForm)"
     >
       <liquid-switch
-          v-model="nodeProps.xraySettingsEntity.udp"
+          v-model="nodeForm.xraySettingsEntity.udp"
           :active-text="$t('table.enable').toString()"
           :inactive-text="$t('table.disable').toString()"
           :active-value="true"
@@ -245,10 +242,6 @@ export default {
     XrayFormReality,
   },
   props: {
-    nodeProps: {
-      type: Object,
-      require: true
-    },
     formVisibleProps: {
       type: Boolean,
       require: true
@@ -266,13 +259,18 @@ export default {
       required: true
     }
   },
+  inject: {
+    nodeForm: {
+      from: 'nodeFormModel'
+    }
+  },
   computed: {
     xrayStreamSettingsSecuritys() {
       let securitys = ['none', 'tls']
-      if (isXrayVless(this.nodeProps)) {
+      if (isXrayVless(this.nodeForm)) {
         securitys.push('reality')
       }
-      if (isXrayTrojan(this.nodeProps)) {
+      if (isXrayTrojan(this.nodeForm)) {
         for (let i = 0; i < securitys.length; i++) {
           if (securitys[i] === 'none') {
             securitys.splice(i, 1)
@@ -294,9 +292,8 @@ export default {
         // 'quic',
         // 'grpc'
       ]
-      if (this.isXrayShadowsocks(this.nodeProps) ||
-          this.isXraySocks(this.nodeProps)) {
-        this.nodeProps.xrayStreamSettingsEntity.network = 'tcp'
+      if (this.isXrayShadowsocks(this.nodeForm) ||
+          this.isXraySocks(this.nodeForm)) {
         return ['tcp']
       } else {
         return xrayStreamSettingsNetworks
@@ -338,28 +335,29 @@ export default {
     isXrayStreamSettingsSecurityTls,
     isXrayStreamSettingsSecurityReality,
     xrayProtocolChange() {
-      if (isXrayVless(this.nodeProps)) {
-        this.nodeProps.xrayStreamSettingsEntity.security = 'reality'
-      } else if (isXrayShadowsocks(this.nodeProps) || isXraySocks(this.nodeProps)) {
-        this.nodeProps.xrayStreamSettingsEntity.security = 'none'
+      if (isXrayVless(this.nodeForm)) {
+        this.nodeForm.xrayStreamSettingsEntity.security = 'reality'
+      } else if (isXrayShadowsocks(this.nodeForm) || isXraySocks(this.nodeForm)) {
+        this.nodeForm.xrayStreamSettingsEntity.security = 'none'
+        this.nodeForm.xrayStreamSettingsEntity.network = 'tcp'
       } else {
-        this.nodeProps.xrayStreamSettingsEntity.security = 'tls'
+        this.nodeForm.xrayStreamSettingsEntity.security = 'tls'
       }
     },
     xrayStreamSettingsNetworkChange() {
-      if (this.nodeProps.xrayStreamSettingsEntity.network === 'ws') {
-        this.nodeProps.xrayStreamSettingsEntity.security = 'tls'
+      if (this.nodeForm.xrayStreamSettingsEntity.network === 'ws') {
+        this.nodeForm.xrayStreamSettingsEntity.security = 'tls'
       }
     },
     xrayStreamSettingsSecurityChange() {
       if (
-          isXrayVless(this.nodeProps) &&
-          (this.nodeProps.xrayStreamSettingsEntity.security === 'tls' ||
-              this.nodeProps.xrayStreamSettingsEntity.security === 'reality')
+          isXrayVless(this.nodeForm) &&
+          (this.nodeForm.xrayStreamSettingsEntity.security === 'tls' ||
+              this.nodeForm.xrayStreamSettingsEntity.security === 'reality')
       ) {
-        this.nodeProps.xrayFlow = 'xtls-rprx-vision'
+        this.nodeForm.xrayFlow = 'xtls-rprx-vision'
       } else {
-        this.nodeProps.xrayFlow = 'none'
+        this.nodeForm.xrayFlow = 'none'
       }
     }
   }

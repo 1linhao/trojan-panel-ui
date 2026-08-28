@@ -37,7 +37,7 @@
 
 <script>
 export default {
-  name: 'Page404',
+  name: 'NotFoundPage',
   computed: {
     message() {
       return ''

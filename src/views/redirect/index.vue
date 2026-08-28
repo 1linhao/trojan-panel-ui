@@ -1,5 +1,6 @@
 <script>
 export default {
+  name: 'RouteRedirectPage',
   created() {
     const { params, query } = this.$route
     const { path } = params

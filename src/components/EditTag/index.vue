@@ -2,7 +2,7 @@
   <div class="edit-tag-list">
     <liquid-tag
       :key="tag"
-      v-for="tag in dynamicTagsProps"
+      v-for="tag in tags"
       class="edit-tag-item"
       closable
       @close="handleClose(tag)"
@@ -34,10 +34,12 @@
 import { Message } from '@/utils/liquid-feedback'
 
 export default {
+  name: 'EditableTagList',
   data() {
     return {
       inputVisible: false,
-      inputValue: ''
+      inputValue: '',
+      tags: [...this.dynamicTagsProps]
     }
   },
   props: {
@@ -51,9 +53,18 @@ export default {
       default: false
     }
   },
+  watch: {
+    dynamicTagsProps(value) {
+      this.tags = [...value]
+    }
+  },
   methods: {
+    updateTags(tags) {
+      this.tags = tags
+      this.$emit('update:dynamicTagsProps', tags)
+    },
     handleClose(tag) {
-      this.dynamicTagsProps.splice(this.dynamicTagsProps.indexOf(tag), 1)
+      this.updateTags(this.tags.filter((item) => item !== tag))
     },
 
     showInput() {
@@ -66,8 +77,8 @@ export default {
     handleInputConfirm() {
       let inputValue = this.inputValue
       if ((this.valueCanEmpty && inputValue === '') || inputValue) {
-        if (this.dynamicTagsProps.indexOf(inputValue) === -1) {
-          this.dynamicTagsProps.push(inputValue)
+        if (this.tags.indexOf(inputValue) === -1) {
+          this.updateTags([...this.tags, inputValue])
         } else {
           Message({
             message: this.$t('confirm.alreadyExists').toString(),

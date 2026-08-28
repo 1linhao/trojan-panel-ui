@@ -1,5 +1,5 @@
 <template>
-  <liquid-dialog
+  <ui-dialog
     append-to-body
     :title="textMap[dialogStatus]"
     :visible="dialogVisible"
@@ -114,7 +114,7 @@
         {{ $t('table.confirm') }}
       </liquid-button>
     </div>
-  </liquid-dialog>
+  </ui-dialog>
 </template>
 
 <script>

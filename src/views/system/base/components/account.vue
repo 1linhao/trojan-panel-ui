@@ -76,11 +76,10 @@
 import { updateSystemById } from '@/api/system'
 
 export default {
-  name: 'account',
-  props: {
+  name: 'AccountSettingsForm',
+  inject: {
     systemConfig: {
-      type: Object,
-      required: true
+      from: 'systemConfigModel'
     }
   },
   computed: {

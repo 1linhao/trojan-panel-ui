@@ -211,7 +211,7 @@ export const UiDialog = {
     return h(
       'div',
       {
-        class: ['tp-ui-dialog-layer', 'liquid-dialog-layer'],
+        class: 'tp-ui-dialog-layer',
         attrs: {
           'data-ui-motion-role': this.motionRole,
           'data-ui-motion-key': this.motionKey || null
@@ -223,7 +223,7 @@ export const UiDialog = {
           'section',
           {
             ref: 'dialog',
-            class: ['tp-ui-dialog', 'liquid-dialog', this.customClass],
+            class: ['tp-ui-dialog', this.customClass],
             style: {
               width,
               viewTransitionName: name
@@ -241,20 +241,20 @@ export const UiDialog = {
             h(
               'header',
               {
-                class: ['tp-ui-dialog__header', 'liquid-dialog__header'],
+                class: 'tp-ui-dialog__header',
                 attrs: { 'data-ui-part': 'header' }
               },
               [
                 h(
                   'span',
-                  { class: 'liquid-dialog__title' },
+                  { class: 'tp-ui-dialog__title' },
                   [String(this.title == null ? '' : this.title)]
                 ),
                 this.showClose
                   ? h(
                       'button',
                       {
-                        class: 'liquid-dialog__close',
+                        class: 'tp-ui-dialog__close',
                         attrs: { type: 'button', 'aria-label': '关闭' },
                         on: { click: this.close }
                       },
@@ -266,7 +266,7 @@ export const UiDialog = {
             h(
               'div',
               {
-                class: ['tp-ui-dialog__body', 'liquid-dialog__body'],
+                class: 'tp-ui-dialog__body',
                 attrs: { 'data-ui-part': 'body' }
               },
               this.$slots.default
@@ -275,7 +275,7 @@ export const UiDialog = {
               ? h(
                   'footer',
                   {
-                    class: ['tp-ui-dialog__footer', 'liquid-dialog__footer'],
+                    class: 'tp-ui-dialog__footer',
                     attrs: { 'data-ui-part': 'footer' }
                   },
                   this.$slots.footer
