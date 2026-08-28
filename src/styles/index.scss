@@ -6,6 +6,8 @@
 @import './liquid-glass.scss';
 @import './liquid-structural.scss';
 @import './prototype-runtime.scss';
+@import '~@tp-ui/motion-native/motion.css';
+@import '~@tp-ui/components-vue2/button-interactions.css';
 
 body {
   height: 100%;

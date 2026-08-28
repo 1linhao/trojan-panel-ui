@@ -212,7 +212,6 @@ export default {
   color: var(--accent);
   border-color: color-mix(in srgb, var(--accent) 48%, var(--rim));
   background: var(--glass-strong);
-  transform: translateY(-1px);
 }
 
 .liquid-number-input__step:focus-visible {

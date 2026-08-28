@@ -8,6 +8,10 @@ function resolve(dir) {
 
 const name = defaultSettings.title || 'Trojan Panel'
 const port = process.env.port || 8888
+const uiAliases = {
+  '@tp-ui/components-vue2': resolve('packages/ui-components-vue2/src'),
+  '@tp-ui/motion-native': resolve('packages/ui-motion-native/src')
+}
 module.exports = {
   publicPath: '/',
   outputDir: 'dist',
@@ -42,6 +46,7 @@ module.exports = {
           },
           resolve: {
             alias: {
+              ...uiAliases,
               '@': resolve('src')
             }
           },
@@ -63,6 +68,7 @@ module.exports = {
           name: name,
           resolve: {
             alias: {
+              ...uiAliases,
               '@': resolve('src')
             }
           }

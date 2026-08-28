@@ -1,3 +1,11 @@
+import { BUTTON_INTERACTION } from './button-interactions.js'
+
+export {
+  BUTTON_INTERACTION,
+  createButtonInteractionController,
+  createCssButtonInteractionAdapter
+} from './button-interactions.js'
+
 function semanticData(component, overrides = {}) {
   const state = component.disabled
     ? 'disabled'
@@ -37,6 +45,7 @@ export const UiButton = {
         attrs: {
           ...this.$attrs,
           ...semanticData(this),
+          [BUTTON_INTERACTION.attribute]: BUTTON_INTERACTION.variant,
           type: this.type,
           disabled: this.disabled || this.loading,
           'aria-busy': this.loading ? 'true' : null

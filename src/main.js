@@ -11,6 +11,7 @@ import { initializeTheme } from '@/utils/theme'
 import LiquidLoading from '@/directives/liquid-loading'
 import { structuralComponents } from '@/components/LiquidStructural'
 import { Message, MessageBox, Notification } from '@/utils/liquid-feedback'
+import { installUiInteractions } from '@/adapters/ui-interactions'
 
 const LiquidNumberInput = () =>
   import(/* webpackChunkName: "liquid-controls" */ '@/components/LiquidNumberInput')
@@ -47,6 +48,7 @@ Vue.prototype.$prompt = MessageBox.prompt
 Vue.prototype.$notify = Notification
 
 initializeTheme()
+installUiInteractions()
 
 new Vue({
   el: '#app',

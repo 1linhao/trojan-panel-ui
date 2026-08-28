@@ -1,6 +1,7 @@
 <template>
   <button
     class="liquid-button"
+    data-ui-interaction="nav-lift"
     :class="[`is-${type}`, { 'is-icon-only': icon && !$slots.default }]"
     type="button"
     :disabled="disabled || loading"
@@ -43,18 +44,13 @@ export default {
   font-size: 12.5px;
   font-weight: 650;
   cursor: pointer;
-  transition: color 160ms ease, border-color 160ms ease,
-    background 160ms ease, transform 160ms ease;
+  transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
 }
 @media (hover: hover) and (pointer: fine) {
   .liquid-button:hover:not(:disabled) {
     color: var(--accent);
     background: var(--glass-strong);
-    transform: translateY(-1px);
   }
-}
-.liquid-button:active:not(:disabled) {
-  transform: translateY(0) scale(0.98);
 }
 .liquid-button.is-primary {
   color: var(--on-accent);

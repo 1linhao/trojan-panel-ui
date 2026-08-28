@@ -29,6 +29,8 @@
 
   --dur: 0.32s;
   --spring: cubic-bezier(0.32, 0.72, 0.25, 1);
+  --ui-button-interaction-shadow: var(--shadow-soft),
+    inset 0 1px 0 var(--spec-soft);
 }
 
 [data-theme='light'] {
@@ -567,11 +569,7 @@ h3 {
 }
 
 .cap:hover {
-  transform: translateY(-1px);
   background: var(--glass-strong);
-}
-.cap:active {
-  transform: translateY(0) scale(0.97);
 }
 
 .cap.primary {
@@ -658,7 +656,6 @@ h3 {
 .icon-btn:hover {
   background: var(--glass-soft);
   color: var(--ink);
-  transform: translateY(-1px);
 }
 .icon-btn.danger:hover {
   color: var(--bad-fg);
@@ -1295,8 +1292,6 @@ h3 {
 
 .nav-item:hover {
   background: var(--glass-soft);
-  transform: translateY(-3px);
-  box-shadow: var(--shadow-soft), inset 0 1px 0 var(--spec-soft);
 }
 
 .nav-item.on {
@@ -2218,12 +2213,6 @@ h3 {
 .prototype-mobile-nav .prototype-mobile-icon {
   width: 24px !important;
   height: 24px !important;
-}
-@media (hover: hover) and (pointer: fine) {
-  .prototype-mobile-nav button:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow-soft), inset 0 1px 0 var(--spec-soft);
-  }
 }
 .prototype-mobile-nav .mobile-logout {
   color: var(--bad-fg);

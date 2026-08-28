@@ -96,6 +96,21 @@ async function main() {
         'login form'
       )
       const password = await find('input[autocomplete="current-password"]')
+      const loginButtonCoverage = await execute(
+        "const items=[...document.querySelectorAll('button,[role=button]')]; return {total:items.length,covered:items.filter((item)=>item.dataset.uiInteraction==='nav-lift').length,motion:document.documentElement.dataset.uiMotion,transition:getComputedStyle(document.querySelector('.auth-submit.primary')).transitionProperty}"
+      )
+      if (
+        !loginButtonCoverage.total ||
+        loginButtonCoverage.covered !== loginButtonCoverage.total ||
+        !loginButtonCoverage.transition.includes('transform') ||
+        !['full', 'reduced'].includes(loginButtonCoverage.motion)
+      ) {
+        throw new Error(
+          `Login button interaction coverage failed: ${JSON.stringify(
+            loginButtonCoverage
+          )}`
+        )
+      }
       await command(`/element/${elementId(username)}/value`, 'POST', {
         text: 'sysadmin'
       })
@@ -117,6 +132,19 @@ async function main() {
         )
       )
         throw new Error('UI displayed an error message')
+      const dashboardButtonCoverage = await execute(
+        "const items=[...document.querySelectorAll('button,[role=button]')]; return {total:items.length,covered:items.filter((item)=>item.dataset.uiInteraction==='nav-lift').length}"
+      )
+      if (
+        !dashboardButtonCoverage.total ||
+        dashboardButtonCoverage.covered !== dashboardButtonCoverage.total
+      ) {
+        throw new Error(
+          `Dashboard button interaction coverage failed: ${JSON.stringify(
+            dashboardButtonCoverage
+          )}`
+        )
+      }
       await command('/window/rect', 'POST', { width: 390, height: 844 })
       await waitFor(
         () =>
@@ -128,7 +156,7 @@ async function main() {
       const screenshot = await command('/screenshot')
       writeFileSync(screenshotPath, Buffer.from(screenshot, 'base64'))
       process.stdout.write(
-        `PASS live stack login, dashboard, responsive navigation; screenshot ${screenshotPath}\n`
+        `PASS live stack login, dashboard, ${dashboardButtonCoverage.covered} interactive buttons, responsive navigation; screenshot ${screenshotPath}\n`
       )
     } finally {
       await request(base, 'DELETE').catch(() => {})

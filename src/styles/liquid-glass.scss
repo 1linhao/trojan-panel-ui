@@ -409,7 +409,7 @@ body {
   background: var(--glass-input);
   box-shadow: inset 0 1px 0 var(--spec), var(--shadow-soft);
   font-weight: 650;
-  transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+  transition: box-shadow 0.18s ease, background 0.18s ease;
 }
 
 #app .liquid-button:focus-visible {
@@ -421,11 +421,7 @@ body {
     color: var(--accent);
     border-color: var(--accent);
     background: var(--glass-strong);
-    transform: translateY(-1px);
   }
-}
-#app .liquid-button:active {
-  transform: translateY(0) scale(0.98);
 }
 
 #app .liquid-button--primary {
@@ -812,7 +808,6 @@ body {
 
 .liquid-theme-toggle:hover {
   color: var(--accent);
-  transform: translateY(-1px);
 }
 
 #app .liquid-breadcrumb__inner,

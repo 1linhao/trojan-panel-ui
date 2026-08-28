@@ -37,10 +37,6 @@
   color: var(--ui-on-accent);
 }
 
-.tp-ui-button:not(:disabled):active {
-  transform: translateY(1px);
-}
-
 .tp-ui-button:disabled,
 .tp-ui-input:disabled {
   cursor: not-allowed;
