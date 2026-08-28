@@ -111,6 +111,51 @@ test('button controller preserves an explicit animation Adapter choice', () => {
   assert.equal(attributes.get('data-ui-interaction'), 'none')
 })
 
+test('button controller keeps hover across the lift gap until resting bounds are left', () => {
+  const attributes = new Map()
+  const handlers = new Map()
+  const background = { closest: () => null }
+  const control = {
+    matches: (selector) => selector !== ':disabled',
+    closest: () => control,
+    querySelectorAll: () => [],
+    hasAttribute: (name) => attributes.has(name),
+    setAttribute: (name, value) => attributes.set(name, value),
+    removeAttribute: (name) => attributes.delete(name),
+    getAttribute: (name) => attributes.get(name),
+    getBoundingClientRect: () => ({
+      left: 0,
+      right: 100,
+      top: 0,
+      bottom: 40
+    })
+  }
+  const root = {
+    matches: () => false,
+    querySelectorAll: () => [control],
+    addEventListener: (name, handler) => handlers.set(name, handler),
+    removeEventListener: (name) => handlers.delete(name)
+  }
+  const controller = createButtonInteractionController({
+    root,
+    observerFactory: null
+  }).mount()
+
+  handlers.get('pointerover')({ target: control, clientX: 50, clientY: 39 })
+  assert.equal(attributes.get('data-ui-hovered'), 'true')
+
+  handlers.get('pointermove')({ target: background, clientX: 50, clientY: 39 })
+  assert.equal(
+    attributes.get('data-ui-hovered'),
+    'true',
+    'the resting bottom edge remains hovered after the visual moves upward'
+  )
+
+  handlers.get('pointermove')({ target: background, clientX: 50, clientY: 41 })
+  assert.equal(attributes.get('data-ui-hovered'), undefined)
+  controller.destroy()
+})
+
 test('shared button CSS matches the navigation hover interaction contract', async () => {
   const css = await readFile(
     new URL('../../src/button-interactions.css', import.meta.url),
@@ -118,12 +163,22 @@ test('shared button CSS matches the navigation hover interaction contract', asyn
   )
   assert.match(css, /--ui-button-hover-lift:\s*-3px/)
   assert.match(css, /@media \(hover: hover\) and \(pointer: fine\)/)
-  assert.match(css, /\[data-ui-interaction='nav-lift'\].*:hover/s)
+  assert.match(css, /\[data-ui-interaction='nav-lift'\].*data-ui-hovered/s)
   assert.match(css, /:not\(:disabled\).*\[aria-disabled='true'\]/s)
   assert.match(css, /transform:\s*translateY\(var\(--ui-button-hover-lift\)\)/)
   assert.match(css, /--ui-button-interaction-shadow/)
   assert.match(css, /--ui-surface-shadow, none/)
   assert.match(css, /data-ui-motion='reduced'/)
+  const movesHitTargetUp =
+    /--ui-button-hover-lift:\s*-\d/.test(css) &&
+    /transform:\s*translateY\(var\(--ui-button-hover-lift\)\)/.test(css)
+  const preservesRestingHitArea =
+    /data-ui-hovered/.test(css)
+  assert.equal(
+    movesHitTargetUp && !preservesRestingHitArea,
+    false,
+    'hover animation must not move the bottom hit boundary above its resting position'
+  )
 })
 
 test('input emits Vue 2 v-model input events', () => {

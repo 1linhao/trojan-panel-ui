@@ -3,6 +3,7 @@
 export const BUTTON_INTERACTION = Object.freeze({
   selector: 'button, [role="button"]',
   attribute: 'data-ui-interaction',
+  hoverAttribute: 'data-ui-hovered',
   variant: 'nav-lift'
 })
 
@@ -51,17 +52,63 @@ export function createButtonInteractionController({
 } = {}) {
   let observer = null
   let mounted = false
+  let hoveredElement = null
+  let restingRect = null
+
+  const closestInteractive = (node) => {
+    if (!node || typeof node !== 'object') return null
+    return node.closest?.(selector) || (node.matches?.(selector) ? node : null)
+  }
+  const clearHover = () => {
+    root?.removeEventListener?.('pointermove', handlePointerMove)
+    hoveredElement?.removeAttribute?.(BUTTON_INTERACTION.hoverAttribute)
+    hoveredElement = null
+    restingRect = null
+  }
+  const activateHover = (element) => {
+    if (!element || element === hoveredElement) return
+    clearHover()
+    if (
+      element.matches?.(':disabled') ||
+      element.getAttribute?.('aria-disabled') === 'true'
+    )
+      return
+    hoveredElement = element
+    restingRect = element.getBoundingClientRect?.() || null
+    element.setAttribute(BUTTON_INTERACTION.hoverAttribute, 'true')
+    root.addEventListener?.('pointermove', handlePointerMove)
+  }
+  const isInsideRestingRect = (event) =>
+    restingRect &&
+    event.clientX >= restingRect.left &&
+    event.clientX <= restingRect.right &&
+    event.clientY >= restingRect.top &&
+    event.clientY <= restingRect.bottom
+  const handlePointerOver = (event) =>
+    activateHover(closestInteractive(event.target))
+  const handlePointerMove = (event) => {
+    const candidate = closestInteractive(event.target)
+    if (candidate === hoveredElement || isInsideRestingRect(event)) return
+    clearHover()
+    activateHover(candidate)
+  }
 
   const connectTree = (node) =>
     collectInteractiveButtons(node, selector).forEach(adapter.connect)
-  const disconnectTree = (node) =>
+  const disconnectTree = (node) => {
+    if (node === hoveredElement || node?.contains?.(hoveredElement)) clearHover()
     collectInteractiveButtons(node, selector).forEach(adapter.disconnect)
+  }
 
   return Object.freeze({
     mount() {
       if (mounted || !root) return this
       mounted = true
       connectTree(root)
+      root.addEventListener?.('pointerover', handlePointerOver)
+      root.addEventListener?.('pointerleave', clearHover)
+      root.addEventListener?.('pointercancel', clearHover)
+      root.addEventListener?.('scroll', clearHover, true)
       if (typeof observerFactory === 'function') {
         observer = observerFactory((records) => {
           records.forEach((record) => {
@@ -80,6 +127,12 @@ export function createButtonInteractionController({
     destroy() {
       if (!mounted) return
       observer?.disconnect?.()
+      root.removeEventListener?.('pointerover', handlePointerOver)
+      root.removeEventListener?.('pointermove', handlePointerMove)
+      root.removeEventListener?.('pointerleave', clearHover)
+      root.removeEventListener?.('pointercancel', clearHover)
+      root.removeEventListener?.('scroll', clearHover, true)
+      clearHover()
       disconnectTree(root)
       adapter.destroy?.()
       observer = null

@@ -17,7 +17,7 @@
 @media (hover: hover) and (pointer: fine) {
   [data-ui-interaction='nav-lift']:not(:disabled):not(
       [aria-disabled='true']
-    ):hover {
+    )[data-ui-hovered='true'] {
     transform: translateY(var(--ui-button-hover-lift));
     box-shadow: var(
       --ui-button-interaction-shadow,
@@ -29,7 +29,7 @@
 [data-ui-interaction='nav-lift']:not(:disabled):not(
     [aria-disabled='true']
   ):active {
-  transform: translateY(0) scale(var(--ui-button-press-scale));
+  transform: scale(var(--ui-button-press-scale));
 }
 
 :root[data-ui-motion='reduced'] {
