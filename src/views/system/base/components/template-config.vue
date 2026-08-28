@@ -22,26 +22,29 @@
             {{ client.label }}
           </button>
         </div>
-        <div
-          v-if="activeClient === 'sing-box'"
-          class="seg mode-switch"
-          role="group"
-        >
-          <button
-            type="button"
-            :class="{ on: activeSingBoxTemplate === 'tun' }"
-            @click="activeSingBoxTemplate = 'tun'"
+        <transition name="nested-mode-switch">
+          <div
+            v-if="activeClient === 'sing-box'"
+            class="seg mode-switch"
+            role="group"
+            aria-label="sing-box 模板模式"
           >
-            {{ systemConfig.singBoxTunTemplateName || 'TUN' }}
-          </button>
-          <button
-            type="button"
-            :class="{ on: activeSingBoxTemplate === 'outbound' }"
-            @click="activeSingBoxTemplate = 'outbound'"
-          >
-            {{ systemConfig.singBoxOutboundTemplateName || 'Outbound only' }}
-          </button>
-        </div>
+            <button
+              type="button"
+              :class="{ on: activeSingBoxTemplate === 'tun' }"
+              @click="activeSingBoxTemplate = 'tun'"
+            >
+              {{ systemConfig.singBoxTunTemplateName || 'TUN' }}
+            </button>
+            <button
+              type="button"
+              :class="{ on: activeSingBoxTemplate === 'outbound' }"
+              @click="activeSingBoxTemplate = 'outbound'"
+            >
+              {{ systemConfig.singBoxOutboundTemplateName || 'Outbound only' }}
+            </button>
+          </div>
+        </transition>
       </div>
       <template v-if="activeClient === 'clash-meta'">
           <liquid-form-item
@@ -261,15 +264,31 @@ export default {
 }
 
 .template-mode-switches {
-  display: flex;
-  align-items: center;
+  display: grid;
+  justify-items: start;
   gap: 12px;
   margin-bottom: 20px;
-  flex-wrap: wrap;
+}
+
+.template-mode-switches > .liquid-tabs {
+  margin-bottom: 0;
 }
 
 .mode-switch {
-  flex: 0 0 auto;
+  grid-row: 2;
+}
+
+.nested-mode-switch-enter-active,
+.nested-mode-switch-leave-active {
+  transition: opacity var(--ui-motion-fast) var(--ui-motion-easing-standard),
+    transform var(--ui-motion-fast) var(--ui-motion-easing-standard);
+  transform-origin: top left;
+}
+
+.nested-mode-switch-enter,
+.nested-mode-switch-leave-to {
+  opacity: 0;
+  transform: translateY(-6px) scale(0.98);
 }
 
 .actions {
