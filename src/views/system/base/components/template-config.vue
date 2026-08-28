@@ -15,11 +15,33 @@
         </liquid-form-item>
       </div>
 
-      <div class="seg liquid-tabs" role="tablist" aria-label="订阅模板客户端">
-        <button v-for="client in clients" :key="client.name" type="button"
-          :class="{ on: activeClient === client.name }" @click="activeClient = client.name">
-          {{ client.label }}
-        </button>
+      <div class="template-mode-switches">
+        <div class="seg liquid-tabs" role="tablist" aria-label="订阅模板客户端">
+          <button v-for="client in clients" :key="client.name" type="button"
+            :class="{ on: activeClient === client.name }" @click="activeClient = client.name">
+            {{ client.label }}
+          </button>
+        </div>
+        <div
+          v-if="activeClient === 'sing-box'"
+          class="seg mode-switch"
+          role="group"
+        >
+          <button
+            type="button"
+            :class="{ on: activeSingBoxTemplate === 'tun' }"
+            @click="activeSingBoxTemplate = 'tun'"
+          >
+            {{ systemConfig.singBoxTunTemplateName || 'TUN' }}
+          </button>
+          <button
+            type="button"
+            :class="{ on: activeSingBoxTemplate === 'outbound' }"
+            @click="activeSingBoxTemplate = 'outbound'"
+          >
+            {{ systemConfig.singBoxOutboundTemplateName || 'Outbound only' }}
+          </button>
+        </div>
       </div>
       <template v-if="activeClient === 'clash-meta'">
           <liquid-form-item
@@ -39,23 +61,6 @@
       </template>
 
       <template v-else-if="activeClient === 'sing-box'">
-          <div class="seg mode-switch" role="group">
-            <button
-              type="button"
-              :class="{ on: activeSingBoxTemplate === 'tun' }"
-              @click="activeSingBoxTemplate = 'tun'"
-            >
-              {{ systemConfig.singBoxTunTemplateName || 'TUN' }}
-            </button>
-            <button
-              type="button"
-              :class="{ on: activeSingBoxTemplate === 'outbound' }"
-              @click="activeSingBoxTemplate = 'outbound'"
-            >
-              {{ systemConfig.singBoxOutboundTemplateName || 'Outbound only' }}
-            </button>
-          </div>
-
           <template v-if="activeSingBoxTemplate === 'tun'">
             <liquid-form-item
               :label="$t('config.templateName')"
@@ -255,8 +260,16 @@ export default {
   gap: 24px;
 }
 
-.mode-switch {
+.template-mode-switches {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.mode-switch {
+  flex: 0 0 auto;
 }
 
 .actions {

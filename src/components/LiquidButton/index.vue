@@ -43,6 +43,7 @@ export default {
   font: inherit;
   font-size: 12.5px;
   font-weight: 650;
+  line-height: 1.2;
   cursor: pointer;
   transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
 }

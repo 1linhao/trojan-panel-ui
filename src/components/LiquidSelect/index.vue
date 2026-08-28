@@ -269,6 +269,7 @@ export default {
   clip-path: inset(50%);
 }
 .liquid-select__trigger {
+  --ui-button-hover-lift: 0px;
   display: flex;
   align-items: center;
   justify-content: space-between;
