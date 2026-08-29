@@ -1,7 +1,11 @@
 <template>
   <div class="app-container">
-    <liquid-card v-if="batchMode" class="section">
-      <div slot="header">{{ $t('kernel.batchUpgrade') }}</div>
+    <ui-panel
+      v-if="batchMode"
+      class="section"
+      motion-key="kernel-batch-upgrade"
+    >
+      <div class="section-head">{{ $t('kernel.batchUpgrade') }}</div>
       <liquid-form label-width="150px">
         <liquid-form-item :label="$t('kernel.nodes')">
           <liquid-select
@@ -28,10 +32,15 @@
           </liquid-select>
         </liquid-form-item>
       </liquid-form>
-    </liquid-card>
+    </ui-panel>
 
-    <liquid-card v-if="!batchMode" v-liquid-loading="inventoryLoading" class="section">
-      <div slot="header">
+    <ui-panel
+      v-if="!batchMode"
+      v-liquid-loading="inventoryLoading"
+      class="section"
+      motion-key="kernel-inventory"
+    >
+      <div class="section-head">
         {{ $t('kernel.inventory') }}
         <liquid-button size="mini" style="float: right" @click="loadInventory">
           {{ $t('kernel.refreshInventory') }}
@@ -53,10 +62,10 @@
           </liquid-button>
         </liquid-descriptions-item>
       </liquid-descriptions>
-    </liquid-card>
+    </ui-panel>
 
-    <liquid-card class="section">
-      <div slot="header">
+    <ui-panel class="section" motion-key="managed-kernels">
+      <div class="section-head">
         {{ $t('kernel.managedKernels') }}
         <liquid-button size="mini" style="float: right" @click="loadReleases(true)">
           {{ $t('kernel.refreshReleases') }}
@@ -163,10 +172,15 @@
       >
         {{ $t('kernel.createBatchTask') }}
       </liquid-button>
-    </liquid-card>
+    </ui-panel>
 
-    <liquid-card v-for="task in tasks" :key="task.id" class="section">
-      <div slot="header">
+    <ui-panel
+      v-for="task in tasks"
+      :key="task.id"
+      class="section"
+      :motion-key="`kernel-task-${task.id}`"
+    >
+      <div class="section-head">
         {{ $t('kernel.task') }} #{{ task.id }}
         <liquid-tag>{{ statusLabel(task.status) }}</liquid-tag>
       </div>
@@ -195,10 +209,10 @@
       >
         {{ $t('kernel.retryFailed') }}
       </liquid-button>
-    </liquid-card>
+    </ui-panel>
 
-    <liquid-card class="section">
-      <div slot="header">{{ $t('kernel.taskHistory') }}</div>
+    <ui-panel class="section" motion-key="kernel-task-history">
+      <div class="section-head">{{ $t('kernel.taskHistory') }}</div>
       <liquid-table :data="taskHistory" border>
         <liquid-table-column prop="id" label="ID" width="90" />
         <liquid-table-column prop="operatorName" :label="$t('kernel.operator')" />
@@ -216,7 +230,7 @@
           </template>
         </liquid-table-column>
       </liquid-table>
-    </liquid-card>
+    </ui-panel>
   </div>
 </template>
 
@@ -567,6 +581,17 @@ export default {
 <style scoped>
 .section {
   margin-bottom: 20px;
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--hairline);
+  color: var(--ink);
+  font-weight: 700;
 }
 .inventory-warning {
   margin-bottom: 16px;

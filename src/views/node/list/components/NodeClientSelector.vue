@@ -20,7 +20,7 @@
       </button>
     </div>
 
-    <p class="client-selector__hint">
+    <p class="client-selector__hint ui-supporting-text">
       {{ $t('table.nodeClientsTip') }}
     </p>
 
@@ -187,9 +187,6 @@ export default {
 
 .client-selector__hint {
   margin: 9px 0 0;
-  color: var(--ink-3);
-  font-size: 12px;
-  line-height: 1.6;
 }
 
 .client-selector__warning {

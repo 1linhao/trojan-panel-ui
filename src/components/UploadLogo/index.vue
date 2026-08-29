@@ -18,7 +18,7 @@
         选择 Logo
       </liquid-button>
     </template>
-    <div class="liquid-logo-picker__tip">
+    <div class="liquid-logo-picker__tip ui-supporting-text">
       {{ $t('config.imageFileTip') }}
     </div>
   </div>
@@ -127,9 +127,5 @@ export default {
   color: var(--bad-fg);
   background: var(--glass-popover);
   cursor: pointer;
-}
-.liquid-logo-picker__tip {
-  color: var(--ink-3);
-  font-size: 11.5px;
 }
 </style>

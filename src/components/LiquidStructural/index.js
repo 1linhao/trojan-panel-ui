@@ -190,17 +190,6 @@ export const LiquidFormItem = {
   }
 }
 
-export const LiquidCard = {
-  name: 'LiquidCard',
-  functional: true,
-  render(h, context) {
-    return h('section', { ...context.data, class: ['liquid-card', context.data.class, context.data.staticClass] }, [
-      context.slots().header ? h('header', { class: 'liquid-card__header' }, context.slots().header) : null,
-      h('div', { class: 'liquid-card__body' }, context.slots().default)
-    ])
-  }
-}
-
 export const LiquidDescriptionsItem = { name: 'LiquidDescriptionsItem', functional: true, props: { label: [String, Number] }, render: () => null }
 export const LiquidDescriptions = {
   name: 'LiquidDescriptions',
@@ -243,7 +232,7 @@ export const LiquidBreadcrumb = { name: 'LiquidBreadcrumb', functional: true, pr
 export const LiquidBreadcrumbItem = { name: 'LiquidBreadcrumbItem', functional: true, render(h, context) { return h('span', { ...context.data, class: ['liquid-breadcrumb__item', context.data.class] }, context.children) } }
 
 export const structuralComponents = {
-  LiquidBreadcrumb, LiquidBreadcrumbItem, LiquidCard, LiquidCol,
+  LiquidBreadcrumb, LiquidBreadcrumbItem, LiquidCol,
   LiquidDescriptions, LiquidDescriptionsItem, LiquidDropdown,
   LiquidDropdownItem, LiquidDropdownMenu, LiquidForm, LiquidFormItem,
   LiquidMenu, LiquidMenuItem, LiquidRow, LiquidScrollbar, LiquidSubmenu,

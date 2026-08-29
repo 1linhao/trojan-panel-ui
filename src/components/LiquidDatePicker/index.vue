@@ -193,7 +193,7 @@ export default {
 .liquid-date-picker__clear { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--neutral-bg); }
 .liquid-date-picker__popover { position: fixed; z-index: 5000; box-sizing: border-box; margin: 0; padding: 10px; border: 1px solid var(--rim); border-radius: var(--r-lg); color: var(--ink); background: linear-gradient(150deg, var(--spec-soft), transparent 46%), var(--glass-popover); box-shadow: var(--shadow), inset 0 1px 0 var(--spec); backdrop-filter: blur(30px) saturate(180%); overflow: auto; }
 .liquid-date-picker__manual { display: block; margin-bottom: 9px; }
-.liquid-date-picker__manual span, .liquid-date-picker__time span { display: block; margin: 0 0 5px 3px; color: var(--ink-3); font-size: 11px; font-weight: 700; }
+.liquid-date-picker__manual span, .liquid-date-picker__time span { display: block; margin: 0 0 5px 3px; color: var(--form-label-ink); font-size: 11px; font-weight: 700; }
 .liquid-date-picker__manual input, .liquid-date-picker__time input { width: 100%; min-height: 40px; padding: 0 12px; border: 1px solid var(--control-border); border-radius: 12px; outline: 0; color: var(--ink); background: var(--control-fill); font: inherit; color-scheme: only light; }
 .liquid-date-picker__manual.has-error input { border-color: var(--bad-fg); box-shadow: 0 0 0 3px var(--bad-bg); }
 .liquid-date-picker__manual small { display: block; margin: 5px 3px 0; color: var(--bad-fg); font-size: 11px; }
@@ -205,7 +205,7 @@ export default {
 .liquid-date-picker__calendar header button { width: 34px; height: 34px; border-radius: 10px; }
 .liquid-date-picker__calendar header button:hover, .liquid-date-picker__days button:hover, .liquid-date-picker__months button:hover { color: var(--accent); background: var(--glass-strong); }
 .liquid-date-picker__weekdays, .liquid-date-picker__days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
-.liquid-date-picker__weekdays span { padding: 5px 0; color: var(--ink-3); font-size: 10px; text-align: center; }
+.liquid-date-picker__weekdays span { padding: 5px 0; color: var(--table-header-ink); font-size: 10px; text-align: center; }
 .liquid-date-picker__days button { aspect-ratio: 1; border-radius: 11px; font: inherit; font-size: 12px; }
 .liquid-date-picker__months { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
 .liquid-date-picker__months button { min-height: 42px; border-radius: 11px; font: inherit; }

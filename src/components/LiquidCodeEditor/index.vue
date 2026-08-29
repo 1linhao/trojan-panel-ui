@@ -136,7 +136,7 @@ export default {
   min-height: 38px;
   padding: 0 10px 0 14px;
   border-bottom: 1px solid var(--hairline);
-  color: var(--ink-3);
+  color: var(--supporting-text-ink);
   background: var(--glass-soft);
   font-size: 12px;
   line-height: 1.2;

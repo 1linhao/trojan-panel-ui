@@ -99,9 +99,6 @@
   }
 }
 
-.liquid-card { overflow: hidden; border: 1px solid var(--rim); border-radius: 20px; background: var(--panel-surface); box-shadow: var(--shadow-soft); }
-.liquid-card__header { padding: 16px 20px; border-bottom: 1px solid var(--hairline); }
-.liquid-card__body { padding: 20px; }
 .liquid-descriptions { display: grid; gap: 1px; overflow: hidden; border-radius: 14px; background: var(--hairline); }
 .liquid-descriptions__item { min-width: 0; background: var(--glass); }
 .liquid-descriptions dt { padding: 10px 12px 4px; color: var(--ink-2); font-size: 12px; }

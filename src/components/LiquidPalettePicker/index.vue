@@ -22,8 +22,10 @@
       aria-label="颜色主题"
       @click.stop
     >
-      <strong>颜色主题</strong>
-      <small v-if="inline">选择会保存在当前浏览器中</small>
+      <span class="ui-field-label">颜色主题</span>
+      <span v-if="inline" class="ui-supporting-text">
+        选择会保存在当前浏览器中
+      </span>
       <button
         v-for="option in options"
         :key="option.value"
@@ -159,17 +161,13 @@ export default {
   box-shadow: var(--shadow), inset 0 1px 0 var(--spec);
   backdrop-filter: blur(30px) saturate(180%);
 }
-.liquid-palette-picker__menu > strong {
+.liquid-palette-picker__menu > .ui-field-label {
   display: block;
   padding: 7px 10px;
-  color: var(--ink-3);
-  font-size: 11px;
 }
-.liquid-palette-picker__menu > small {
+.liquid-palette-picker__menu > .ui-supporting-text {
   display: block;
   padding: 0 10px 9px;
-  color: var(--ink-3);
-  font-size: 11px;
 }
 .liquid-palette-picker__menu button {
   display: grid;
@@ -202,8 +200,8 @@ export default {
   box-shadow: none;
   backdrop-filter: none;
 }
-.liquid-palette-picker__menu.is-inline > strong,
-.liquid-palette-picker__menu.is-inline > small {
+.liquid-palette-picker__menu.is-inline > .ui-field-label,
+.liquid-palette-picker__menu.is-inline > .ui-supporting-text {
   grid-column: 1 / -1;
 }
 @media (max-width: 520px) {

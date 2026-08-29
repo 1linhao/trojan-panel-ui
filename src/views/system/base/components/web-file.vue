@@ -20,7 +20,7 @@
       <span v-if="fileList.length" class="liquid-file-picker__name">
         {{ fileList[0].name }}
       </span>
-      <div class="liquid-file-picker__tip">
+      <div class="liquid-file-picker__tip ui-supporting-text">
         {{ $t('config.webFileTip') }}
       </div>
     </div>
@@ -101,7 +101,5 @@ export default {
 }
 .liquid-file-picker__tip {
   flex-basis: 100%;
-  color: var(--ink-3);
-  font-size: 11.5px;
 }
 </style>

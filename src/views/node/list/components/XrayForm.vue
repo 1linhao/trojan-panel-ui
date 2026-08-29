@@ -28,7 +28,9 @@
           :active-value="1"
           :inactive-value="0"
       />
-      <div class="option-help">{{ $t('table.xrayUotHelp') }}</div>
+      <div class="option-help ui-supporting-text">
+        {{ $t('table.xrayUotHelp') }}
+      </div>
     </liquid-form-item>
     <liquid-form-item
         :label="$t('table.xrayUotVersion').toString()"
@@ -373,9 +375,4 @@ export default {
   margin-left: 10px;
 }
 
-.option-help {
-  color: #909399;
-  font-size: 12px;
-  line-height: 18px;
-}
 </style>

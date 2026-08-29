@@ -293,9 +293,11 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.liquid-select__trigger .is-placeholder,
-.liquid-select__empty {
+.liquid-select__trigger .is-placeholder {
   color: var(--ink-3);
+}
+.liquid-select__empty {
+  color: var(--supporting-text-ink);
 }
 .liquid-select.is-focused .liquid-select__trigger {
   border-color: var(--accent);
