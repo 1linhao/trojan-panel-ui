@@ -38,12 +38,14 @@
   --ink: #171a21;
   --ink-2: rgba(38, 44, 60, 0.64);
   --ink-3: rgba(38, 44, 60, 0.42);
+  --form-label-ink: rgba(23, 26, 33, 0.78);
 
   --accent: #0a7cff;
   --accent-deep: #0061e0;
   --on-accent: #ffffff;
 
   --glass: rgba(255, 255, 255, 0.5);
+  --panel-surface: var(--glass);
   --glass-strong: rgba(255, 255, 255, 0.74);
   --glass-popover: rgba(255, 255, 255, 0.93);
   --glass-soft: rgba(255, 255, 255, 0.32);
@@ -90,12 +92,14 @@
   --ink: #eef1f9;
   --ink-2: rgba(222, 229, 246, 0.62);
   --ink-3: rgba(222, 229, 246, 0.4);
+  --form-label-ink: rgba(238, 241, 249, 0.8);
 
   --accent: #3f9bff;
   --accent-deep: #7ab8ff;
   --on-accent: #041530;
 
   --glass: rgba(22, 28, 48, 0.52);
+  --panel-surface: var(--glass);
   --glass-strong: rgba(34, 42, 68, 0.68);
   --glass-popover: rgba(36, 44, 72, 0.95);
   --glass-soft: rgba(255, 255, 255, 0.055);
@@ -410,7 +414,7 @@ h3 {
   z-index: -1;
   pointer-events: none;
   background: linear-gradient(150deg, var(--spec-soft), transparent 46%),
-    var(--glass);
+    var(--panel-surface);
   -webkit-backdrop-filter: blur(30px) saturate(180%);
   backdrop-filter: blur(30px) saturate(180%);
   border: 1px solid var(--rim);
@@ -2438,7 +2442,7 @@ h3 {
 
 #app .liquid-form-item__label,
 .tp-ui-dialog .liquid-form-item__label {
-  color: var(--ink-2);
+  color: var(--form-label-ink);
   font-size: 12px;
   font-weight: 650;
 }
@@ -2777,7 +2781,7 @@ h3 {
 #app .liquid-card {
   border-color: var(--rim);
   color: var(--ink);
-  background: var(--glass);
+  background: var(--panel-surface);
 }
 
 #app .liquid-card__header {

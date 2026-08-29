@@ -1,7 +1,11 @@
 <template>
   <liquid-row :gutter="40" class="panel-group">
     <liquid-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel">
+      <ui-panel
+        variant="metric"
+        class="card-panel"
+        motion-key="server-cpu-usage"
+      >
         <div class="card-panel-symbol-wrapper icon-sysinfo">
           <i class="card-panel-symbol liquid-icon--cpu" />
         </div>
@@ -11,10 +15,14 @@
             {{ nodeServerGroupData.cpuUsed | toPercent }}
           </h3>
         </div>
-      </div>
+      </ui-panel>
     </liquid-col>
     <liquid-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel">
+      <ui-panel
+        variant="metric"
+        class="card-panel"
+        motion-key="server-memory-usage"
+      >
         <div class="card-panel-symbol-wrapper icon-sysinfo">
           <i class="card-panel-symbol liquid-icon--cpu" />
         </div>
@@ -24,10 +32,14 @@
             {{ nodeServerGroupData.memUsed | toPercent }}
           </h3>
         </div>
-      </div>
+      </ui-panel>
     </liquid-col>
     <liquid-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-      <div class="card-panel">
+      <ui-panel
+        variant="metric"
+        class="card-panel"
+        motion-key="server-disk-usage"
+      >
         <div class="card-panel-symbol-wrapper icon-sysinfo">
           <i class="card-panel-symbol liquid-icon--cpu" />
         </div>
@@ -37,7 +49,7 @@
             {{ nodeServerGroupData.diskUsed | toPercent }}
           </h3>
         </div>
-      </div>
+      </ui-panel>
     </liquid-col>
   </liquid-row>
 </template>
@@ -76,10 +88,9 @@ export default {
     font-size: 12px;
     position: relative;
     overflow: hidden;
-    color: #666;
-    background: #fff;
-    box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.05);
-    border-color: rgba(0, 0, 0, 0.05);
+    color: var(--ink);
+    background: transparent;
+    box-shadow: none;
 
     &:hover {
       .card-panel-symbol-wrapper {
@@ -132,7 +143,7 @@ export default {
       margin: 14px 0 0 14px;
       padding: 16px;
       transition: all 0.38s ease-out;
-      border-radius: 6px;
+      border-radius: 12px;
     }
 
     .card-panel-symbol {
@@ -148,7 +159,7 @@ export default {
 
       .card-panel-text {
         line-height: 18px;
-        color: rgba(0, 0, 0, 0.45);
+        color: var(--ink-2);
         font-size: 16px;
         margin-bottom: 12px;
       }

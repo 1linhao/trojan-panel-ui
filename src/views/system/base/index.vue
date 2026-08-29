@@ -16,6 +16,7 @@
       <account v-if="activeName === 'account-config'" />
       <email v-else-if="activeName === 'config-email'" />
       <web-file v-else-if="activeName === 'config-web-file'" />
+      <panel-config v-else-if="activeName === 'config-panel'" />
       <template-config v-else />
     </ui-panel>
   </div>
@@ -25,12 +26,13 @@
 import Account from './components/account'
 import WebFile from './components/web-file'
 import Email from './components/email'
+import PanelConfig from './components/panel-config'
 import TemplateConfig from './components/template-config'
 import { selectSystemByName } from '@/api/system'
 
 export default {
   name: 'SystemSettingsPage',
-  components: { Account, WebFile, Email, TemplateConfig },
+  components: { Account, WebFile, Email, PanelConfig, TemplateConfig },
   provide() {
     return {
       systemConfigModel: this.systemConfig
@@ -43,6 +45,7 @@ export default {
         { name: 'account-config', label: '账号' },
         { name: 'config-email', label: '邮件' },
         { name: 'config-web-file', label: 'Web 文件' },
+        { name: 'config-panel', label: '面板设置' },
         { name: 'config-template-config', label: '订阅模板' }
       ],
       systemConfig: {

@@ -17,7 +17,7 @@
       </liquid-select>
     </liquid-form-item>
     <liquid-form-item>
-      <aside>
+      <aside class="form-hint">
         {{ $t('table.naiveproxyTip') }}
       </aside>
     </liquid-form-item>

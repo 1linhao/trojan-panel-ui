@@ -6,15 +6,6 @@
       :model="systemConfig"
       label-position="top"
     >
-      <div class="general-settings">
-        <liquid-form-item :label="$t('config.systemLogo')" prop="systemName">
-          <upload-logo />
-        </liquid-form-item>
-        <liquid-form-item :label="$t('config.systemName')" prop="systemName">
-          <liquid-input v-model="systemConfig.systemName" clearable />
-        </liquid-form-item>
-      </div>
-
       <div class="template-mode-switches">
         <div class="seg liquid-tabs" role="tablist" aria-label="订阅模板客户端">
           <button v-for="client in clients" :key="client.name" type="button"
@@ -47,12 +38,11 @@
 
 <script>
 import { updateSystemById } from '@/api/system'
-import UploadLogo from '@/components/UploadLogo'
 import ClientTemplateEditor from '@/components/ClientTemplateEditor'
 
 export default {
   name: 'TemplateConfigForm',
-  components: { ClientTemplateEditor, UploadLogo },
+  components: { ClientTemplateEditor },
   inject: {
     systemConfig: {
       from: 'systemConfigModel'
@@ -85,19 +75,6 @@ export default {
         xray: 'default'
       },
       updateRules: {
-        systemName: [
-          {
-            required: true,
-            message: this.$t('valid.systemName'),
-            trigger: ['change', 'blur']
-          },
-          {
-            min: 2,
-            max: 32,
-            message: this.$t('valid.systemNameRange'),
-            trigger: ['change', 'blur']
-          }
-        ],
         clashTemplateName: nameRules,
         singBoxTunTemplateName: nameRules,
         singBoxOutboundTemplateName: nameRules,
@@ -255,12 +232,6 @@ export default {
 </script>
 
 <style scoped>
-.general-settings {
-  display: grid;
-  grid-template-columns: minmax(160px, 240px) minmax(240px, 1fr);
-  gap: 24px;
-}
-
 .template-mode-switches {
   display: grid;
   justify-items: start;
@@ -275,10 +246,4 @@ export default {
   margin-top: 20px;
 }
 
-@media (max-width: 720px) {
-  .general-settings {
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
-}
 </style>

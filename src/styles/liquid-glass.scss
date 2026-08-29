@@ -85,7 +85,7 @@ body {
 
 .liquid-glass,
 #app .liquid-card,
-#app .dashboard-editor-container .panel-group .card-panel {
+#app .dashboard-editor-container .panel-group .card-panel:not(.tp-ui-panel) {
   border: 1px solid var(--rim);
   border-radius: var(--r-lg);
   background: linear-gradient(
@@ -93,7 +93,7 @@ body {
       var(--spec-soft),
       transparent 46%
     ),
-    var(--glass);
+    var(--panel-surface);
   box-shadow: var(--shadow-soft), inset 0 1px 0 var(--spec);
   -webkit-backdrop-filter: blur(30px) saturate(180%);
   backdrop-filter: blur(30px) saturate(180%);
@@ -266,14 +266,14 @@ body {
   color: var(--ink);
 }
 
-#app .dashboard-editor-container .panel-group .card-panel {
+#app .dashboard-editor-container .panel-group .card-panel:not(.tp-ui-panel) {
   color: var(--ink) !important;
   background: linear-gradient(
       150deg,
       rgba(255, 255, 255, 0.12),
       transparent 46%
     ),
-    var(--glass) !important;
+    var(--panel-surface) !important;
 }
 
 #app .dashboard-editor-container .panel-group .card-panel .card-panel-text {

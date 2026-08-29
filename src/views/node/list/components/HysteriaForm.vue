@@ -76,7 +76,7 @@
       </liquid-switch>
     </liquid-form-item>
     <liquid-form-item>
-      <aside>
+      <aside class="form-hint">
         {{ $t('table.hysteriaTip') }}
       </aside>
     </liquid-form-item>

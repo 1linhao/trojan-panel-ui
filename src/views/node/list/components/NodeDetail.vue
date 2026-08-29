@@ -479,7 +479,7 @@
           <liquid-tag>v{{ nodeInfoProps.naiveUotVersion }}</liquid-tag>
         </liquid-form-item>
         <liquid-form-item v-if="isHysteria(nodeInfoProps)">
-          <aside>
+          <aside class="form-hint">
             {{ $t('table.hysteriaTip') }}
           </aside>
         </liquid-form-item>

@@ -1,6 +1,6 @@
 <template>
   <div class="profile-form">
-    <aside v-if="emailEnable === 1">
+    <aside v-if="emailEnable === 1" class="form-hint">
       {{ this.$t('remark.emailEnable') }}
     </aside>
     <liquid-form
