@@ -3,16 +3,14 @@
     <ui-panel motion-key="server-filters">
       <div class="toolbar">
         <div class="search-box">
-          <i class="liquid-icon--search"></i
-          ><input
+          <app-icon name="search" /><input
             v-model="listQuery.name"
             placeholder="按名称搜索"
             @keyup.enter="handleFilter"
           />
         </div>
         <div class="search-box">
-          <i class="liquid-icon--connection"></i
-          ><input
+          <app-icon name="connection" /><input
             v-model="listQuery.ip"
             placeholder="按 IP 搜索"
             @keyup.enter="handleFilter"
@@ -25,7 +23,7 @@
           type="button"
           @click="downloadTemplate"
         >
-          <i class="liquid-icon--document"></i>模板
+          <app-icon name="document" />模板
         </button>
         <button
           v-if="checkPermission(['sysadmin'])"
@@ -33,7 +31,7 @@
           type="button"
           @click="handleImport"
         >
-          <i class="liquid-icon--import"></i>导入
+          <app-icon name="import" />导入
         </button>
         <button
           v-if="checkPermission(['sysadmin'])"
@@ -41,7 +39,7 @@
           type="button"
           @click="handleExport"
         >
-          <i class="liquid-icon--export"></i>导出
+          <app-icon name="export" />导出
         </button>
         <button
           v-if="checkPermission(['sysadmin'])"
@@ -49,7 +47,7 @@
           type="button"
           @click="handleBatchUpgrade"
         >
-          <i class="liquid-icon--upgrade"></i>批量升级
+          <app-icon name="upgrade" />批量升级
         </button>
         <button
           v-if="checkPermission(['sysadmin'])"
@@ -57,7 +55,7 @@
           type="button"
           @click="handleCreate"
         >
-          <i class="liquid-icon--plus"></i>添加服务器
+          <app-icon name="plus" />添加服务器
         </button>
       </div>
     </ui-panel>
@@ -84,7 +82,7 @@
                     aria-label="重置所有服务器流量统计"
                     @click="handleResetAllServerTraffic"
                   >
-                    <i class="liquid-icon--refresh"></i>重置全部
+                    <app-icon name="refresh" />重置全部
                   </button>
                 </div>
               </th>
@@ -161,7 +159,7 @@
                   :aria-label="`重置服务器 ${row.name} 的流量统计`"
                   @click="handleResetServerTraffic(row)"
                 >
-                  <i class="liquid-icon--refresh-left"></i>重置流量
+                  <app-icon name="refresh-left" />重置流量
                 </button>
                 <span v-else class="faint">—</span>
               </td>
@@ -173,7 +171,7 @@
                     title="运行状态"
                     @click="handleDetail(row)"
                   >
-                    <i class="liquid-icon--view"></i>
+                    <app-icon name="view" />
                   </button>
                   <button
                     v-if="checkPermission(['sysadmin'])"
@@ -182,7 +180,7 @@
                     title="内核管理"
                     @click="handleKernelManage(row)"
                   >
-                    <i class="liquid-icon--top"></i>
+                    <app-icon name="top" />
                   </button>
                   <button
                     v-if="checkPermission(['sysadmin'])"
@@ -191,7 +189,7 @@
                     title="编辑"
                     @click="handleUpdate(row)"
                   >
-                    <i class="liquid-icon--edit"></i>
+                    <app-icon name="edit" />
                   </button>
                   <button
                     v-if="checkPermission(['sysadmin'])"
@@ -200,7 +198,7 @@
                     title="删除"
                     @click="handleDelete(row, index)"
                   >
-                    <i class="liquid-icon--delete"></i>
+                    <app-icon name="delete" />
                   </button>
                 </div>
               </td>
@@ -228,7 +226,7 @@
           <h2>{{ detailServer.name }} · 运行状态</h2>
         </div>
         <button class="icon-btn" type="button" @click="detailServer = null">
-          <i class="liquid-icon--close"></i>
+          <app-icon name="close" />
         </button>
       </div>
       <div class="server-detail-layout">

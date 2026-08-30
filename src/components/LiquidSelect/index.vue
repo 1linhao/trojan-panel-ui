@@ -39,14 +39,13 @@
         aria-label="清空"
         @click.stop="clearSelection"
       >
-        <i class="liquid-icon--close" aria-hidden="true" />
+        <app-icon name="close" aria-hidden="true" />
       </span>
-      <i
+      <app-icon
         v-else
-        class="liquid-icon--arrow-down liquid-select__arrow"
+        name="arrow-down" class="liquid-select__arrow"
         :class="{ 'is-open': open }"
-        aria-hidden="true"
-      />
+        aria-hidden="true" />
     </button>
 
     <div
@@ -59,7 +58,7 @@
       @click.stop
     >
       <div v-if="filterable" class="liquid-select__search-wrap">
-        <i class="liquid-icon--search" aria-hidden="true" />
+        <app-icon name="search" aria-hidden="true" />
         <input
           ref="search"
           v-model.trim="query"
@@ -82,11 +81,10 @@
           @click="choose(option.value)"
         >
           <span>{{ option.label }}</span>
-          <i
+          <app-icon
             v-if="isSelected(option.value)"
-            class="liquid-icon--check"
-            aria-hidden="true"
-          />
+            name="check"
+            aria-hidden="true" />
         </button>
         <div v-if="!filteredOptions.length" class="liquid-select__empty">
           暂无匹配项
@@ -365,7 +363,7 @@ export default {
   border-radius: 11px;
   background: var(--control-fill);
 }
-.liquid-select__search-wrap > i {
+.liquid-select__search-wrap > .app-icon {
   color: var(--ink-3);
 }
 .liquid-select__search {

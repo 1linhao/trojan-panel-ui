@@ -3,8 +3,7 @@
     <ui-panel motion-key="node-filters">
       <div class="toolbar">
         <div class="search-box">
-          <i class="liquid-icon--search"></i
-          ><input
+          <app-icon name="search" /><input
             v-model="listQuery.name"
             placeholder="按节点名搜索"
             @keyup.enter="handleFilter"
@@ -30,7 +29,7 @@
           type="button"
           @click="exportDialogVisible = true"
         >
-          <i class="liquid-icon--export"></i>订阅导出
+          <app-icon name="export" />订阅导出
         </button>
         <button
           v-if="checkPermission(['sysadmin', 'admin'])"
@@ -38,7 +37,7 @@
           type="button"
           @click="handleCreate"
         >
-          <i class="liquid-icon--plus"></i>新建节点
+          <app-icon name="plus" />新建节点
         </button>
       </div>
     </ui-panel>
@@ -118,8 +117,7 @@
               type="button"
               @click="handlePrototypeDetail(row)"
             >
-              <i class="liquid-icon--view"></i
-              >{{ detailId === row.id ? '收起' : '详情' }}
+              <app-icon name="view" />{{ detailId === row.id ? '收起' : '详情' }}
             </button>
             <template v-if="checkPermission(['sysadmin', 'admin'])">
               <button
@@ -128,7 +126,7 @@
                 title="编辑"
                 @click="handleUpdate(row)"
               >
-                <i class="liquid-icon--edit"></i>
+                <app-icon name="edit" />
               </button>
               <button
                 class="icon-btn danger"
@@ -136,7 +134,7 @@
                 title="删除"
                 @click="handleDelete(row, index)"
               >
-                <i class="liquid-icon--delete"></i>
+                <app-icon name="delete" />
               </button>
             </template>
           </div>
@@ -154,7 +152,7 @@
               <h2>{{ row.name }} · 连接参数</h2>
             </div>
             <button class="icon-btn" type="button" @click="detailId = 0">
-              <i class="liquid-icon--close"></i>
+              <app-icon name="close" />
             </button>
           </div>
           <div class="kv-grid">

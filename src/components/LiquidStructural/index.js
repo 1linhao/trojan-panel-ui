@@ -203,38 +203,7 @@ export const LiquidDescriptions = {
   }
 }
 
-export const LiquidRow = { name: 'LiquidRow', functional: true, props: { gutter: [String, Number] }, render(h, context) { const gap = px(context.props.gutter); return h('div', { ...context.data, class: ['liquid-row', context.data.class, context.data.staticClass], style: [{ gap }, context.data.style] }, context.children) } }
-export const LiquidCol = { name: 'LiquidCol', functional: true, props: { span: [String, Number], xs: [String, Number], sm: [String, Number], md: [String, Number], lg: [String, Number] }, render(h, context) { const p = context.props; return h('div', { ...context.data, class: ['liquid-col', p.xs && `liquid-col-xs-${p.xs}`, p.sm && `liquid-col-sm-${p.sm}`, p.md && `liquid-col-md-${p.md}`, p.lg && `liquid-col-lg-${p.lg}`, context.data.class, context.data.staticClass] }, context.children) } }
-
-export const LiquidScrollbar = {
-  name: 'LiquidScrollbar',
-  props: { wrapClass: String, vertical: { type: Boolean, default: true } },
-  render(h) { return h('div', { class: 'liquid-scrollbar' }, [h('div', { ref: 'wrap', class: ['liquid-scrollbar__wrap', this.wrapClass, { 'is-horizontal': !this.vertical }] }, this.$slots.default)]) }
-}
-
-export const LiquidTooltip = { name: 'LiquidTooltip', functional: true, props: { content: String, placement: String }, render(h, context) { return h('span', { ...context.data, class: ['liquid-tooltip', context.data.class], attrs: { title: context.props.content } }, context.children) } }
-
-export const LiquidDropdown = {
-  name: 'LiquidDropdown',
-  provide() { return { liquidDropdown: this } },
-  data: () => ({ open: false }),
-  methods: { command(value) { this.$emit('command', value); this.open = false } },
-  render(h) { return h('div', { class: 'liquid-dropdown' }, [h('div', { class: 'liquid-dropdown__trigger', on: { click: () => { this.open = !this.open } } }, this.$slots.default), this.open ? h('div', { class: 'liquid-dropdown__panel' }, this.$slots.dropdown) : null]) }
-}
-export const LiquidDropdownMenu = { name: 'LiquidDropdownMenu', functional: true, render(h, context) { return h('ul', { ...context.data, class: ['liquid-dropdown-menu', context.data.class] }, context.children) } }
-export const LiquidDropdownItem = { name: 'LiquidDropdownItem', inject: { liquidDropdown: { default: null } }, props: { command: null, disabled: Boolean, divided: Boolean }, render(h) { return h('li', { class: ['liquid-dropdown-item', { 'is-disabled': this.disabled, 'is-divided': this.divided }], on: { click: () => { if (!this.disabled && this.liquidDropdown) this.liquidDropdown.command(this.command) } } }, this.$slots.default) } }
-
-export const LiquidMenu = { name: 'LiquidMenu', provide() { return { liquidMenu: this } }, props: { defaultActive: String, collapse: Boolean, mode: String }, render(h) { return h('nav', { class: ['liquid-menu', { 'is-collapsed': this.collapse }] }, this.$slots.default) } }
-export const LiquidMenuItem = { name: 'LiquidMenuItem', inject: { liquidMenu: { default: null } }, props: { index: String }, render(h) { return h('div', { class: ['liquid-menu-item', { 'is-active': this.liquidMenu && this.liquidMenu.defaultActive === this.index }] }, this.$slots.default) } }
-export const LiquidSubmenu = { name: 'LiquidSubmenu', props: { index: String }, data: () => ({ open: true }), render(h) { return h('section', { class: ['liquid-submenu', { 'is-open': this.open }] }, [h('div', { class: 'liquid-submenu__title', on: { click: () => { this.open = !this.open } } }, this.$slots.title), this.open ? h('div', { class: 'liquid-submenu__content' }, this.$slots.default) : null]) } }
-
-export const LiquidBreadcrumb = { name: 'LiquidBreadcrumb', functional: true, props: { separator: { type: String, default: '/' } }, provide() { return {} }, render(h, context) { const children = (context.children || []).reduce((all, child, index) => all.concat(index ? [h('span', { class: 'liquid-breadcrumb__separator' }, [context.props.separator]), child] : [child]), []); return h('nav', { ...context.data, class: ['liquid-breadcrumb', context.data.class] }, children) } }
-export const LiquidBreadcrumbItem = { name: 'LiquidBreadcrumbItem', functional: true, render(h, context) { return h('span', { ...context.data, class: ['liquid-breadcrumb__item', context.data.class] }, context.children) } }
-
 export const structuralComponents = {
-  LiquidBreadcrumb, LiquidBreadcrumbItem, LiquidCol,
-  LiquidDescriptions, LiquidDescriptionsItem, LiquidDropdown,
-  LiquidDropdownItem, LiquidDropdownMenu, LiquidForm, LiquidFormItem,
-  LiquidMenu, LiquidMenuItem, LiquidRow, LiquidScrollbar, LiquidSubmenu,
-  LiquidTable, LiquidTableColumn, LiquidTooltip
+  LiquidDescriptions, LiquidDescriptionsItem, LiquidForm, LiquidFormItem,
+  LiquidTable, LiquidTableColumn
 }

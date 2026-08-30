@@ -3,8 +3,7 @@
     <ui-panel motion-key="blacklist-filters">
       <div class="toolbar">
         <div class="search-box">
-          <i class="liquid-icon--search"></i
-          ><input
+          <app-icon name="search" /><input
             v-model="listQuery.ip"
             placeholder="按 IP 地址搜索"
             @keyup.enter="handleFilter"
@@ -12,7 +11,7 @@
         </div>
         <div class="spacer"></div>
         <button class="cap primary small" type="button" @click="handleCreate">
-          <i class="liquid-icon--plus"></i>添加黑名单
+          <app-icon name="plus" />添加黑名单
         </button>
       </div>
     </ui-panel>
@@ -43,7 +42,7 @@
                     title="删除"
                     @click="handleDelete(row, index)"
                   >
-                    <i class="liquid-icon--delete"></i>
+                    <app-icon name="delete" />
                   </button>
                 </div>
               </td>

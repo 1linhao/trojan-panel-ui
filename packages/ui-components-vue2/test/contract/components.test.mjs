@@ -55,8 +55,9 @@ test('panel variants expose stable anatomy and motion identity', () => {
   assert.equal(vnode.data.attrs['data-ui-motion-role'], 'shared')
   assert.equal(vnode.data.attrs['data-ui-motion-key'], 'auth-primary')
   assert.deepEqual(vnode.data.style[1], {
-    viewTransitionName: 'ui-auth-primary'
+    '--ui-view-transition-name': 'ui-auth-primary'
   })
+  assert.equal(vnode.data.style[1].viewTransitionName, undefined)
   assert.equal(vnode.children[0].data.attrs['data-ui-part'], 'header')
   assert.equal(vnode.children[1].data.attrs['data-ui-part'], 'body')
 })
@@ -78,7 +79,19 @@ test('sheet uses the raised surface recipe', () => {
     }
   )
   assert.equal(vnode.data.attrs['data-ui-surface'], 'raised')
+  assert.deepEqual(vnode.data.style[1], { '--ui-view-transition-name': 'ui-node-1' })
   assert.equal(vnode.children[1].data.attrs['data-ui-part'], 'body')
+})
+
+test('capture is opt-in and mobile dialog geometry stays centered', async () => {
+  const css = await readFile(new URL('../../src/geometry.css', import.meta.url), 'utf8')
+  assert.match(css, /\[data-ui-view-transitions='active'\] \.tp-ui-panel/)
+  assert.match(css, /view-transition-name: var\(--ui-view-transition-name, none\)/)
+  const mobile = css.slice(css.indexOf('@media (max-width: 760px)'))
+  assert.match(mobile, /\.tp-ui-dialog-layer\s*{\s*place-items: center;/)
+  assert.doesNotMatch(mobile, /place-items: end|align-items: flex-end/)
+  assert.match(mobile, /safe-area-inset-top/)
+  assert.match(mobile, /safe-area-inset-bottom/)
 })
 
 test('dialog exposes overlay anatomy and close events', () => {
@@ -90,6 +103,7 @@ test('dialog exposes overlay anatomy and close events', () => {
       width: 480,
       customClass: '',
       showClose: true,
+      renderIcon: (h, name) => h('svg', { attrs: { 'data-icon': name } }),
       tone: 'neutral',
       motionRole: 'overlay',
       motionKey: 'edit-node',
@@ -102,10 +116,23 @@ test('dialog exposes overlay anatomy and close events', () => {
   )
   const surface = vnode.children[0]
   assert.equal(surface.data.attrs['data-ui-surface'], 'overlay')
-  assert.equal(surface.data.style.viewTransitionName, 'ui-edit-node')
+  assert.equal(surface.data.style['--ui-view-transition-name'], 'ui-edit-node')
+  assert.equal(surface.data.style.viewTransitionName, undefined)
   assert.equal(surface.children[1].data.attrs['data-ui-part'], 'body')
+  assert.equal(surface.children[0].children[1].children[0].data.attrs['data-icon'], 'close')
   surface.children[0].children[1].data.on.click()
   assert.deepEqual(emitted, ['close'])
+})
+
+test('composition root can supply one icon renderer without a package dependency', () => {
+  const renderIcon = () => {}
+  const registered = {}
+  createVue2Components({ include: ['UiDialog', 'UiPanel'], renderIcon }).install({
+    component: (name, component) => { registered[name] = component }
+  })
+  assert.equal(registered.UiDialog.props.renderIcon.default, renderIcon)
+  assert.equal(registered.UiPanel, UiPanel)
+  assert.equal(UiDialog.props.renderIcon.default, null)
 })
 
 test('button anatomy exposes semantic attributes and loading behavior', () => {

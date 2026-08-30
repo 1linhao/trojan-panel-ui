@@ -109,9 +109,9 @@ export default {
     },
     formatIcon(format) {
       return {
-        link: 'liquid-icon--document-copy',
-        file: 'liquid-icon--download',
-        qrcode: 'liquid-icon--full-screen'
+        link: 'document-copy',
+        file: 'download',
+        qrcode: 'full-screen'
       }[format]
     },
     absoluteUrl(path) {

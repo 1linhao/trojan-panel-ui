@@ -38,7 +38,7 @@
               class="liquid-add-button"
               type="primary"
               size="mini"
-              icon="liquid-icon--plus"
+              icon="plus"
               aria-label="添加服务器"
               @click="toAddNodeServer"
             ></liquid-button>

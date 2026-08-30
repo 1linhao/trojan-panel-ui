@@ -58,7 +58,9 @@ function surfaceData(context, { surface, classes }) {
     ...context.data,
     attrs,
     class: [classes, context.data.class],
-    style: [context.data.style, name ? { viewTransitionName: name } : null]
+    // Keep animation identity inert until the motion adapter opts into capture.
+    // A permanent view-transition-name creates a backdrop root, isolating glass.
+    style: [context.data.style, name ? { '--ui-view-transition-name': name } : null]
   }
 }
 
@@ -145,12 +147,14 @@ export const UiSheet = {
 
 export const UiDialog = {
   name: 'UiDialog',
+  // The composition root supplies icons; standalone consumers keep a text close action.
   props: {
     visible: Boolean,
     title: [String, Number],
     width: { type: [String, Number], default: '50%' },
     customClass: String,
     closeOnClickModal: { type: Boolean, default: true },
+    renderIcon: { type: Function, default: null },
     closeOnEscape: { type: Boolean, default: true },
     showClose: { type: Boolean, default: true },
     appendToBody: Boolean,
@@ -226,7 +230,7 @@ export const UiDialog = {
             class: ['tp-ui-dialog', this.customClass],
             style: {
               width,
-              viewTransitionName: name
+              '--ui-view-transition-name': name
             },
             attrs: {
               role: 'dialog',
@@ -258,7 +262,7 @@ export const UiDialog = {
                         attrs: { type: 'button', 'aria-label': '关闭' },
                         on: { click: this.close }
                       },
-                      ['×']
+                      [this.renderIcon ? this.renderIcon(h, 'close') : '关闭']
                     )
                   : null
               ]
@@ -365,14 +369,20 @@ export const COMPONENTS = Object.freeze({
 })
 
 export function createVue2Components({
-  include = Object.keys(COMPONENTS)
+  include = Object.keys(COMPONENTS),
+  renderIcon = null
 } = {}) {
   const unknown = include.filter((name) => !COMPONENTS[name])
   if (unknown.length)
     throw new TypeError(`Unknown UI components: ${unknown.join(', ')}`)
   return Object.freeze({
     install(Vue) {
-      include.forEach((name) => Vue.component(name, COMPONENTS[name]))
+      include.forEach((name) => {
+        const component = COMPONENTS[name]
+        Vue.component(name, name === 'UiDialog' && renderIcon
+          ? { ...component, props: { ...component.props, renderIcon: { type: Function, default: renderIcon } } }
+          : component)
+      })
     }
   })
 }

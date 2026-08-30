@@ -390,6 +390,25 @@ h3 {
   animation-delay: -9s;
 }
 
+.ambient .ambient__center {
+  display: none;
+}
+
+@media (max-width: 1060px) {
+  .ambient .ambient__center {
+    --ambient-center-size: clamp(280px, 58vmin, 560px);
+    display: block;
+    width: var(--ambient-center-size);
+    height: var(--ambient-center-size);
+    left: calc(50% - var(--ambient-center-size) / 2);
+    top: calc(50% - var(--ambient-center-size) / 2);
+    background: var(--blob-e);
+    filter: blur(70px);
+    opacity: 0.65;
+    animation-delay: -15s;
+  }
+}
+
 @keyframes drift {
   from {
     transform: translate3d(0, 0, 0) scale(1);
@@ -436,14 +455,14 @@ h3 {
 .tbl-wrap,
 .dd-menu,
 .liquid-table__scroll,
-.liquid-select-dropdown__wrap {
+.liquid-select__options {
   scrollbar-width: thin;
   scrollbar-color: transparent transparent;
 }
 
 .tbl-wrap,
 .dd-menu,
-.liquid-select-dropdown__wrap {
+.liquid-select__options {
   scrollbar-gutter: stable;
 }
 
@@ -457,15 +476,15 @@ h3 {
 .dd-menu:focus-within,
 .liquid-table__scroll:hover,
 .liquid-table__scroll:focus-within,
-.liquid-select-dropdown__wrap:hover,
-.liquid-select-dropdown__wrap:focus-within {
+.liquid-select__options:hover,
+.liquid-select__options:focus-within {
   scrollbar-color: color-mix(in srgb, var(--accent) 48%, var(--rim)) transparent;
 }
 
 .tbl-wrap::-webkit-scrollbar,
 .dd-menu::-webkit-scrollbar,
 .liquid-table__scroll::-webkit-scrollbar,
-.liquid-select-dropdown__wrap::-webkit-scrollbar {
+.liquid-select__options::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
@@ -473,21 +492,21 @@ h3 {
 .tbl-wrap::-webkit-scrollbar-track,
 .dd-menu::-webkit-scrollbar-track,
 .liquid-table__scroll::-webkit-scrollbar-track,
-.liquid-select-dropdown__wrap::-webkit-scrollbar-track {
+.liquid-select__options::-webkit-scrollbar-track {
   background: transparent;
 }
 
 .tbl-wrap::-webkit-scrollbar-corner,
 .dd-menu::-webkit-scrollbar-corner,
 .liquid-table__scroll::-webkit-scrollbar-corner,
-.liquid-select-dropdown__wrap::-webkit-scrollbar-corner {
+.liquid-select__options::-webkit-scrollbar-corner {
   background: transparent;
 }
 
 .tbl-wrap::-webkit-scrollbar-button,
 .dd-menu::-webkit-scrollbar-button,
 .liquid-table__scroll::-webkit-scrollbar-button,
-.liquid-select-dropdown__wrap::-webkit-scrollbar-button {
+.liquid-select__options::-webkit-scrollbar-button {
   display: none;
   width: 0;
   height: 0;
@@ -496,7 +515,7 @@ h3 {
 .tbl-wrap::-webkit-scrollbar-thumb,
 .dd-menu::-webkit-scrollbar-thumb,
 .liquid-table__scroll::-webkit-scrollbar-thumb,
-.liquid-select-dropdown__wrap::-webkit-scrollbar-thumb {
+.liquid-select__options::-webkit-scrollbar-thumb {
   border: 2px solid transparent;
   border-radius: 999px;
   background: transparent;
@@ -509,8 +528,8 @@ h3 {
 .dd-menu:focus-within::-webkit-scrollbar-thumb,
 .liquid-table__scroll:hover::-webkit-scrollbar-thumb,
 .liquid-table__scroll:focus-within::-webkit-scrollbar-thumb,
-.liquid-select-dropdown__wrap:hover::-webkit-scrollbar-thumb,
-.liquid-select-dropdown__wrap:focus-within::-webkit-scrollbar-thumb {
+.liquid-select__options:hover::-webkit-scrollbar-thumb,
+.liquid-select__options:focus-within::-webkit-scrollbar-thumb {
   background: color-mix(in srgb, var(--accent) 70%, var(--rim));
   background-clip: padding-box;
 }
@@ -617,35 +636,6 @@ h3 {
   height: 15px;
 }
 
-.cap > [class*='liquid-icon--'],
-.cap > .svg-icon,
-.liquid-button > [class*='liquid-icon--'],
-.liquid-button > .svg-icon {
-  width: 21px;
-  height: 21px;
-  padding: 3px;
-  border-radius: 7px;
-  color: var(--accent-deep);
-  background: color-mix(in srgb, var(--accent) 11%, transparent);
-  box-shadow: inset 0 1px 0 var(--spec-soft);
-}
-
-.cap.small > [class*='liquid-icon--'],
-.cap.small > .svg-icon {
-  width: 19px;
-  height: 19px;
-  padding: 2.5px;
-  border-radius: 6px;
-}
-
-.cap.primary > [class*='liquid-icon--'],
-.cap.primary > .svg-icon,
-.liquid-button.is-primary > [class*='liquid-icon--'],
-.liquid-button.is-primary > .svg-icon {
-  color: inherit;
-  background: rgba(255, 255, 255, 0.16);
-}
-
 .icon-btn {
   display: inline-flex;
   align-items: center;
@@ -728,10 +718,10 @@ h3 {
   gap: 6px;
   min-width: 0;
 }
-.fld > span {
-  color: var(--ink-2);
+.fld > span:first-child {
+  color: var(--form-label-ink);
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 650;
 }
 
 .fld input,
@@ -1265,12 +1255,6 @@ h3 {
   font-size: 15px;
   letter-spacing: -0.01em;
 }
-.brand small {
-  display: block;
-  color: var(--ink-3);
-  font-size: 10.5px;
-  letter-spacing: 0.1em;
-}
 
 .nav-group {
   margin: 10px 0 2px;
@@ -1311,10 +1295,6 @@ h3 {
   box-shadow: inset 0 1px 0 var(--spec-soft);
 }
 
-.side-foot {
-  margin-top: auto;
-  padding-top: 12px;
-}
 
 .user-pill {
   display: flex;
@@ -1435,8 +1415,9 @@ h3 {
   width: 18px;
   height: 18px;
 }
-.stat-tile .icon-wrap i {
-  font-size: 18px;
+.stat-tile .icon-wrap .app-icon {
+  width: 18px;
+  height: 18px;
 }
 .stat-tile b {
   font-size: 30px;
@@ -1818,6 +1799,8 @@ h3 {
 
 .auth-brand {
   display: grid;
+  min-width: 0;
+  overflow-wrap: anywhere;
   justify-items: center;
   gap: 12px;
   margin-bottom: 26px;
@@ -1835,8 +1818,6 @@ h3 {
 }
 .auth-brand p {
   margin: 0;
-  color: var(--ink-3);
-  font-size: 12.5px;
 }
 
 .auth-form {
@@ -2075,6 +2056,11 @@ h3 {
 .prototype-main {
   @extend .main;
 }
+.prototype-brand__name {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
 .prototype-brand {
   @extend .brand;
   width: 100%;
@@ -2089,9 +2075,6 @@ h3 {
 }
 .prototype-nav-item {
   @extend .nav-item;
-}
-.prototype-side-foot {
-  @extend .side-foot;
 }
 .prototype-user-pill {
   @extend .user-pill;
@@ -2165,24 +2148,6 @@ h3 {
   min-width: 0;
   width: 100%;
 }
-.prototype-shell .svg-icon {
-  width: 18px;
-  height: 18px;
-  fill: currentColor !important;
-  stroke: none !important;
-}
-.prototype-shell .svg-icon path {
-  fill: currentColor !important;
-  stroke: none !important;
-}
-.prototype-nav-item .svg-icon,
-.prototype-mobile-nav .svg-icon {
-  color: currentColor;
-  opacity: 0.92;
-  filter: drop-shadow(
-    0 1px 1px color-mix(in srgb, var(--ink) 12%, transparent)
-  );
-}
 .prototype-mobile-nav button {
   flex: 1 1 0;
   min-width: 0;
@@ -2204,10 +2169,6 @@ h3 {
 }
 .prototype-mobile-nav button:hover:not(.on) {
   color: var(--ink);
-}
-.prototype-mobile-nav .svg-icon {
-  width: 19px;
-  height: 19px;
 }
 .prototype-side.glass::before {
   background: linear-gradient(150deg, var(--spec-soft), transparent 42%),
@@ -2231,9 +2192,6 @@ h3 {
 }
 .prototype-mobile-nav .mobile-logout {
   color: var(--bad-fg);
-}
-.prototype-icon-btn .liquid-icon--switch-button {
-  font-size: 18px;
 }
 .prototype-shell .liquid-theme-toggle {
   flex: 0 0 auto;
@@ -2274,10 +2232,9 @@ h3 {
   color: var(--ink);
   background: var(--glass-soft);
 }
-.field-icon .svg-icon {
-  width: 17px;
-  height: 17px;
-  fill: currentColor !important;
+.field-icon .app-icon {
+  width: 18px;
+  height: 18px;
 }
 .auth-submit {
   width: 100%;
@@ -2308,52 +2265,18 @@ h3 {
 
 /* 所有原生 Liquid 控件共享同一输入规范。 */
 #app input,
-#app textarea,
-#app .liquid-input__inner,
-#app .liquid-textarea__inner {
+#app textarea {
   font-family: var(--font);
   font-size: 13px;
   font-weight: 500;
 }
 
 #app input::placeholder,
-#app textarea::placeholder,
-#app .liquid-input__inner::placeholder,
-#app .liquid-textarea__inner::placeholder {
+#app textarea::placeholder {
   color: var(--ink-3);
   font-size: 13px;
   font-weight: 500;
   opacity: 1;
-}
-
-#app .liquid-input__inner,
-#app .liquid-textarea__inner,
-#app .liquid-range-editor.liquid-input__inner,
-#app .liquid-input-number,
-#app .liquid-input-number .liquid-input__inner {
-  border-color: var(--control-border) !important;
-  color: var(--ink) !important;
-  background: var(--control-fill) !important;
-  box-shadow: inset 0 1px 0 var(--spec-soft) !important;
-  -webkit-text-fill-color: var(--ink);
-}
-
-#app .liquid-input__inner {
-  min-height: 40px;
-}
-
-#app .liquid-input__prefix,
-#app .liquid-input__suffix,
-#app .liquid-select__caret,
-#app .liquid-input__icon {
-  color: var(--ink-2);
-}
-
-#app .liquid-input.is-disabled .liquid-input__inner,
-#app .liquid-textarea.is-disabled .liquid-textarea__inner {
-  color: var(--ink-3) !important;
-  background: var(--glass-soft) !important;
-  -webkit-text-fill-color: var(--ink-3);
 }
 
 .profile-form {
@@ -2428,7 +2351,6 @@ h3 {
 .dashboard-detail-grid,
 .dashboard-detail-grid > .card,
 .dashboard-table-block .liquid-table,
-.dashboard-table-block .liquid-table__header-wrapper,
 .dashboard-table-block .liquid-table__scroll {
   min-width: 0;
   max-width: 100%;
@@ -2529,22 +2451,6 @@ h3 {
   border-radius: 13px !important;
 }
 
-.tp-ui-dialog .liquid-input__inner,
-.tp-ui-dialog .liquid-textarea__inner,
-.tp-ui-dialog .liquid-range-editor.liquid-input__inner,
-.tp-ui-dialog .liquid-input-number,
-.tp-ui-dialog .liquid-input-number .liquid-input__inner {
-  border: 1px solid var(--control-border) !important;
-  border-radius: 14px;
-  color: var(--ink) !important;
-  background: var(--control-fill) !important;
-  box-shadow: inset 0 1px 0 var(--spec-soft) !important;
-  font-family: var(--font);
-  font-size: 13px;
-  font-weight: 500;
-  -webkit-text-fill-color: var(--ink);
-}
-
 .account-expiry-column {
   width: 132px;
   min-width: 132px;
@@ -2559,54 +2465,12 @@ h3 {
   line-height: 1.45;
 }
 
-.tp-ui-dialog .liquid-input__prefix,
-.tp-ui-dialog .liquid-input__suffix,
-.tp-ui-dialog .liquid-input__icon,
-.tp-ui-dialog .liquid-select__caret {
-  color: var(--ink-2);
-}
-
-.tp-ui-dialog .liquid-input-number__decrease,
-.tp-ui-dialog .liquid-input-number__increase {
-  right: 6px;
-  width: 28px;
-  height: 14px;
-  border: 1px solid var(--control-border) !important;
-  border-radius: 8px;
-  color: var(--ink-2);
-  background: var(--glass-strong);
-  box-shadow: inset 0 1px 0 var(--spec-soft);
-  line-height: 12px;
-}
-
-.tp-ui-dialog .liquid-input-number.is-controls-right .liquid-input__inner {
-  padding-right: 48px;
-  text-align: left;
-}
-
-.tp-ui-dialog .liquid-input-number.is-controls-right .liquid-input-number__increase {
-  top: 5px;
-  bottom: auto;
-}
-
-.tp-ui-dialog .liquid-input-number.is-controls-right .liquid-input-number__decrease {
-  top: auto;
-  bottom: 5px;
-}
-
-.tp-ui-dialog .liquid-input-number__decrease:hover,
-.tp-ui-dialog .liquid-input-number__increase:hover {
-  color: var(--accent);
-  border-color: color-mix(in srgb, var(--accent) 48%, var(--rim)) !important;
-  background: color-mix(in srgb, var(--accent) 10%, var(--glass-strong));
-}
-
 .dialog-section-title {
   display: flex;
   align-items: center;
   gap: 12px;
   margin: 25px 0 20px;
-  color: var(--ink-3);
+  color: var(--form-label-ink);
   background: transparent;
   font-size: 11px;
   font-weight: 700;
@@ -2628,263 +2492,13 @@ h3 {
   opacity: 1;
 }
 
-.tp-ui-dialog .liquid-button,
-.liquid-message-box .liquid-button {
-  min-height: 36px;
-  padding: 9px 16px;
-  border: 1px solid var(--rim);
-  border-radius: 999px;
-  color: var(--ink);
-  background: var(--glass-input);
-  box-shadow: inset 0 1px 0 var(--spec-soft), var(--shadow-soft);
-  font-family: var(--font);
-  font-weight: 650;
-}
-
-.tp-ui-dialog .liquid-button--primary,
-.liquid-message-box .liquid-button--primary {
-  color: var(--on-accent);
-  border-color: transparent;
-  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
-}
-
-#app .liquid-radio-button__inner,
-.tp-ui-dialog .liquid-radio-button__inner {
-  min-height: 36px;
-  padding: 10px 14px;
-  border-color: var(--hairline) !important;
-  border-radius: 999px !important;
-  color: var(--ink-2);
-  background: transparent;
-  box-shadow: none !important;
-  font-size: 12.5px;
-  font-weight: 650;
-}
-
-#app .liquid-radio-button:first-child .liquid-radio-button__inner,
-#app .liquid-radio-button:last-child .liquid-radio-button__inner,
-.tp-ui-dialog .liquid-radio-button:first-child .liquid-radio-button__inner,
-.tp-ui-dialog .liquid-radio-button:last-child .liquid-radio-button__inner {
-  border-radius: 999px !important;
-}
-
-#app .liquid-radio-button,
-.tp-ui-dialog .liquid-radio-button {
-  margin-right: 4px;
-}
-
-#app .liquid-radio-button__orig-radio:checked + .liquid-radio-button__inner,
-.tp-ui-dialog .liquid-radio-button__orig-radio:checked + .liquid-radio-button__inner {
-  color: var(--ink);
-  border-color: var(--rim) !important;
-  background: var(--glass-strong);
-  box-shadow: inset 0 1px 0 var(--spec), var(--shadow-soft) !important;
-}
-
-#app .liquid-switch__label,
-.tp-ui-dialog .liquid-switch__label {
-  color: var(--ink-3);
-  font-size: 11.5px;
-  font-weight: 650;
-}
-
-#app .liquid-switch__label.is-active,
-.tp-ui-dialog .liquid-switch__label.is-active {
-  color: var(--ink);
-}
-
-#app .liquid-switch__core,
-.tp-ui-dialog .liquid-switch__core {
-  width: 46px !important;
-  height: 28px;
-  border-color: var(--hairline) !important;
-  border-radius: 999px;
-  background: var(--neutral-bg) !important;
-}
-
-#app .liquid-switch__core::after,
-.tp-ui-dialog .liquid-switch__core::after {
-  top: 2px;
-  left: 2px;
-  width: 22px;
-  height: 22px;
-  box-shadow: 0 2px 6px rgba(10, 20, 50, 0.28);
-}
-
-#app .liquid-switch.is-checked .liquid-switch__core,
-.tp-ui-dialog .liquid-switch.is-checked .liquid-switch__core {
-  border-color: transparent !important;
-  background: var(--accent) !important;
-}
-
-#app .liquid-switch.is-checked .liquid-switch__core::after,
-.tp-ui-dialog .liquid-switch.is-checked .liquid-switch__core::after {
-  left: 100%;
-  margin-left: -24px;
-}
-
-#app .liquid-checkbox__inner,
-#app .liquid-radio__inner,
-.tp-ui-dialog .liquid-checkbox__inner,
-.tp-ui-dialog .liquid-radio__inner {
-  border-color: var(--rim);
-  background: var(--glass-input);
-  box-shadow: inset 0 1px 0 var(--spec-soft);
-}
-
-#app .liquid-checkbox__label,
-#app .liquid-radio__label,
-.tp-ui-dialog .liquid-checkbox__label,
-.tp-ui-dialog .liquid-radio__label {
-  color: var(--ink-2);
-  font-size: 13px;
-}
-
-#app .liquid-tabs__nav {
-  display: inline-flex;
-  gap: 4px;
-  padding: 4px;
-  border: 1px solid var(--rim);
-  border-radius: 999px;
-  background: var(--glass-soft);
-}
-
-#app .liquid-tabs__nav-wrap::after,
-#app .liquid-tabs__active-bar {
-  display: none;
-}
-
-#app .liquid-tabs__item {
-  height: 36px;
-  padding: 0 16px !important;
-  border-radius: 999px;
-  color: var(--ink-2);
-  line-height: 36px;
-  font-size: 12.5px;
-  font-weight: 650;
-}
-
-#app .liquid-tabs__item.is-active {
-  color: var(--ink);
-  background: var(--glass-strong);
-  box-shadow: inset 0 1px 0 var(--spec), var(--shadow-soft);
-}
-
-#app .liquid-tabs__content {
-  padding-top: 4px;
-}
-
-#app .liquid-divider,
-.tp-ui-dialog .liquid-divider {
-  background: var(--hairline);
-}
-
-#app .liquid-divider__text,
-.tp-ui-dialog .liquid-divider__text {
-  color: var(--ink-3);
-  background: var(--glass-popover);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-}
-
-#app .liquid-descriptions,
-#app .liquid-descriptions__body,
-#app .liquid-descriptions .liquid-descriptions-item__cell {
-  color: var(--ink);
-  background: transparent;
-}
-
-#app .liquid-descriptions-item__label {
-  color: var(--ink-3);
-  font-size: 11.5px;
-  font-weight: 700;
-}
-
-#app .liquid-color-picker__trigger {
-  border-color: var(--rim);
-  border-radius: 12px;
-  background: var(--glass-input);
-}
-
-.tp-ui-dialog__wrapper,
-.liquid-message-box__wrapper {
-  backdrop-filter: none;
-}
-
-/* Element 默认在弹窗 wrapper 上执行 translate3d。Chromium 会在该合成层动画
-   结束时重新栅格化内部 backdrop-filter，导致玻璃背景瞬间改变。禁用这段动画，
-   让面板从首帧开始就使用最终的实时模糊。 */
-.dialog-fade-enter-active,
-.dialog-fade-leave-active {
-  animation: none !important;
-  transition: none !important;
-}
-
-.dialog-fade-enter,
-.dialog-fade-leave-to {
-  opacity: 1 !important;
-  transform: none !important;
-}
-
-.liquid-message,
-.liquid-notification {
+.liquid-message {
   border: 1px solid var(--rim);
   border-radius: var(--r-md);
   color: var(--ink);
   background: var(--glass-popover);
   box-shadow: var(--shadow), inset 0 1px 0 var(--spec);
   backdrop-filter: blur(28px) saturate(170%);
-}
-
-.liquid-message__content,
-.liquid-notification__title,
-.liquid-notification__content {
-  color: var(--ink);
-}
-
-.liquid-tooltip__popper,
-.liquid-popover {
-  border-color: var(--rim) !important;
-  border-radius: 12px;
-  color: var(--ink) !important;
-  background: var(--glass-popover) !important;
-  box-shadow: var(--shadow-soft);
-}
-
-.liquid-picker-panel,
-.liquid-color-dropdown {
-  border-color: var(--rim);
-  color: var(--ink);
-  background: var(--glass-popover);
-}
-
-.liquid-picker-panel__icon-btn,
-.liquid-date-picker__header-label,
-.liquid-date-table th,
-.liquid-date-table td.available,
-.liquid-month-table td .cell,
-.liquid-year-table td .cell {
-  color: var(--ink-2);
-}
-
-.liquid-date-table td.current:not(.disabled) span,
-.liquid-month-table td.current:not(.disabled) .cell,
-.liquid-year-table td.current:not(.disabled) .cell {
-  color: var(--on-accent);
-  background: var(--accent);
-}
-
-.liquid-select-dropdown__item,
-.liquid-dropdown-menu__item {
-  font-size: 13px;
-  font-weight: 550;
-}
-
-.liquid-pagination .liquid-input__inner {
-  border-color: var(--control-border) !important;
-  color: var(--ink) !important;
-  background: var(--control-fill) !important;
 }
 
 .fld input,
@@ -2895,58 +2509,6 @@ h3 {
 .dd-trigger {
   border-color: var(--control-border);
   background: var(--control-fill);
-}
-
-#app .liquid-select .liquid-input__inner,
-.tp-ui-dialog .liquid-select .liquid-input__inner {
-  border-color: var(--control-border) !important;
-  background: var(--control-fill) !important;
-}
-
-#app .liquid-select .liquid-input.is-focus .liquid-input__inner,
-#app .liquid-select:hover .liquid-input__inner,
-.tp-ui-dialog .liquid-select .liquid-input.is-focus .liquid-input__inner,
-.tp-ui-dialog .liquid-select:hover .liquid-input__inner {
-  border-color: color-mix(
-    in srgb,
-    var(--accent) 56%,
-    var(--control-border)
-  ) !important;
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 13%, transparent) !important;
-}
-
-.liquid-select-dropdown {
-  padding: 6px;
-  border: 1px solid var(--control-border);
-  border-radius: 16px;
-  background: linear-gradient(150deg, var(--spec-soft), transparent 44%),
-    var(--glass-popover);
-  box-shadow: var(--shadow), inset 0 1px 0 var(--spec-soft);
-}
-
-.liquid-select-dropdown__list {
-  padding: 0;
-}
-
-.liquid-select-dropdown__item {
-  height: 38px;
-  margin: 2px 0;
-  padding: 0 12px;
-  border-radius: 10px;
-  color: var(--ink-2);
-  line-height: 38px;
-}
-
-.liquid-select-dropdown__item.hover,
-.liquid-select-dropdown__item:hover {
-  color: var(--ink);
-  background: var(--glass-soft);
-}
-
-.liquid-select-dropdown__item.selected {
-  color: var(--accent-deep);
-  background: color-mix(in srgb, var(--accent) 13%, transparent);
-  font-weight: 700;
 }
 
 @media (hover: none), (pointer: coarse) {
@@ -3169,10 +2731,6 @@ h3 {
   }
   .split-toggle {
     justify-content: center;
-  }
-  .pagination-container .liquid-pagination__sizes,
-  .pagination-container .liquid-pagination__jump {
-    display: none !important;
   }
   .pagination-container {
     padding-left: 0 !important;

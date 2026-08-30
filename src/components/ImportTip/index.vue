@@ -29,7 +29,7 @@
             {{ $t('config.webFileSelect') }}
           </liquid-button>
           <liquid-button
-            icon="liquid-icon--download"
+            icon="download"
             @click="downloadTemplate"
           >
             {{ $t('table.downloadTemplate') }}

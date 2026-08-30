@@ -18,7 +18,7 @@
       <liquid-form-item class="panel-config__actions">
         <liquid-button
           type="primary"
-          icon="liquid-icon--check"
+          icon="check"
           @click="updateData"
         >
           {{ $t('table.confirm') }}
@@ -31,6 +31,7 @@
 <script>
 import { updateSystemById } from '@/api/system'
 import UploadLogo from '@/components/UploadLogo'
+import { updatePanelBranding } from '@/utils/panel-branding'
 
 export default {
   name: 'PanelConfigForm',
@@ -63,7 +64,9 @@ export default {
     updateData() {
       this.$refs.dataForm.validate((valid) => {
         if (!valid) return
-        updateSystemById(Object.assign({}, this.systemConfig)).then(() => {
+        const savedConfig = Object.assign({}, this.systemConfig)
+        updateSystemById(savedConfig).then(() => {
+          updatePanelBranding(savedConfig)
           this.$nextTick(() => this.$refs.dataForm.clearValidate())
           this.$notify({
             title: 'Success',

@@ -3,7 +3,7 @@
     <ui-panel motion-key="account-filters">
       <div class="toolbar">
         <div class="search-box">
-          <i class="liquid-icon--search"></i>
+          <app-icon name="search" />
           <input
             v-model="listQuery.username"
             placeholder="按用户名搜索"
@@ -30,7 +30,7 @@
           type="button"
           @click="handleCreateBatch"
         >
-          <i class="liquid-icon--user-plus"></i>批量创建
+          <app-icon name="user-plus" />批量创建
         </button>
         <button
           v-if="checkPermission(['sysadmin'])"
@@ -38,7 +38,7 @@
           type="button"
           @click="handleImport"
         >
-          <i class="liquid-icon--import"></i>导入
+          <app-icon name="import" />导入
         </button>
         <button
           v-if="checkPermission(['sysadmin'])"
@@ -46,7 +46,7 @@
           type="button"
           @click="handleExport"
         >
-          <i class="liquid-icon--export"></i>导出
+          <app-icon name="export" />导出
         </button>
         <button
           v-if="checkPermission(['sysadmin'])"
@@ -54,7 +54,7 @@
           type="button"
           @click="exportAccountUnused"
         >
-          <i class="liquid-icon--export"></i>导出未使用
+          <app-icon name="export" />导出未使用
         </button>
         <button
           v-if="checkPermission(['sysadmin'])"
@@ -62,7 +62,7 @@
           type="button"
           @click="handleCreate"
         >
-          <i class="liquid-icon--plus"></i>新建账号
+          <app-icon name="plus" />新建账号
         </button>
       </div>
     </ui-panel>
@@ -85,7 +85,7 @@
                     aria-label="重置所有用户流量统计"
                     @click="handleResetAllAccountTraffic"
                   >
-                    <i class="liquid-icon--refresh"></i>重置全部
+                    <app-icon name="refresh" />重置全部
                   </button>
                 </div>
               </th>
@@ -156,7 +156,7 @@
                     title="编辑"
                     @click="handleUpdate(row)"
                   >
-                    <i class="liquid-icon--edit"></i>
+                    <app-icon name="edit" />
                   </button>
                   <button
                     v-if="checkPermission(['sysadmin'])"
@@ -165,7 +165,7 @@
                     title="重置流量"
                     @click="handleReset(row)"
                   >
-                    <i class="liquid-icon--refresh"></i>
+                    <app-icon name="refresh" />
                   </button>
                   <button
                     v-if="
@@ -177,7 +177,7 @@
                     title="复制订阅"
                     @click="handleClashSubscribeForSb(row)"
                   >
-                    <i class="liquid-icon--document-copy"></i>
+                    <app-icon name="document-copy" />
                   </button>
                   <button
                     v-if="checkPermission(['sysadmin'])"
@@ -186,7 +186,7 @@
                     title="删除"
                     @click="handleDelete(row, index)"
                   >
-                    <i class="liquid-icon--delete"></i>
+                    <app-icon name="delete" />
                   </button>
                 </div>
               </td>

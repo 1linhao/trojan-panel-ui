@@ -36,7 +36,7 @@
       title="清空"
       @click="clear"
     >
-      <i class="liquid-icon--close" aria-hidden="true" />
+      <app-icon name="close" aria-hidden="true" />
     </button>
   </div>
 </template>

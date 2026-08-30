@@ -3,8 +3,7 @@
     <ui-panel motion-key="email-filters">
       <div class="toolbar">
         <div class="search-box">
-          <i class="liquid-icon--search"></i
-          ><input
+          <app-icon name="search" /><input
             v-model="listQuery.toEmail"
             placeholder="按收件邮箱搜索"
             @keyup.enter="handleFilter"

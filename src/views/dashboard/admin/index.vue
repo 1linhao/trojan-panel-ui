@@ -2,12 +2,12 @@
   <div class="prototype-page grid">
     <div class="grid cols-4">
       <ui-panel variant="metric" class="stat-tile" motion-key="account-count">
-        <span class="icon-wrap tone-blue"><i class="liquid-icon--user-solid" /></span>
+        <span class="icon-wrap tone-blue"><app-icon name="user-solid" /></span>
         <b class="num">{{ panelGroupData.accountCount }}</b
         ><span>账号总数</span>
       </ui-panel>
       <ui-panel variant="metric" class="stat-tile" motion-key="node-count">
-        <span class="icon-wrap tone-violet"><i class="liquid-icon--connection" /></span>
+        <span class="icon-wrap tone-violet"><app-icon name="connection" /></span>
         <b class="num">{{
           panelGroupData.nodeCount || panelGroupData.nodeNum
         }}</b

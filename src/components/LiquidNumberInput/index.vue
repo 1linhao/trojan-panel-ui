@@ -27,7 +27,7 @@
       :disabled="disabled || decreaseDisabled"
       @click="stepValue(-1)"
     >
-      <i class="liquid-icon--minus" aria-hidden="true" />
+      <app-icon name="minus" aria-hidden="true" />
     </button>
     <button
       class="liquid-number-input__step"
@@ -37,7 +37,7 @@
       :disabled="disabled || increaseDisabled"
       @click="stepValue(1)"
     >
-      <i class="liquid-icon--plus" aria-hidden="true" />
+      <app-icon name="plus" aria-hidden="true" />
     </button>
   </div>
 </template>

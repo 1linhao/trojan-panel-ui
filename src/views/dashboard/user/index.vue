@@ -40,14 +40,14 @@
             type="button"
             @click="exportVisible = true"
           >
-            <i class="liquid-icon--export"></i>打开订阅导出
+            <app-icon name="export" />打开订阅导出
           </button>
           <button
             class="cap"
             type="button"
             @click="$router.push('/node-manage/node-list')"
           >
-            <i class="liquid-icon--connection"></i>查看我的节点
+            <app-icon name="connection" />查看我的节点
           </button>
         </div>
       </ui-panel>

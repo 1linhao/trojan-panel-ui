@@ -4,7 +4,7 @@ import '@/styles/index.scss'
 import App from './App'
 import store from '@/store'
 import router from '@/router'
-import '@/icons'
+import AppIcon from '@/components/AppIcon'
 import '@/permission'
 import i18n from '@/lang'
 import { initializeTheme } from '@/utils/theme'
@@ -13,6 +13,7 @@ import { structuralComponents } from '@/components/LiquidStructural'
 import { Message, MessageBox, Notification } from '@/utils/liquid-feedback'
 import { installUiInteractions } from '@/adapters/ui-interactions'
 import { createVue2Components } from '@tp-ui/components-vue2'
+import { renderIcon } from '@tp-ui/icons'
 
 const LiquidNumberInput = () =>
   import(/* webpackChunkName: "liquid-controls" */ '@/components/LiquidNumberInput')
@@ -34,11 +35,12 @@ Object.entries(structuralComponents).forEach(([name, component]) => {
 })
 
 Vue.use(
-  createVue2Components({ include: ['UiPanel', 'UiSheet', 'UiDialog'] })
+  createVue2Components({ include: ['UiPanel', 'UiSheet', 'UiDialog'], renderIcon })
 )
 
 Vue.config.productionTip = false
 
+Vue.component('AppIcon', AppIcon)
 Vue.component('LiquidNumberInput', LiquidNumberInput)
 Vue.component('LiquidInput', LiquidInput)
 Vue.component('LiquidSelect', LiquidSelect)

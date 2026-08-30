@@ -19,7 +19,7 @@
       @blur="handleInputConfirm"
     />
     <liquid-button
-      icon="liquid-icon--plus"
+      icon="plus"
       v-else
       class="edit-tag-add liquid-add-button"
       type="primary"

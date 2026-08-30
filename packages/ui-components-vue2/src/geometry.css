@@ -17,6 +17,14 @@
   box-sizing: border-box;
 }
 
+/* The motion adapter enables this only around a view-transition capture and
+   removes it on completion. Idle surfaces must not become backdrop roots. */
+[data-ui-view-transitions='active'] .tp-ui-panel,
+[data-ui-view-transitions='active'] .tp-ui-sheet,
+[data-ui-view-transitions='active'] .tp-ui-dialog {
+  view-transition-name: var(--ui-view-transition-name, none);
+}
+
 .tp-ui-panel__body,
 .tp-ui-sheet__body {
   display: contents;
@@ -38,8 +46,9 @@
 
 @media (max-width: 760px) {
   .tp-ui-dialog-layer {
-    place-items: end center;
-    padding: 10px 10px max(10px, env(safe-area-inset-bottom));
+    place-items: center;
+    padding: max(10px, env(safe-area-inset-top)) 10px
+      max(10px, env(safe-area-inset-bottom));
   }
 
   .tp-ui-dialog {

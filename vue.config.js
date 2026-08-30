@@ -9,6 +9,7 @@ function resolve(dir) {
 const name = defaultSettings.title || 'Trojan Panel'
 const port = process.env.port || 8888
 const uiAliases = {
+  '@tp-ui/icons': resolve('packages/ui-icons/src'),
   '@tp-ui/components-vue2': resolve('packages/ui-components-vue2/src'),
   '@tp-ui/motion-native': resolve('packages/ui-motion-native/src')
 }

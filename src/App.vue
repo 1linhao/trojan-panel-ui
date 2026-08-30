@@ -1,11 +1,12 @@
 <template>
   <div id="app">
-    <div class="ambient liquid-ambient" aria-hidden="true">
+    <div class="ambient" aria-hidden="true">
       <i />
       <i />
       <i />
       <i />
       <i />
+      <i class="ambient__center" />
     </div>
     <router-view />
   </div>

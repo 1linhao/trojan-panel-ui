@@ -3,8 +3,9 @@
     <liquid-theme-toggle class="auth-theme-toggle" />
     <ui-panel variant="auth" motion-role="shared" motion-key="auth-primary">
       <div class="auth-brand">
-        <span class="brand-mark">T</span>
+        <panel-logo />
         <h1>创建账号</h1>
+        <p class="ui-supporting-text">{{ branding.systemName }}</p>
       </div>
       <liquid-form
         ref="registerForm"
@@ -37,8 +38,7 @@
                 class="field-icon"
                 @click="showPwd"
               >
-                <svg-icon
-                  :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
+                <app-icon :name="passwordType === 'password' ? 'eye-off' : 'eye'"
                 /></button></span></label
         ></liquid-form-item>
         <liquid-form-item prop="pass"
@@ -87,12 +87,13 @@
 
 <script>
 import { generateCaptcha } from '@/api/account'
-import { setting } from '@/api/system'
+import { panelBranding, loadPanelSettings } from '@/utils/panel-branding'
+import PanelLogo from '@/components/PanelLogo'
 import LiquidThemeToggle from '@/components/LiquidThemeToggle'
 
 export default {
   name: 'RegisterPage',
-  components: { LiquidThemeToggle },
+  components: { LiquidThemeToggle, PanelLogo },
   data() {
     const validatePass = (rule, value, callback) => {
       if (this.registerForm.passOne !== this.registerForm.pass) {
@@ -116,6 +117,7 @@ export default {
         captchaId: '',
         captchaCode: ''
       },
+      branding: panelBranding,
       captchaImg: '',
       captchaEnable: 0,
       registerRules: {
@@ -220,134 +222,11 @@ export default {
       this.$router.push('/login').catch(() => true)
     },
     setting() {
-      setting().then((response) => {
+      loadPanelSettings().then((response) => {
         const { data } = response
         this.captchaEnable = data.captchaEnable
-      })
+      }).catch(() => {})
     }
   }
 }
 </script>
-
-<style lang="scss">
-/* 修复input 背景不协调 和光标变色 */
-/* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
-
-$bg: #283443;
-$light_gray: #fff;
-$cursor: #fff;
-
-@supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
-  .login-container .liquid-input input {
-    color: $cursor;
-  }
-}
-
-/* reset legacy UI css */
-.login-container {
-  .liquid-input {
-    display: inline-block;
-    height: 47px;
-    width: 85%;
-
-    input {
-      background: transparent;
-      border: 0px;
-      -webkit-appearance: none;
-      border-radius: 0px;
-      padding: 12px 5px 12px 15px;
-      color: $light_gray;
-      height: 47px;
-      caret-color: $cursor;
-
-      &:-webkit-autofill {
-        box-shadow: 0 0 0px 1000px $bg inset !important;
-        -webkit-text-fill-color: $cursor !important;
-      }
-    }
-  }
-
-  .liquid-form-item {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    color: #454545;
-  }
-}
-</style>
-
-<style lang="scss" scoped>
-$bg: #2d3a4b;
-$dark_gray: #889aa4;
-$light_gray: #eee;
-
-.login-container {
-  min-height: 100%;
-  width: 100%;
-  background-color: $bg;
-  overflow: hidden;
-
-  .login-form {
-    position: relative;
-    width: 520px;
-    max-width: 100%;
-    padding: 160px 35px 0;
-    margin: 0 auto;
-    overflow: hidden;
-  }
-
-  .tips {
-    font-size: 14px;
-    color: #fff;
-    margin-bottom: 10px;
-
-    span {
-      &:first-of-type {
-        margin-right: 16px;
-      }
-    }
-  }
-
-  .svg-container {
-    padding: 6px 5px 6px 15px;
-    color: $dark_gray;
-    vertical-align: middle;
-    width: 30px;
-    display: inline-block;
-  }
-
-  .title-container {
-    position: relative;
-
-    .title {
-      font-size: 26px;
-      color: $light_gray;
-      margin: 0px auto 40px auto;
-      text-align: center;
-      font-weight: bold;
-    }
-  }
-
-  .show-pwd {
-    position: absolute;
-    right: 10px;
-    top: 7px;
-    font-size: 16px;
-    color: $dark_gray;
-    cursor: pointer;
-    user-select: none;
-  }
-
-  .captcha {
-    position: absolute;
-    right: 0;
-    top: 0;
-
-    img {
-      height: 48px;
-      cursor: pointer;
-      vertical-align: middle;
-    }
-  }
-}
-</style>

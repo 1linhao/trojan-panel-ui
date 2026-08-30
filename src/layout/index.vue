@@ -6,8 +6,8 @@
         type="button"
         @click="go('/dashboard/index')"
       >
-        <span class="brand-mark">T</span>
-        <span><strong>Trojan Panel</strong><small>FROSTED GLASS</small></span>
+        <panel-logo />
+        <span class="prototype-brand__name"><strong>{{ branding.systemName }}</strong></span>
       </button>
       <template v-for="group in visibleGroups">
         <div :key="`${group.label}-label`" class="prototype-nav-group">
@@ -20,7 +20,7 @@
           type="button"
           @click="go(item.path)"
         >
-          <liquid-nav-icon
+          <app-icon
             :name="item.icon"
             class="prototype-nav-icon prototype-desktop-nav-icon"
           />
@@ -40,7 +40,7 @@
             :title="isAdmin ? '切换到普通用户演示' : '切换到管理员演示'"
             @click="switchPreviewRole"
           >
-            <i :class="isAdmin ? 'liquid-icon--user' : 'liquid-icon--setting'" aria-hidden="true" />
+            <app-icon :name="isAdmin ? 'user' : 'setting'" aria-hidden="true" />
             <span>{{ isAdmin ? '普通用户' : '管理员' }}</span>
           </button>
           <liquid-theme-toggle />
@@ -54,7 +54,7 @@
               aria-label="退出登录"
               @click="logout"
             >
-              <i class="liquid-icon--switch-button" aria-hidden="true" />
+              <app-icon name="switch-button" aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -75,7 +75,7 @@
         type="button"
         @click="go(item.path)"
       >
-        <liquid-nav-icon
+        <app-icon
           :name="item.icon"
           class="prototype-nav-icon prototype-mobile-icon"
         />
@@ -87,9 +87,10 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { AppMain } from './components'
+import AppMain from './components/AppMain'
+import PanelLogo from '@/components/PanelLogo'
+import { panelBranding, loadPanelSettings } from '@/utils/panel-branding'
 import LiquidThemeToggle from '@/components/LiquidThemeToggle'
-import LiquidNavIcon from '@/components/LiquidNavIcon'
 import { setToken } from '@/utils/auth'
 
 const ADMIN_GROUPS = [
@@ -226,8 +227,12 @@ export default {
   name: 'PrototypeLayout',
   components: {
     AppMain,
-    LiquidThemeToggle,
-    LiquidNavIcon
+    PanelLogo,
+    LiquidThemeToggle
+  },
+  data: () => ({ branding: panelBranding }),
+  created() {
+    loadPanelSettings().catch(() => {})
   },
   computed: {
     ...mapGetters(['roles', 'username']),

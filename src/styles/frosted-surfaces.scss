@@ -1,0 +1,135 @@
+/* Shared frosted surfaces; component geometry and motion live in their own layers. */
+
+html,
+body,
+#app {
+  min-height: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  color: var(--ink);
+  background: var(--bg-base);
+  font-family: var(--font);
+}
+
+body {
+  transition: color 0.22s ease, background 0.22s ease;
+}
+
+#app > :not(.ambient) {
+  position: relative;
+  z-index: 1;
+}
+
+#app .app-container,
+#app .dashboard-container {
+  position: relative;
+  padding: 24px !important;
+  color: var(--ink);
+  background: transparent !important;
+}
+
+.tp-ui-dialog {
+  width: min(680px, calc(100vw - 32px));
+  border: 1px solid var(--rim);
+  border-radius: var(--r-xl);
+  color: var(--ink);
+  background: linear-gradient(
+      150deg,
+      var(--spec-soft),
+      transparent 46%
+    ),
+    var(--glass);
+  box-shadow: var(--shadow), inset 0 1px 0 var(--spec);
+  -webkit-backdrop-filter: blur(36px) saturate(180%);
+  backdrop-filter: blur(36px) saturate(180%);
+  overflow: hidden;
+}
+
+.tp-ui-dialog.ui-node-editor {
+  width: min(900px, calc(100vw - 32px));
+}
+
+.tp-ui-dialog__header {
+  padding: 22px 26px 18px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.tp-ui-dialog__title {
+  color: var(--ink);
+  font-size: 20px;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+}
+.tp-ui-dialog__body {
+  max-height: min(68vh, 760px);
+  padding: 24px 26px;
+  color: var(--ink);
+  overflow-y: auto;
+}
+.tp-ui-dialog__footer {
+  padding: 16px 26px 22px;
+  border-top: 1px solid var(--hairline);
+}
+.tp-ui-dialog__footer .dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.liquid-message-box {
+  border: 1px solid var(--rim);
+  border-radius: var(--r-lg);
+  color: var(--ink);
+  background: var(--glass);
+  box-shadow: var(--shadow), inset 0 1px 0 var(--spec);
+  -webkit-backdrop-filter: blur(32px) saturate(180%);
+  backdrop-filter: blur(32px) saturate(180%);
+}
+
+.auth-theme-toggle {
+  position: fixed;
+  z-index: 10;
+  top: 22px;
+  right: 22px;
+}
+
+.liquid-theme-toggle {
+  display: inline-grid !important;
+  place-items: center;
+  width: 38px;
+  min-width: 38px;
+  height: 38px !important;
+  padding: 0 !important;
+  border: 1px solid var(--rim);
+  border-radius: 50%;
+  color: var(--ink-2);
+  background: var(--glass-input);
+  box-shadow: inset 0 1px 0 var(--spec), var(--shadow-soft);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  font-size: 19px !important;
+  line-height: 1 !important;
+  cursor: pointer;
+}
+
+.liquid-theme-toggle:hover {
+  color: var(--accent);
+}
+
+@media (max-width: 992px) {
+  #app .app-container,
+  #app .dashboard-container {
+    padding: 16px 6px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

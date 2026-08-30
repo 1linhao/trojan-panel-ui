@@ -191,7 +191,7 @@
           class="liquid-add-button"
           type="primary"
           size="mini"
-          icon="liquid-icon--plus"
+          icon="plus"
           @click="handleCreateFallbackProps"
       ></liquid-button>
     </liquid-form-item>

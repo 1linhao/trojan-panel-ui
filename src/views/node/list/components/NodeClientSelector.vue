@@ -16,7 +16,7 @@
       >
         <span class="client-choice__mark">{{ client.mark }}</span>
         <span class="client-choice__label">{{ client.label }}</span>
-        <i class="liquid-icon--check client-choice__check" aria-hidden="true" />
+        <app-icon name="check" class="client-choice__check" aria-hidden="true" />
       </button>
     </div>
 
@@ -25,7 +25,7 @@
     </p>
 
     <div v-if="showNaiveWarning" class="client-selector__warning" role="alert">
-      <i class="liquid-icon--warning-outline" aria-hidden="true" />
+      <app-icon name="warning-outline" aria-hidden="true" />
       <span>{{ $t('table.naiveClientWarning') }}</span>
     </div>
   </div>
@@ -171,10 +171,7 @@ export default {
   justify-content: center;
   width: 20px;
   height: 20px;
-  border-radius: 50%;
-  color: var(--on-accent);
-  background: var(--accent);
-  font-size: 11px;
+  color: var(--accent-deep);
   opacity: 0;
   transform: scale(0.72);
   transition: opacity 160ms ease, transform 160ms ease;

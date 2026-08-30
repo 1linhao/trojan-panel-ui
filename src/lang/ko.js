@@ -184,19 +184,6 @@ export default {
     desc: '역순으로',
     asc: '양성 서열'
   },
-  tagsView: {
-    refresh: '새로 고침',
-    close: '폐쇄',
-    closeOthers: '다른 사람을 닫습니다',
-    closeAll: '모두 닫기'
-  },
-  settings: {
-    title: '시스템 레이아웃 구성',
-    theme: '테마 색상',
-    tagsView: '켜다 Tags-View',
-    fixedHeader: '결정된 Header',
-    sidebarLogo: '사이드바 Logo'
-  },
   dashboard: {
     diskUsed: '디스크 사용량',
     memUsed: '메모리 사용량',

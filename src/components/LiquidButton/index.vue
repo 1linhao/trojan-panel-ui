@@ -8,8 +8,8 @@
     v-bind="$attrs"
     @click="$emit('click', $event)"
   >
-    <i v-if="loading" class="liquid-icon--loading" aria-hidden="true" />
-    <i v-else-if="icon" :class="icon" aria-hidden="true" />
+    <app-icon v-if="loading" name="loading" aria-hidden="true" />
+    <app-icon v-else-if="icon" :name="icon" aria-hidden="true" />
     <span v-if="$slots.default"><slot /></span>
   </button>
 </template>
@@ -26,53 +26,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.liquid-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  min-height: 38px;
-  padding: 8px 16px;
-  border: 1px solid var(--rim);
-  border-radius: 999px;
-  color: var(--ink);
-  background: var(--glass-input);
-  box-shadow: inset 0 1px 0 var(--spec-soft), var(--shadow-soft);
-  font: inherit;
-  font-size: 12.5px;
-  font-weight: 650;
-  line-height: 1.2;
-  cursor: pointer;
-  transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
-}
-@media (hover: hover) and (pointer: fine) {
-  .liquid-button:hover:not(:disabled) {
-    color: var(--accent);
-    background: var(--glass-strong);
-  }
-}
-.liquid-button.is-primary {
-  color: var(--on-accent);
-  border-color: transparent;
-  background: linear-gradient(135deg, var(--accent), var(--accent-deep));
-}
-.liquid-button.is-danger {
-  color: var(--bad-fg);
-  background: var(--bad-bg);
-}
-.liquid-button.is-icon-only {
-  width: 38px;
-  padding: 0;
-  border-radius: 13px;
-}
-.liquid-button:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--accent) 58%, transparent);
-  outline-offset: 2px;
-}
-.liquid-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-</style>

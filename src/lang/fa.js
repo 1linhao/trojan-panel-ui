@@ -184,19 +184,6 @@ export default {
     desc: 'به صورت برعکس',
     asc: 'دنباله مثبت'
   },
-  tagsView: {
-    refresh: 'تازه کردن',
-    close: 'بسته',
-    closeOthers: 'دیگر را ببند',
-    closeAll: 'همه را ببند'
-  },
-  settings: {
-    title: 'پیکربندی طرح بندی سیستم',
-    theme: 'رنگ تم',
-    tagsView: 'Tags-View را فعال کنید',
-    fixedHeader: 'هدر ثابت',
-    sidebarLogo: 'لوگوی نوار کناری'
-  },
   dashboard: {
     diskUsed: 'استفاده از دیسک',
     memUsed: 'استفاده از حافظه',

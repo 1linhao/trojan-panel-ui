@@ -9,7 +9,7 @@
         :motion-key="`server-${metric.key}-usage`"
       >
         <span :class="['icon-wrap', metric.tone]">
-          <i class="liquid-icon--cpu" />
+          <app-icon name="cpu" />
         </span>
         <b class="num">{{ metric.value }}<em>%</em></b>
         <span>{{ metric.label }}</span>

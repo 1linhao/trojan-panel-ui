@@ -57,7 +57,7 @@ const openBox = (message, title, options = {}, prompt = false) => new Promise((r
   cancel.textContent = options.cancelButtonText || '取消'
   const confirm = document.createElement('button')
   confirm.type = 'button'
-  confirm.className = 'liquid-button liquid-button--primary'
+  confirm.className = 'liquid-button is-primary'
   confirm.textContent = options.confirmButtonText || '确定'
   actions.append(cancel, confirm)
   box.appendChild(actions)

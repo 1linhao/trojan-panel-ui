@@ -3,8 +3,7 @@
     <ui-panel motion-key="task-filters">
       <div class="toolbar">
         <div class="search-box">
-          <i class="liquid-icon--search"></i
-          ><input
+          <app-icon name="search" /><input
             v-model="listQuery.accountUsername"
             placeholder="按账号搜索"
             @keyup.enter="handleFilter"
@@ -64,7 +63,7 @@
                     "
                     @click="handleDownload(row, index)"
                   >
-                    <i class="liquid-icon--download"></i>下载
+                    <app-icon name="download" />下载
                   </button>
                 </div>
               </td>
