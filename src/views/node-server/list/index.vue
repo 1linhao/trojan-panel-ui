@@ -90,6 +90,12 @@
             </tr>
           </thead>
           <tbody>
+            <tr v-if="!listLoading && listError" class="tbl-empty">
+              <td colspan="9">{{ listError }}</td>
+            </tr>
+            <tr v-else-if="!listLoading && !list.length" class="tbl-empty">
+              <td colspan="9">暂无数据</td>
+            </tr>
             <tr v-for="(row, index) in list" :key="row.id">
               <td class="primary-cell">
                 <strong>{{ row.name }}</strong
@@ -132,7 +138,9 @@
                         : getFlow(row.trafficStatus.totalRemaining)
                     }}</span>
                   </div>
-                  <div class="meter"><i style="width: 45%"></i></div>
+                  <div class="meter">
+                    <i :style="{ width: trafficPercent(row.trafficStatus) + '%' }"></i>
+                  </div>
                 </template>
               </td>
               <td>
@@ -323,6 +331,7 @@ export default {
     return {
       tableKey: 0,
       listLoading: true,
+      listError: '',
       list: null,
       total: 0,
       listQuery: {
@@ -383,17 +392,37 @@ export default {
     quotaFlow(limit, remaining) {
       return limit > 0 ? getFlow(remaining) : this.$t('traffic.unlimited')
     },
+    // WEB-015: real usage ratio instead of a fixed demo value. Combined mode
+    // uses total used/limit; separate mode uses the dominant direction. A
+    // missing or zero limit (unreported / unlimited) yields null so the bar
+    // renders empty rather than a fake percentage.
+    trafficPercent(trafficStatus) {
+      if (!trafficStatus) return 0
+      const limit =
+        trafficStatus.limitMode === 'separate'
+          ? Math.max(trafficStatus.uploadLimit || 0, trafficStatus.downloadLimit || 0)
+          : trafficStatus.totalLimit || 0
+      if (limit <= 0) return 0
+      const used =
+        trafficStatus.limitMode === 'separate'
+          ? Math.max(trafficStatus.uploadUsed || 0, trafficStatus.downloadUsed || 0)
+          : trafficStatus.totalUsed || 0
+      return Math.min(100, Math.round((used / limit) * 100))
+    },
     checkPermission,
     timeStampToDate,
     getList() {
       this.listLoading = true
+      this.listError = ''
       selectNodeServerPage(this.listQuery).then((response) => {
         this.list = response.data.nodeServers
         this.total = response.data.total
-
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
+        this.listLoading = false
+      }).catch(() => {
+        this.list = []
+        this.total = 0
+        this.listError = '请求失败，请重试'
+        this.listLoading = false
       })
     },
     resetTemp() {

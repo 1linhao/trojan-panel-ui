@@ -43,6 +43,8 @@
     </ui-panel>
 
     <div class="node-grid" v-liquid-loading="listLoading">
+      <p v-if="!listLoading && listError" class="node-grid__empty">{{ listError }}</p>
+      <p v-else-if="!listLoading && !list.length" class="node-grid__empty">暂无数据</p>
       <template v-for="(row, index) in list">
         <ui-panel
           :key="'node-' + row.id"
@@ -255,6 +257,7 @@ export default {
     return {
       tableKey: 0,
       listLoading: true,
+      listError: '',
       list: null,
       total: 0,
       listQuery: {
@@ -603,13 +606,16 @@ export default {
     },
     getList() {
       this.listLoading = true
+      this.listError = ''
       selectNodePage(this.listQuery).then((response) => {
         this.list = response.data.nodes
         this.total = response.data.total
-
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
+        this.listLoading = false
+      }).catch(() => {
+        this.list = []
+        this.total = 0
+        this.listError = '请求失败，请重试'
+        this.listLoading = false
       })
     },
     handleFilter() {

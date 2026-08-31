@@ -116,6 +116,33 @@ const nodeServers = [
   { id: 5, name: 'Hong Kong', ip: 'hk.example.com', grpcPort: 8104, grpcTLSMode: 'mtls', grpcTLSServerName: 'core-hk.example.com', trafficPeriod: 'month', trafficLimitMode: 'combined', trafficTotalLimit: 1649267441664, trafficUploadLimit: 0, trafficDownloadLimit: 0, status: 1, trojanPanelCoreVersion: '2.3.0', kernelSummary: 'xray 25.8.3' }
 ]
 
+const serverTrafficStatus = (server) => {
+  if (server.trafficPeriod === 'none') return null
+  const usage = [0.18, 0.42, 0.05, 0.73, 0.31]
+  const ratio = usage[(server.id - 1) % usage.length]
+  const separate = server.trafficLimitMode === 'separate'
+  const uploadUsed = separate ? Math.round(server.trafficUploadLimit * ratio) : Math.round(server.trafficTotalLimit * ratio * 0.4)
+  const downloadUsed = separate ? Math.round(server.trafficDownloadLimit * ratio) : Math.round(server.trafficTotalLimit * ratio * 0.6)
+  const totalUsed = uploadUsed + downloadUsed
+  const reached = ratio >= 1
+  return {
+    nodeServerId: server.id,
+    nodeServerName: server.name,
+    period: server.trafficPeriod,
+    limitMode: server.trafficLimitMode,
+    uploadUsed,
+    downloadUsed,
+    totalUsed,
+    uploadLimit: server.trafficUploadLimit,
+    downloadLimit: server.trafficDownloadLimit,
+    totalLimit: server.trafficTotalLimit,
+    uploadRemaining: Math.max(0, server.trafficUploadLimit - uploadUsed),
+    downloadRemaining: Math.max(0, server.trafficDownloadLimit - downloadUsed),
+    totalRemaining: Math.max(0, server.trafficTotalLimit - totalUsed),
+    reached
+  }
+}
+
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, 'http://127.0.0.1')
   const path = url.pathname.replace(/^\/api/, '')
@@ -172,7 +199,8 @@ const server = http.createServer((req, res) => {
       accountCount: accounts.length,
       cpuUsed: 28,
       memUsed: 43,
-      diskUsed: 37
+      diskUsed: 37,
+      resetDownloadAndUploadMonth: 1
     },
     '/dashboard/trafficRank': [
       {
@@ -251,8 +279,11 @@ const server = http.createServer((req, res) => {
       { id: 5, name: 'hysteria2' }
     ],
     '/nodeServer/selectNodeServerList': nodeServers.map(({ id, name }) => ({ id, name })),
-    '/nodeServer/selectNodeServerPage': page('nodeServers', nodeServers),
-    '/nodeServer/selectNodeServerById': nodeServers[0],
+    '/nodeServer/selectNodeServerPage': page(
+      'nodeServers',
+      nodeServers.map((server) => ({ ...server, trafficStatus: serverTrafficStatus(server) }))
+    ),
+    '/nodeServer/selectNodeServerById': Object.assign({}, nodeServers[0], { trafficStatus: serverTrafficStatus(nodeServers[0]) }),
     '/nodeServer/nodeServerState': { cpuUsed: 28, memUsed: 43, diskUsed: 37 },
     '/nodeServer/resetNodeServerTraffic': { deletedRows: 24 },
     '/kernel/releases': {

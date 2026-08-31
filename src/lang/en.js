@@ -139,6 +139,8 @@ export default {
     email: 'Email(Only support 163 126 qq gmail)',
     oldPass: 'Old Password',
     newPass: 'New Password',
+    confirmNewPass: 'Confirm New Password',
+    oldPassRequired: 'Please enter the old password',
     nodeName: 'Node Name',
     nodeDomain: 'Domain',
     nodePort: 'Port',
@@ -462,7 +464,7 @@ export default {
     realityPbk: 'please enter publicKey',
     xrayStreamSettingsEntityRealitySettingsXver: 'xver can only be 0, 1, 2',
     createBatchNum: 'Please enter the quantity',
-    createBatchNumRange: 'The number is an integer in the range 5-200',
+    createBatchNumRange: 'The number is an integer in the range 5-500',
     createBatchQuota: 'Please enter the total traffic',
     createBatchQuotaRange:
       'The range of the total flow is an integer between -1-1024000',

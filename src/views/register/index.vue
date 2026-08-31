@@ -24,7 +24,7 @@
               placeholder="6–20 位字母或数字"
               autocomplete="username" /></label
         ></liquid-form-item>
-        <liquid-form-item prop="pass"
+        <liquid-form-item prop="passOne"
           ><label class="fld"
             ><span>密码</span
             ><span class="password-field"
@@ -142,6 +142,24 @@ export default {
           },
           {
             validator: validateUsername,
+            trigger: ['change', 'blur']
+          }
+        ],
+        passOne: [
+          {
+            required: true,
+            message: this.$t('valid.pass'),
+            trigger: ['change', 'blur']
+          },
+          {
+            min: 6,
+            max: 20,
+            message: this.$t('valid.passRange'),
+            trigger: ['change', 'blur']
+          },
+          {
+            pattern: /^[A-Za-z0-9]+$/,
+            message: this.$t('valid.passElement'),
             trigger: ['change', 'blur']
           }
         ],

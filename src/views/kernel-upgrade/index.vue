@@ -46,7 +46,7 @@
           {{ $t('kernel.refreshInventory') }}
         </liquid-button>
       </div>
-      <liquid-descriptions v-if="currentServer.id" :column="2" border>
+      <liquid-descriptions v-if="currentServer.id && !inventoryUnavailable" :column="2" border>
         <liquid-descriptions-item :label="$t('kernel.platform')">
           {{ inventory ? inventory.os + '/' + inventory.arch : '-' }}
         </liquid-descriptions-item>
@@ -62,6 +62,7 @@
           </liquid-button>
         </liquid-descriptions-item>
       </liquid-descriptions>
+      <p v-else-if="currentServer.id && inventoryUnavailable && !inventoryLoading" class="node-grid__empty">内核清单不可用</p>
     </ui-panel>
 
     <ui-panel class="section" motion-key="managed-kernels">
@@ -221,7 +222,11 @@
             statusLabel(row.status)
           }}</template>
         </liquid-table-column>
-        <liquid-table-column prop="createdAt" :label="$t('table.createTime')" />
+        <liquid-table-column :label="$t('table.createTime')">
+          <template slot-scope="{ row }">{{
+            formatTaskTime(row.createdAt)
+          }}</template>
+        </liquid-table-column>
         <liquid-table-column :label="$t('table.actions')" width="100">
           <template slot-scope="{ row }">
             <liquid-button size="sm" @click="openTask(row.id)">
@@ -236,6 +241,7 @@
 
 <script>
 import { MessageBox } from '@/utils/liquid-feedback'
+import { timeStampToDate } from '@/utils'
 import { selectNodeServerList, selectNodeServerById } from '@/api/node-server'
 import {
   createKernelTask,
@@ -354,6 +360,11 @@ export default {
     clearTimeout(this.timer)
   },
   methods: {
+    // WEB-029: raw/missing timestamps render a stable placeholder, not the raw value.
+    formatTaskTime(createdAt) {
+      if (createdAt === undefined || createdAt === null || createdAt === '') return '—'
+      return timeStampToDate(createdAt, true)
+    },
     stageLabel(stage) {
       return this.$t(`kernel.stages.${stage}`)
     },
@@ -530,6 +541,9 @@ export default {
           if (!this.batchMode) this.loadInventory()
         }
         if (this.tasks.some((task) => !terminal.includes(task.status))) {
+          // WEB-024: re-check liveness just before re-scheduling so a request
+          // that resolved after unmount cannot create a fresh timer.
+          if (this._isDestroyed || this._isBeingDestroyed) return
           this.timer = setTimeout(() => this.loadTasks([]), 2000)
         }
       })

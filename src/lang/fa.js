@@ -72,6 +72,8 @@ export default {
     email: 'ایمیل (فقط پشتیبانی از 163 126 qq gmail)',
     oldPass: 'رمز عبور قدیمی',
     newPass: 'رمز عبور جدید',
+    confirmNewPass: 'تأیید رمز عبور جدید',
+    oldPassRequired: 'لطفا رمز عبور قبلی را وارد کنید',
     nodeName: 'نام گره',
     nodeDomain: 'نام دامنه',
     nodePort: 'بندر',
@@ -378,7 +380,7 @@ export default {
     xrayStreamSettingsEntityRealitySettingsXver:
       'xver فقط می تواند 0، 1، 2 باشد',
     createBatchNum: 'لطفا مقدار را وارد کنید',
-    createBatchNumRange: 'عدد یک عدد صحیح در محدوده 5-200 است',
+    createBatchNumRange: 'عدد یک عدد صحیح در محدوده 5-500 است',
     createBatchQuota: 'لطفا کل ترافیک را وارد کنید',
     createBatchQuotaRange: 'محدوده جریان کل یک عدد صحیح بین -1-1024000 است',
     createBatchPresetExpire: 'لطفا تاریخ انقضای پیش فرض را وارد کنید',

@@ -72,6 +72,8 @@ export default {
     email: '이메일(163 126 qq gmail만 지원)',
     oldPass: '기존 비밀번호',
     newPass: '새 비밀번호',
+    confirmNewPass: '새 비밀번호 확인',
+    oldPassRequired: '기존 비밀번호를 입력해주세요',
     nodeName: '노드 이름',
     nodeDomain: '도메인 이름',
     nodePort: '포트',
@@ -368,7 +370,7 @@ export default {
     xrayStreamSettingsEntityRealitySettingsXver:
       'xver는 0, 1, 2만 될 수 있습니다',
     createBatchNum: '수량을 입력해주세요',
-    createBatchNumRange: '숫자는 5-200 범위의 정수입니다',
+    createBatchNumRange: '숫자는 5-500 범위의 정수입니다',
     createBatchQuota: '총 트래픽을 입력하세요',
     createBatchQuotaRange: '전체 흐름의 범위는 -1-1024000 사이의 정수입니다',
     createBatchPresetExpire: '기본 만료일을 입력하세요.',

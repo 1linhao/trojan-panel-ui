@@ -37,6 +37,12 @@
             </tr>
           </thead>
           <tbody>
+            <tr v-if="!listLoading && listError" class="tbl-empty">
+              <td colspan="5">{{ listError }}</td>
+            </tr>
+            <tr v-else-if="!listLoading && !list.length" class="tbl-empty">
+              <td colspan="5">暂无数据</td>
+            </tr>
             <tr v-for="row in list" :key="row.id">
               <td class="primary-cell">
                 <strong>{{ row.toEmail }}</strong
@@ -94,6 +100,7 @@ export default {
     return {
       tableKey: 0,
       listLoading: true,
+      listError: '',
       list: null,
       total: 0,
       listQuery: {
@@ -129,13 +136,16 @@ export default {
     timeStampToDate,
     getList() {
       this.listLoading = true
+      this.listError = ''
       selectEmailRecordPage(this.listQuery).then((response) => {
         this.list = response.data.emailRecords
         this.total = response.data.total
-
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
+        this.listLoading = false
+      }).catch(() => {
+        this.list = []
+        this.total = 0
+        this.listError = '请求失败，请重试'
+        this.listLoading = false
       })
     },
     handleFilter() {

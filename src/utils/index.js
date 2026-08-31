@@ -231,8 +231,16 @@ export function toggleClass(element, className) {
   element.className = classString
 }
 
-export function timeStampToDate(timestamp) {
+export function timeStampToDate(timestamp, hasHms = true) {
+  // WEB-029: missing/invalid values must render a stable placeholder instead
+  // of a NaN date from new Date(undefined).
+  if (timestamp === undefined || timestamp === null || timestamp === '' || timestamp === 0) {
+    return '—'
+  }
   const date = new Date(timestamp)
+  if (Number.isNaN(date.getTime())) {
+    return '—'
+  }
   const yy = date.getFullYear() // 年
   const mm = date.getMonth() + 1 // 月
   const dd = date.getDate() // 日
@@ -243,7 +251,11 @@ export function timeStampToDate(timestamp) {
   if (mm < 10) clock += '0'
   clock += mm + '-'
   if (dd < 10) clock += '0'
-  clock += dd + ' '
+  clock += dd
+  if (!hasHms) {
+    return clock
+  }
+  clock += ' '
   if (hh < 10) clock += '0'
   clock += hh + ':'
   if (ii < 10) clock += '0'

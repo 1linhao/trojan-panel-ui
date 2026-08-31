@@ -13,7 +13,7 @@
         >
           <i :style="{ width: `${usedPercent}%` }"></i>
         </div>
-        <span class="faint usage-label">已使用 {{ usedPercent }}%</span>
+        <span class="muted usage-label">已使用 {{ usedPercent }}%</span>
         <div class="hero-meta">
           <div>
             <b>{{ expireRelative }}</b
@@ -23,7 +23,10 @@
             <b>{{ panelGroupData.nodeCount || panelGroupData.nodeNum }}</b
             ><span>可用节点</span>
           </div>
-          <div><b>每月 1 日</b><span>流量自动重置</span></div>
+          <div v-if="resetPolicyText">
+            <b>{{ resetPolicyText.title }}</b
+            ><span>{{ resetPolicyText.description }}</span>
+          </div>
         </div>
       </ui-panel>
       <ui-panel class="subscription-card" motion-key="subscription-export">
@@ -127,6 +130,16 @@ export default {
         (this.panelGroupData.expireTime - Date.now()) / 86400000
       )
       return days >= 0 ? `${days} 天` : '已到期'
+    },
+    // WEB-026: consume the real system reset policy instead of asserting an
+    // enabled monthly reset. Unknown/missing policy renders nothing.
+    resetPolicyText() {
+      const reset = this.panelGroupData.resetDownloadAndUploadMonth
+      if (reset === undefined || reset === null) return null
+      if (Number(reset) === 1) {
+        return { title: '每月 1 日', description: '流量自动重置' }
+      }
+      return { title: '不自动重置', description: '流量按周期累计' }
     }
   },
   created() {

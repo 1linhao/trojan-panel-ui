@@ -871,6 +871,11 @@ h3 {
 .tbl tbody tr:hover {
   background: var(--glass-soft);
 }
+.tbl .tbl-empty td {
+  height: 92px;
+  text-align: center;
+  color: var(--supporting-text-ink);
+}
 
 .tbl .primary-cell strong {
   display: block;
@@ -1354,7 +1359,7 @@ h3 {
   font-size: 16px;
 }
 .hero-meta div span {
-  color: var(--ink-3);
+  color: var(--supporting-text-ink);
   font-size: 11.5px;
   font-weight: 600;
 }
@@ -1387,6 +1392,13 @@ h3 {
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   grid-auto-flow: dense;
   gap: 16px;
+}
+
+.node-grid__empty {
+  grid-column: 1 / -1;
+  padding: 24px 0;
+  color: var(--supporting-text-ink);
+  text-align: center;
 }
 
 .node-card {
@@ -2366,6 +2378,7 @@ h3 {
   color: var(--bad-fg);
 }
 .usage-label {
+  color: var(--supporting-text-ink);
   font-size: 12px;
 }
 .subscription-actions {

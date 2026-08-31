@@ -111,12 +111,19 @@ export default {
   },
   methods: {
     handleSizeChange(val) {
-      this.$emit('pagination', { page: this.currentPage, limit: val })
+      // WEB-023: persist limit first, reset to a valid page, then notify the
+      // query so lists using .sync observe the new page/limit state.
+      this.$emit('update:limit', val)
+      const pageCount = Math.max(1, Math.ceil(this.total / val))
+      const page = Math.min(this.currentPage, pageCount)
+      if (page !== this.currentPage) this.$emit('update:page', page)
+      this.$emit('pagination', { page, limit: val })
       if (this.autoScroll) {
         scrollTo(0)
       }
     },
     handleCurrentChange(val) {
+      this.$emit('update:page', val)
       this.$emit('pagination', { page: val, limit: this.pageSize })
       if (this.autoScroll) {
         scrollTo(0)

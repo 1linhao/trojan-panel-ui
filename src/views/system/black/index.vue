@@ -26,6 +26,12 @@
             </tr>
           </thead>
           <tbody>
+            <tr v-if="!listLoading && listError" class="tbl-empty">
+              <td colspan="3">{{ listError }}</td>
+            </tr>
+            <tr v-else-if="!listLoading && !list.length" class="tbl-empty">
+              <td colspan="3">暂无数据</td>
+            </tr>
             <tr v-for="(row, index) in list" :key="row.id || row.ip">
               <td class="primary-cell">
                 <strong class="mono">{{ row.ip }}</strong
@@ -110,6 +116,7 @@ export default {
     return {
       tableKey: 0,
       listLoading: true,
+      listError: '',
       list: null,
       total: 0,
       listQuery: {
@@ -152,13 +159,16 @@ export default {
     timeStampToDate,
     getList() {
       this.listLoading = true
+      this.listError = ''
       selectBlackListPage(this.listQuery).then((response) => {
         this.list = response.data.blackLists
         this.total = response.data.total
-
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
+        this.listLoading = false
+      }).catch(() => {
+        this.list = []
+        this.total = 0
+        this.listError = '请求失败，请重试'
+        this.listLoading = false
       })
     },
     resetTemp() {

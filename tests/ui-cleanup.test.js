@@ -93,6 +93,73 @@ test('form item labels target registered primary controls and follow conditional
   }
 })
 
+test('form item min/max validation follows rule type across number, string, and array values', async () => {
+  const { LiquidFormItem } = loadModule(read('src/components/LiquidStructural/index.js'), { vue: {} })
+  const validateValue = (value, rules) => {
+    const item = {
+      value, appliedRules: rules, error: '',
+      liquidForm: { model: {} },
+      $on: () => {}, $emit: () => {}
+    }
+    return LiquidFormItem.methods.validate.call(item)
+  }
+
+  // Numeric values with type 'number' must compare range, not digit count.
+  assert.ok(await validateValue(5, [{ type: 'number', min: 5, max: 500 }]), '5 within 5-500 must pass')
+  assert.ok(await validateValue(6, [{ type: 'number', min: 5, max: 500 }]), '6 within 5-500 must pass')
+  assert.ok(await validateValue(500, [{ type: 'number', min: 5, max: 500 }]), '500 within 5-500 must pass')
+  assert.ok(!(await validateValue(501, [{ type: 'number', min: 5, max: 500, message: '超范围' }])), '501 must fail')
+  assert.ok(!(await validateValue(4, [{ type: 'number', min: 5, max: 500 }])), '4 below 5-500 must fail')
+  assert.ok(await validateValue(-1, [{ type: 'number', min: -1, max: 1024000 }]), '-1 must pass quota range')
+  assert.ok(await validateValue(1024000, [{ type: 'number', min: -1, max: 1024000 }]), 'quota upper bound must pass')
+
+  // Non-finite numeric strings must not silently pass a number range.
+  assert.ok(!(await validateValue('abc', [{ type: 'number', min: 5, max: 500 }])), 'non-numeric string must fail number range')
+
+  // String values still validate character counts.
+  assert.ok(await validateValue('ab', [{ min: 1, max: 5 }]), '2 chars within 1-5 must pass')
+  assert.ok(!(await validateValue('abcdef', [{ min: 1, max: 5, message: '过长' }])), '6 chars must fail max 5')
+
+  // Array values validate element counts.
+  assert.ok(await validateValue(['a', 'b'], [{ min: 1, max: 3 }]), '2 items within 1-3 must pass')
+  assert.ok(!(await validateValue(['a', 'b', 'c', 'd'], [{ min: 1, max: 3, message: '过多' }])), '4 items must fail max 3')
+})
+
+test('pagination emits controlled page/limit updates before notifying the query', async () => {
+  const { transformSync } = require('@babel/core')
+  const source = read('src/components/Pagination/index.vue')
+  const parsed = compiler.parse({ source })
+  const script = (parsed.descriptor || parsed).script.content
+  const { code } = transformSync(script, {
+    babelrc: false, configFile: false,
+    plugins: ['@babel/plugin-transform-modules-commonjs']
+  })
+  const exports = {}
+  vm.runInNewContext(code, {
+    exports,
+    require(name) { assert.equal(name, '@/utils/scroll-to'); return { scrollTo: () => {} } }
+  })
+  const component = exports.default
+
+  const emitted = []
+  const instance = {
+    $emit: (...args) => emitted.push(args),
+    autoScroll: true
+  }
+  // Size change: limit is persisted, the page is clamped into the new range,
+  // then the query is notified with the resulting page/limit pair.
+  const sizeInstance = { ...instance, currentPage: 9, pageSize: 10, total: 30 }
+  component.methods.handleSizeChange.call(sizeInstance, 50)
+  assert.deepEqual(emitted.map(([event]) => event), ['update:limit', 'update:page', 'pagination'])
+  assert.deepEqual({ ...emitted[2][1] }, { page: 1, limit: 50 })
+  emitted.length = 0
+  // Page change: page is committed before the query notification.
+  const pageInstance = { ...instance, currentPage: 1, pageSize: 20 }
+  component.methods.handleCurrentChange.call(pageInstance, 2)
+  assert.deepEqual(emitted.map(([event]) => event), ['update:page', 'pagination'])
+  assert.deepEqual({ ...emitted[1][1] }, { page: 2, limit: 20 })
+})
+
 test('navigation interaction owns button transitions; component skins cannot override them', () => {
   const postcss = require('postcss')
   const targets = {

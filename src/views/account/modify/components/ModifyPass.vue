@@ -14,7 +14,7 @@
           clearable
         />
       </liquid-form-item>
-      <liquid-form-item :label="$t('table.newPass')" prop="newPass">
+      <liquid-form-item :label="$t('table.newPass')" prop="newPassOne">
         <liquid-input
           v-model="temp.newPassOne"
           type="password"
@@ -22,11 +22,11 @@
           clearable
         />
       </liquid-form-item>
-      <liquid-form-item :label="$t('table.newPass')" prop="newPass">
+      <liquid-form-item :label="$t('table.confirmNewPass')" prop="newPass">
         <liquid-input
           v-model="temp.newPass"
           type="password"
-          :placeholder="$t('table.newPass')"
+          :placeholder="$t('table.confirmNewPass')"
           clearable
         />
       </liquid-form-item>
@@ -49,6 +49,13 @@ export default {
     const validatePass = (rule, value, callback) => {
       if (this.temp.newPassOne !== this.temp.newPass) {
         callback(new Error(this.$t('valid.passNotSame')))
+      } else {
+        callback()
+      }
+    }
+    const validateOldPassRequired = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error(this.$t('table.oldPassRequired')))
       } else {
         callback()
       }
@@ -78,6 +85,24 @@ export default {
           }
         ],
         oldPass: [
+          {
+            required: true,
+            validator: validateOldPassRequired,
+            trigger: ['change', 'blur']
+          },
+          {
+            min: 6,
+            max: 20,
+            message: this.$t('valid.passRange'),
+            trigger: ['change', 'blur']
+          },
+          {
+            pattern: /^[A-Za-z0-9]+$/,
+            message: this.$t('valid.passElement'),
+            trigger: ['change', 'blur']
+          }
+        ],
+        newPassOne: [
           {
             required: true,
             message: this.$t('valid.passNew'),

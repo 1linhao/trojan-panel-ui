@@ -16,6 +16,33 @@ const getValue = (object, path) => {
     .reduce((value, key) => (value == null ? value : value[key]), object)
 }
 
+const isEmptyValue = (value) =>
+  value === '' || value === null || value === undefined ||
+  (Array.isArray(value) && !value.length)
+
+// WEB-022: min/max must compare against the rule type, not String(value).length.
+// Numbers with type 'number' validate range; strings validate character count;
+// arrays validate element count. Values that cannot be parsed as a number fail
+// a 'number' rule instead of silently passing.
+const validateRange = (rule, value) => {
+  if (rule.type === 'number' || typeof value === 'number') {
+    const numeric = typeof value === 'number' ? value : Number(value)
+    if (!Number.isFinite(numeric)) return rule.message || '请输入数字'
+    if (rule.min != null && numeric < rule.min) return rule.message || `不能小于 ${rule.min}`
+    if (rule.max != null && numeric > rule.max) return rule.message || `不能大于 ${rule.max}`
+    return ''
+  }
+  if (Array.isArray(value)) {
+    if (rule.min != null && value.length < rule.min) return rule.message || `至少选择 ${rule.min} 项`
+    if (rule.max != null && value.length > rule.max) return rule.message || `最多选择 ${rule.max} 项`
+    return ''
+  }
+  const length = String(value).length
+  if (rule.min != null && length < rule.min) return rule.message || `至少输入 ${rule.min} 个字符`
+  if (rule.max != null && length > rule.max) return rule.message || `最多输入 ${rule.max} 个字符`
+  return ''
+}
+
 export const LiquidTableColumn = {
   name: 'LiquidTableColumn',
   props: {
@@ -162,13 +189,12 @@ export const LiquidFormItem = {
     async validate(trigger) {
       const rules = this.appliedRules.filter((rule) => !trigger || !rule.trigger || rule.trigger === trigger || (Array.isArray(rule.trigger) && rule.trigger.includes(trigger)))
       for (const rule of rules) {
-        const empty = this.value === '' || this.value === null || this.value === undefined || (Array.isArray(this.value) && !this.value.length)
+        const empty = isEmptyValue(this.value)
         let error = ''
         if (rule.required && empty) error = rule.message || '此项为必填项'
-        else if (!empty && rule.min != null && String(this.value).length < rule.min) error = rule.message || `至少输入 ${rule.min} 个字符`
-        else if (!empty && rule.max != null && String(this.value).length > rule.max) error = rule.message || `最多输入 ${rule.max} 个字符`
-        else if (!empty && rule.pattern && !rule.pattern.test(String(this.value))) error = rule.message || '格式不正确'
-        else if (rule.validator) {
+        else if (!empty) error = validateRange(rule, this.value)
+        if (!error && rule.pattern && !empty && !rule.pattern.test(String(this.value))) error = rule.message || '格式不正确'
+        else if (!error && rule.validator) {
           error = await new Promise((resolve) => {
             let settled = false
             const done = (reason) => { if (!settled) { settled = true; resolve(reason ? (reason.message || String(reason)) : '') } }

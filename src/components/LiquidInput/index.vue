@@ -29,11 +29,12 @@
       @blur="handleBlur"
     />
     <button
-      v-if="clearable && value !== '' && value !== undefined && value !== null"
+      v-if="clearable && !clearSuppressed && value !== '' && value !== undefined && value !== null"
       class="liquid-input__clear"
       type="button"
       aria-label="清空"
       title="清空"
+      :disabled="disabled"
       @click="clear"
     >
       <app-icon name="close" aria-hidden="true" />
@@ -54,10 +55,16 @@ export default {
     type: { type: String, default: 'text' },
     clearable: { type: Boolean, default: false },
     disabled: { type: Boolean, default: false },
+    readonly: { type: Boolean, default: false },
     compact: { type: Boolean, default: false }
   },
   data() {
     return { focused: false }
+  },
+  computed: {
+    clearSuppressed() {
+      return this.disabled || this.readonly
+    }
   },
   methods: {
     notify(value) {
@@ -80,8 +87,10 @@ export default {
       this.dispatch('LiquidFormItem', 'liquid.form.blur', [event.target.value])
     },
     clear() {
+      if (this.disabled || this.readonly) return
       this.notify('')
       this.$emit('clear')
+      this.$nextTick(() => this.$refs.field?.focus())
     },
     focus() {
       this.$refs.field.focus()
