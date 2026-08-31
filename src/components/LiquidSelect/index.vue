@@ -1,6 +1,8 @@
 <template>
   <div
     class="liquid-select"
+    data-ui-control
+    :data-ui-size="controlSize"
     :class="{ 'is-focused': open, 'is-disabled': disabled }"
   >
     <select
@@ -20,36 +22,32 @@
       ref="trigger"
       class="liquid-select__trigger"
       type="button"
+      v-bind="controlAttrs"
       :disabled="disabled"
+      :aria-controls="`liquid-select-menu-${_uid}`"
       :aria-expanded="String(open)"
       aria-haspopup="listbox"
       @click="toggleMenu"
       @keydown.down.prevent="openMenu"
       @keydown.enter.prevent="toggleMenu"
       @keydown.space.prevent="toggleMenu"
-      @keydown.esc.prevent="closeMenu"
+      @keydown.esc="handleEscape"
     >
       <span :class="{ 'is-placeholder': !hasSelection }">
         {{ selectedLabel || placeholder || '请选择' }}
       </span>
-      <span
-        v-if="clearable && hasSelection"
-        class="liquid-select__clear"
-        role="button"
-        aria-label="清空"
-        @click.stop="clearSelection"
-      >
-        <app-icon name="close" aria-hidden="true" />
-      </span>
       <app-icon
-        v-else
+        v-if="!clearable || !hasSelection"
         name="arrow-down" class="liquid-select__arrow"
         :class="{ 'is-open': open }"
         aria-hidden="true" />
     </button>
+    <button v-if="clearable && hasSelection" type="button" class="liquid-select__clear" aria-label="清空" :disabled="disabled" @click.stop="clearSelection"><app-icon name="close" aria-hidden="true" /></button>
 
     <div
       ref="menu"
+      :id="`liquid-select-menu-${_uid}`"
+      @keydown="handleMenuKeydown"
       class="liquid-select__menu"
       popover="manual"
       :style="menuStyle"
@@ -64,8 +62,8 @@
           v-model.trim="query"
           class="liquid-select__search"
           type="search"
+          aria-label="搜索选项"
           placeholder="搜索"
-          @keydown.esc.prevent="closeMenu"
         />
       </div>
       <div class="liquid-select__options">
@@ -96,10 +94,12 @@
 
 <script>
 import emitter from '@/mixins/liquid-control-emitter'
+import formControl from '@/mixins/liquid-form-control'
+import controlSize from '@/mixins/liquid-control-size'
 
 export default {
   name: 'LiquidSelect',
-  mixins: [emitter],
+  mixins: [formControl, emitter, controlSize],
   inheritAttrs: false,
   props: {
     value: { type: [String, Number, Boolean, Array], default: '' },
@@ -154,6 +154,13 @@ export default {
     window.removeEventListener('scroll', this.updatePosition, true)
   },
   methods: {
+    handleEscape(event) {
+      if (!this.open) return
+      event.preventDefault()
+      event.stopPropagation()
+      this.closeMenu()
+      this.$refs.trigger?.focus()
+    },
     refreshOptions() {
       if (!this.$refs.native) return
       const options = Array.from(this.$refs.native.options).map((option) => ({
@@ -197,7 +204,9 @@ export default {
       this.$nextTick(() => this.$refs.trigger && this.$refs.trigger.focus())
     },
     clearSelection() {
+      if (this.disabled) return
       this.emitValue(this.multiple ? [] : '')
+      this.$nextTick(() => this.$refs.trigger?.focus())
     },
     toggleMenu() {
       if (this.open) this.closeMenu()
@@ -212,7 +221,26 @@ export default {
         this.updatePosition()
         if (this.$refs.menu.showPopover) this.$refs.menu.showPopover()
         if (this.filterable && this.$refs.search) this.$refs.search.focus()
+        else this.$refs.menu.querySelector('.liquid-select__option:not(:disabled)')?.focus()
       })
+    },
+    handleMenuKeydown(event) {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        event.stopPropagation()
+        this.closeMenu()
+        this.$refs.trigger.focus()
+        return
+      }
+      if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) return
+      if (event.target === this.$refs.search && !['ArrowDown', 'ArrowUp'].includes(event.key)) return
+      const items = Array.from(this.$refs.menu.querySelectorAll('.liquid-select__option:not(:disabled)'))
+      if (!items.length) return
+      event.preventDefault()
+      const index = items.indexOf(event.target)
+      const next = event.key === 'Home' ? 0 : event.key === 'End' ? items.length - 1 :
+        (index + (event.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length
+      items[next].focus()
     },
     closeMenu() {
       if (!this.open) return
@@ -256,6 +284,7 @@ export default {
 .liquid-select {
   position: relative;
   width: min(100%, var(--control-max-width));
+  max-width: var(--control-max-width);
   min-width: 0;
 }
 .liquid-select__native {
@@ -273,8 +302,8 @@ export default {
   justify-content: space-between;
   width: 100%;
   min-width: 0;
-  min-height: 42px;
-  padding: 0 14px;
+  min-height: var(--ui-control-size-height, 42px);
+  padding: 0 40px 0 14px;
   border: 1px solid var(--control-border);
   border-radius: 14px;
   color: var(--ink);
@@ -283,7 +312,6 @@ export default {
   font: inherit;
   text-align: left;
   cursor: pointer;
-  transition: border-color 160ms ease, box-shadow 160ms ease;
 }
 .liquid-select__trigger > span {
   min-width: 0;
@@ -309,12 +337,15 @@ export default {
   color: var(--ink-3);
 }
 .liquid-select__arrow {
-  transition: transform 160ms ease;
+  transition: transform var(--ui-motion-fast) var(--ui-motion-easing-standard);
 }
 .liquid-select__arrow.is-open {
   transform: rotate(180deg);
 }
 .liquid-select__clear {
+  position: absolute;
+  right: 12px;
+  top: calc(50% - 12px);
   display: grid;
   place-items: center;
   width: 24px;
@@ -346,8 +377,8 @@ export default {
     var(--glass);
   box-shadow: var(--shadow), inset 0 1px 0 var(--spec),
     inset 0 -1px 0 var(--spec-soft);
-  -webkit-backdrop-filter: blur(30px) saturate(180%);
-  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: var(--ui-backdrop-surface);
+  backdrop-filter: var(--ui-backdrop-surface);
   -webkit-text-stroke: 0.25px var(--liquid-select-counterstroke);
   paint-order: stroke fill;
   text-shadow: 0 0 0.45px var(--liquid-select-counterstroke);
@@ -399,8 +430,6 @@ export default {
   font: inherit;
   text-align: left;
   cursor: pointer;
-  transition: color var(--ui-motion-fast) var(--ui-motion-easing-standard),
-    background-color var(--ui-motion-fast) var(--ui-motion-easing-standard);
 }
 .liquid-select__option:hover:not(:disabled) {
   color: var(--ink);
@@ -415,22 +444,11 @@ export default {
   cursor: not-allowed;
   opacity: 0.45;
 }
-@media (prefers-reduced-motion: reduce) {
-  .liquid-select__option {
-    transition-duration: 1ms;
-  }
-}
 .liquid-select__empty {
   padding: 14px 10px;
   text-align: center;
 }
 .liquid-select.is-disabled {
   opacity: 0.58;
-}
-@media (max-width: 760px) {
-  .liquid-select {
-    width: 100%;
-    max-width: none;
-  }
 }
 </style>

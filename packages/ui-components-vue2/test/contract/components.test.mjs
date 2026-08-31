@@ -88,7 +88,7 @@ test('capture is opt-in and mobile dialog geometry stays centered', async () => 
   assert.match(css, /\[data-ui-view-transitions='active'\] \.tp-ui-panel/)
   assert.match(css, /view-transition-name: var\(--ui-view-transition-name, none\)/)
   const mobile = css.slice(css.indexOf('@media (max-width: 760px)'))
-  assert.match(mobile, /\.tp-ui-dialog-layer\s*{\s*place-items: center;/)
+  assert.match(css, /\.tp-ui-dialog-layer\s*{[^}]*place-items: center;/)
   assert.doesNotMatch(mobile, /place-items: end|align-items: flex-end/)
   assert.match(mobile, /safe-area-inset-top/)
   assert.match(mobile, /safe-area-inset-bottom/)

@@ -1,3 +1,10 @@
+import Vue from 'vue'
+import { UiDialog } from '@tp-ui/components-vue2'
+import { renderIcon } from '@tp-ui/icons'
+import { afterTransition } from '@tp-ui/motion-native'
+import LiquidButton from '@/components/LiquidButton'
+import LiquidInput from '@/components/LiquidInput'
+
 const ensureHost = (className) => {
   let host = document.querySelector(`.${className}`)
   if (!host) {
@@ -13,13 +20,21 @@ export function Message(options) {
   const item = document.createElement('div')
   item.className = `liquid-message is-${normalized.type || 'info'}`
   item.textContent = normalized.message == null ? '' : String(normalized.message)
+  item.setAttribute('role', normalized.type === 'error' ? 'alert' : 'status')
   ensureHost('liquid-message-host').appendChild(item)
-  requestAnimationFrame(() => item.classList.add('is-visible'))
+  let closed = false
+  let timer
+  const frame = requestAnimationFrame(() => { if (!closed) item.classList.add('is-visible') })
   const close = () => {
+    if (closed) return
+    closed = true
+    cancelAnimationFrame(frame)
+    window.clearTimeout(timer)
     item.classList.remove('is-visible')
-    window.setTimeout(() => item.remove(), 180)
+    afterTransition(item, () => item.remove())
   }
-  window.setTimeout(close, normalized.duration == null ? 3000 : normalized.duration)
+  const duration = normalized.duration == null ? 3000 : normalized.duration
+  if (duration > 0) timer = window.setTimeout(close, duration)
   return { close }
 }
 
@@ -29,54 +44,71 @@ feedbackTypes.forEach((type) => {
 })
 
 const openBox = (message, title, options = {}, prompt = false) => new Promise((resolve, reject) => {
-  const layer = document.createElement('div')
-  layer.className = 'liquid-feedback-layer'
-  const box = document.createElement('section')
-  box.className = `liquid-message-box is-${options.type || 'info'}`
-  box.setAttribute('role', 'alertdialog')
-  const heading = document.createElement('h3')
-  heading.textContent = title || ''
-  const content = document.createElement('p')
-  content.textContent = message == null ? '' : String(message)
-  box.append(heading, content)
-  let input
-  let error
-  if (prompt) {
-    input = document.createElement('input')
-    input.className = 'liquid-message-box__input'
-    input.value = options.inputValue || ''
-    error = document.createElement('div')
-    error.className = 'liquid-message-box__error'
-    box.append(input, error)
-  }
-  const actions = document.createElement('div')
-  actions.className = 'liquid-message-box__actions'
-  const cancel = document.createElement('button')
-  cancel.type = 'button'
-  cancel.className = 'liquid-button'
-  cancel.textContent = options.cancelButtonText || '取消'
-  const confirm = document.createElement('button')
-  confirm.type = 'button'
-  confirm.className = 'liquid-button is-primary'
-  confirm.textContent = options.confirmButtonText || '确定'
-  actions.append(cancel, confirm)
-  box.appendChild(actions)
-  layer.appendChild(box)
-  document.body.appendChild(layer)
-  const close = () => layer.remove()
-  cancel.addEventListener('click', () => { close(); reject('cancel') })
-  confirm.addEventListener('click', () => {
-    if (prompt && options.inputPattern && !options.inputPattern.test(input.value)) {
-      error.textContent = options.inputErrorMessage || '格式不正确'
-      input.focus()
-      return
+  let settled = false
+  const vm = new Vue({
+    data: { visible: true, value: options.inputValue == null ? '' : String(options.inputValue), error: '' },
+    methods: {
+      finish(confirmed) {
+        if (settled) return
+        settled = true
+        this.visible = false
+        if (confirmed) resolve(prompt ? { value: this.value, action: 'confirm' } : 'confirm')
+        else reject('cancel')
+        this.$nextTick(() => {
+          const element = this.$el
+          this.$destroy()
+          element?.remove()
+        })
+      },
+      confirm() {
+        const pattern = options.inputPattern
+        if (prompt && pattern) {
+          pattern.lastIndex = 0
+          if (!pattern.test(this.value)) {
+            this.error = options.inputErrorMessage || '格式不正确'
+            this.$nextTick(() => this.$refs.input?.focus())
+            return
+          }
+        }
+        this.finish(true)
+      }
+    },
+    render(h) {
+      const description = `ui-feedback-description-${this._uid}`
+      const errorId = `ui-feedback-error-${this._uid}`
+      return h(UiDialog, {
+        props: {
+          visible: this.visible, title: title || '提示', width: '440px',
+          role: 'alertdialog', describedBy: description, renderIcon,
+          customClass: 'ui-feedback-dialog',
+          closeOnClickModal: options.closeOnClickModal !== false,
+          closeOnEscape: options.closeOnPressEscape !== false
+        },
+        on: {
+          close: () => this.finish(false),
+          open: () => {
+            if (prompt) this.$refs.input?.focus()
+          }
+        }
+      }, [
+        h('p', { attrs: { id: description }, class: 'ui-feedback-description' }, [String(message == null ? '' : message)]),
+        prompt ? h('form', { on: { submit: (event) => { event.preventDefault(); this.confirm() } } }, [
+          h(LiquidInput, {
+            ref: 'input', props: { value: this.value },
+            attrs: { 'aria-label': title || '请输入', 'aria-describedby': `${description} ${errorId}`, 'aria-invalid': String(Boolean(this.error)) },
+            on: { input: (value) => { this.value = value; this.error = '' } }
+          }),
+          h('div', { class: 'ui-feedback-error', attrs: { id: errorId, role: 'status' } }, [this.error])
+        ]) : null,
+        h('div', { slot: 'footer', class: 'dialog-footer' }, [
+          h(LiquidButton, { on: { click: () => this.finish(false) } }, [options.cancelButtonText || '取消']),
+          h(LiquidButton, { props: { type: 'primary' }, on: { click: this.confirm } }, [options.confirmButtonText || '确定'])
+        ])
+      ])
     }
-    const result = prompt ? { value: input.value, action: 'confirm' } : 'confirm'
-    close()
-    resolve(result)
   })
-  layer.addEventListener('mousedown', (event) => { if (event.target === layer) { close(); reject('cancel') } })
-  if (input) window.setTimeout(() => input.focus(), 0)
+  vm.$mount()
+  document.body.appendChild(vm.$el)
 })
 
 export const MessageBox = {

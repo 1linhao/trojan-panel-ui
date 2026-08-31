@@ -133,7 +133,7 @@ export default {
   border-radius: 50%;
   background: var(--glass-input);
   box-shadow: inset 0 1px 0 var(--spec), var(--shadow-soft);
-  backdrop-filter: blur(16px);
+  backdrop-filter: var(--ui-backdrop-control);
 }
 .liquid-palette-picker__swatch,
 .liquid-palette-picker__menu button > span {
@@ -143,10 +143,10 @@ export default {
   border-radius: 50%;
   box-shadow: 0 2px 7px color-mix(in srgb, var(--accent) 28%, transparent);
 }
-[data-palette-swatch='blue'] { background: #0a7cff; }
-[data-palette-swatch='violet'] { background: #8155e7; }
-[data-palette-swatch='emerald'] { background: #078b6c; }
-[data-palette-swatch='amber'] { background: #cf7100; }
+[data-palette-swatch='blue'] { background: var(--ui-palette-blue); }
+[data-palette-swatch='violet'] { background: var(--ui-palette-violet); }
+[data-palette-swatch='emerald'] { background: var(--ui-palette-emerald); }
+[data-palette-swatch='amber'] { background: var(--ui-palette-amber); }
 .liquid-palette-picker__menu {
   position: fixed;
   z-index: 5000;
@@ -159,7 +159,7 @@ export default {
   background: linear-gradient(150deg, var(--spec-soft), transparent 46%),
     var(--glass-popover);
   box-shadow: var(--shadow), inset 0 1px 0 var(--spec);
-  backdrop-filter: blur(30px) saturate(180%);
+  backdrop-filter: var(--ui-backdrop-surface);
 }
 .liquid-palette-picker__menu > .ui-field-label {
   display: block;

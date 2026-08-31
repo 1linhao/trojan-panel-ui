@@ -62,3 +62,14 @@ test('defines required material tokens, modes, palettes, surfaces, and fallback'
   )
   assert.doesNotMatch(css, /#app|\.prototype-|\.dashboard-|\.account-/)
 })
+test('overlay material is opt-in and cannot leak glass into flat mode', async () => {
+  const css = await readFile(new URL('../../src/overlay.css', import.meta.url), 'utf8')
+  const rules = [...css.replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/([^{}]+)\{([^{}]+)\}/g)]
+  assert.equal(rules.length, 2)
+  for (const [, selector, declarations] of rules) {
+    assert.match(selector.trim(), /^:root\[data-ui-material='frosted'\]/)
+    for (const declaration of declarations.split(';').map((part) => part.trim()).filter(Boolean)) {
+      assert.match(declaration, /^--ui-/)
+    }
+  }
+})

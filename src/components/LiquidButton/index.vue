@@ -1,7 +1,9 @@
 <template>
   <button
     class="liquid-button"
+    data-ui-control
     data-ui-interaction="nav-lift"
+    :data-ui-size="controlSize"
     :class="[`is-${type}`, { 'is-icon-only': icon && !$slots.default }]"
     type="button"
     :disabled="disabled || loading"
@@ -15,8 +17,10 @@
 </template>
 
 <script>
+import controlSize from '@/mixins/liquid-control-size'
 export default {
   name: 'LiquidButton',
+  mixins: [controlSize],
   inheritAttrs: false,
   props: {
     type: { type: String, default: 'default' },

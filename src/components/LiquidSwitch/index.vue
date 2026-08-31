@@ -1,6 +1,7 @@
 <template>
   <button
     class="liquid-switch"
+    v-bind="controlAttrs"
     :class="{ 'is-active': checked }"
     type="button"
     role="switch"
@@ -27,10 +28,12 @@
 
 <script>
 import emitter from '@/mixins/liquid-control-emitter'
+import formControl from '@/mixins/liquid-form-control'
 
 export default {
   name: 'LiquidSwitch',
-  mixins: [emitter],
+  inheritAttrs: false,
+  mixins: [formControl, emitter],
   props: {
     value: { type: [Boolean, Number, String], default: false },
     activeValue: { type: [Boolean, Number, String], default: true },
@@ -83,14 +86,14 @@ export default {
   font-weight: 650;
   line-height: 1;
   white-space: nowrap;
-  transition: color 160ms ease, background 160ms ease,
-    box-shadow 160ms ease, transform 160ms ease;
+  transition: color var(--ui-motion-fast) var(--ui-motion-easing-standard), background var(--ui-motion-fast) var(--ui-motion-easing-standard),
+    box-shadow var(--ui-motion-fast) var(--ui-motion-easing-standard), transform var(--ui-motion-fast) var(--ui-motion-easing-standard);
 }
 .liquid-switch__option.is-current {
   color: var(--ink);
   background: var(--glass-strong);
   box-shadow: inset 0 1px 0 var(--spec),
-    0 4px 12px -6px rgba(10, 20, 50, 0.4);
+    0 4px 12px -6px var(--ui-control-strong-shadow-ink);
 }
 .liquid-switch__option.is-current.is-enabled {
   color: var(--accent-deep);

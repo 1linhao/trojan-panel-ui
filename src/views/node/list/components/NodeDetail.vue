@@ -112,10 +112,7 @@
             v-for="(item, index) in nodeInfoProps.xrayStreamSettingsEntity
               .tlsSettings.alpn"
             :key="index"
-            :disable-transitions="true"
             type="success"
-            effect="dark"
-            size="medium"
           >
             {{ item }}
           </liquid-tag>
@@ -165,10 +162,7 @@
             v-for="(item, index) in nodeInfoProps.xrayStreamSettingsEntity
               .realitySettings.serverNames"
             :key="index"
-            :disable-transitions="true"
             type="success"
-            effect="dark"
-            size="medium"
           >
             {{ item }}
           </liquid-tag>
@@ -207,10 +201,7 @@
             v-for="(item, index) in nodeInfoProps.xrayStreamSettingsEntity
               .realitySettings.shortIds"
             :key="index"
-            :disable-transitions="true"
             type="success"
-            effect="dark"
-            size="medium"
           >
             {{ item }}
           </liquid-tag>
@@ -306,10 +297,7 @@
           <liquid-tag
             v-for="(item, index) in nodeInfoProps.xraySettingsEntity.fallbacks"
             :key="index"
-            :disable-transitions="true"
             type="success"
-            effect="dark"
-            size="medium"
             @click="handleFallbackDetail(item)"
           >
             {{ item.dest }}

@@ -116,7 +116,7 @@ export default {
   border-radius: 16px;
   background: var(--control-fill);
   box-shadow: inset 0 1px 0 var(--spec-soft);
-  transition: border-color 160ms ease, box-shadow 160ms ease;
+  transition: border-color var(--ui-motion-fast) var(--ui-motion-easing-standard), box-shadow var(--ui-motion-fast) var(--ui-motion-easing-standard);
 }
 
 .liquid-code-editor.is-focused {
@@ -154,9 +154,6 @@ export default {
   line-height: 1.2;
   letter-spacing: 0;
   cursor: pointer;
-  transition: color var(--ui-motion-fast) var(--ui-motion-easing-standard),
-    border-color var(--ui-motion-fast) var(--ui-motion-easing-standard),
-    background-color var(--ui-motion-fast) var(--ui-motion-easing-standard);
 }
 
 .liquid-code-editor__toolbar button:hover {

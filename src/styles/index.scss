@@ -1,3 +1,4 @@
+@import '@tp-ui/material-frosted/production.css';
 @import './frosted-surfaces.scss';
 @import './buttons.scss';
 @import './icons.scss';
@@ -5,6 +6,7 @@
 @import './prototype-runtime.scss';
 @import '@tp-ui/motion-native/motion.css';
 @import '@tp-ui/components-vue2/geometry.css';
+@import '@tp-ui/material-frosted/overlay.css';
 @import '@tp-ui/components-vue2/button-interactions.css';
 
 body {

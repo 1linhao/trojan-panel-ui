@@ -114,8 +114,6 @@ export default {
   text-align: left;
   cursor: pointer;
   appearance: none;
-  transition: border-color 160ms ease, background-color 160ms ease,
-    box-shadow 160ms ease, transform 160ms ease;
 }
 
 .client-choice:hover {
@@ -174,7 +172,7 @@ export default {
   color: var(--accent-deep);
   opacity: 0;
   transform: scale(0.72);
-  transition: opacity 160ms ease, transform 160ms ease;
+  transition: opacity var(--ui-motion-fast) var(--ui-motion-easing-standard), transform var(--ui-motion-fast) var(--ui-motion-easing-standard);
 }
 
 .client-choice.is-selected .client-choice__check {

@@ -5,7 +5,7 @@
   >
     <input
       ref="input"
-      v-bind="$attrs"
+      v-bind="controlAttrs"
       class="liquid-number-input__field"
       type="number"
       inputmode="decimal"
@@ -44,10 +44,11 @@
 
 <script>
 import emitter from '@/mixins/liquid-control-emitter'
+import formControl from '@/mixins/liquid-form-control'
 
 export default {
   name: 'LiquidNumberInput',
-  mixins: [emitter],
+  mixins: [formControl, emitter],
   inheritAttrs: false,
   props: {
     value: {
@@ -154,6 +155,7 @@ export default {
   align-items: center;
   gap: 5px;
   width: min(100%, var(--control-max-width));
+  max-width: var(--control-max-width);
   min-width: 0;
   min-height: 42px;
   padding: 4px;
@@ -162,7 +164,7 @@ export default {
   color: var(--ink);
   background: var(--control-fill);
   box-shadow: inset 0 1px 0 var(--spec-soft);
-  transition: border-color 160ms ease, box-shadow 160ms ease;
+  transition: border-color var(--ui-motion-fast) var(--ui-motion-easing-standard), box-shadow var(--ui-motion-fast) var(--ui-motion-easing-standard);
 }
 
 .liquid-number-input.is-focused {
@@ -204,8 +206,6 @@ export default {
   background: var(--glass-soft);
   box-shadow: inset 0 1px 0 var(--spec-soft);
   cursor: pointer;
-  transition: color 160ms ease, border-color 160ms ease,
-    background 160ms ease, transform 160ms ease;
 }
 
 .liquid-number-input__step:hover:not(:disabled) {
@@ -223,11 +223,5 @@ export default {
 .liquid-number-input.is-disabled {
   cursor: not-allowed;
   opacity: 0.58;
-}
-@media (max-width: 760px) {
-  .liquid-number-input {
-    width: 100%;
-    max-width: none;
-  }
 }
 </style>

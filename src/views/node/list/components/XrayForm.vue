@@ -177,11 +177,8 @@
       <liquid-tag
           v-for="(item, index) in nodeForm.xraySettingsEntity.fallbacks"
           :key="index"
-          :disable-transitions="true"
           type="default"
           @close="deleteFallbackProps(item)"
-          effect="dark"
-          size="medium"
           closable
           @click="handleFallbackDetailProps(item)"
       >
@@ -190,8 +187,9 @@
       <liquid-button
           class="liquid-add-button"
           type="primary"
-          size="mini"
+          size="sm"
           icon="plus"
+          aria-label="添加回落配置"
           @click="handleCreateFallbackProps"
       ></liquid-button>
     </liquid-form-item>

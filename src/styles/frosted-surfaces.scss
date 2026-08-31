@@ -12,7 +12,7 @@ body,
 }
 
 body {
-  transition: color 0.22s ease, background 0.22s ease;
+  transition: color var(--ui-motion-normal) var(--ui-motion-easing-standard), background var(--ui-motion-normal) var(--ui-motion-easing-standard);
 }
 
 #app > :not(.ambient) {
@@ -28,62 +28,17 @@ body {
   background: transparent !important;
 }
 
-.tp-ui-dialog {
-  width: min(680px, calc(100vw - 32px));
-  border: 1px solid var(--rim);
-  border-radius: var(--r-xl);
-  color: var(--ink);
-  background: linear-gradient(
-      150deg,
-      var(--spec-soft),
-      transparent 46%
-    ),
-    var(--glass);
-  box-shadow: var(--shadow), inset 0 1px 0 var(--spec);
-  -webkit-backdrop-filter: blur(36px) saturate(180%);
-  backdrop-filter: blur(36px) saturate(180%);
-  overflow: hidden;
-}
-
-.tp-ui-dialog.ui-node-editor {
-  width: min(900px, calc(100vw - 32px));
-}
-
-.tp-ui-dialog__header {
-  padding: 22px 26px 18px;
-  border-bottom: 1px solid var(--hairline);
-}
-
-.tp-ui-dialog__title {
-  color: var(--ink);
-  font-size: 20px;
-  font-weight: 750;
-  letter-spacing: -0.02em;
-}
-.tp-ui-dialog__body {
-  max-height: min(68vh, 760px);
-  padding: 24px 26px;
-  color: var(--ink);
-  overflow-y: auto;
-}
-.tp-ui-dialog__footer {
-  padding: 16px 26px 22px;
-  border-top: 1px solid var(--hairline);
-}
-.tp-ui-dialog__footer .dialog-footer {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-.liquid-message-box {
-  border: 1px solid var(--rim);
-  border-radius: var(--r-lg);
-  color: var(--ink);
-  background: var(--glass);
-  box-shadow: var(--shadow), inset 0 1px 0 var(--spec);
-  -webkit-backdrop-filter: blur(32px) saturate(180%);
-  backdrop-filter: blur(32px) saturate(180%);
+:root[data-ui-material='frosted'] {
+  /* Application palette → reusable overlay material contract. */
+  --ui-overlay-z: 5000;
+  --ui-overlay-backdrop-bg: color-mix(in srgb, var(--bg-base) 22%, transparent);
+  --ui-dialog-bg: var(--glass-popover);
+  --ui-dialog-border: var(--rim);
+  --ui-dialog-shadow: var(--shadow);
+  --ui-dialog-ink: var(--ink);
+  --ui-dialog-divider: var(--hairline);
+  --ui-dialog-control-bg: var(--control-fill);
+  --ui-dialog-control-border: var(--control-border);
 }
 
 .auth-theme-toggle {
@@ -105,8 +60,8 @@ body {
   color: var(--ink-2);
   background: var(--glass-input);
   box-shadow: inset 0 1px 0 var(--spec), var(--shadow-soft);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: var(--ui-backdrop-control);
+  backdrop-filter: var(--ui-backdrop-control);
   font-size: 19px !important;
   line-height: 1 !important;
   cursor: pointer;
@@ -120,16 +75,5 @@ body {
   #app .app-container,
   #app .dashboard-container {
     padding: 16px 6px !important;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
   }
 }

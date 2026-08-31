@@ -45,8 +45,17 @@
           </button>
           <liquid-theme-toggle />
           <div class="prototype-user-pill prototype-topbar-user">
-            <span class="prototype-avatar">{{ initials }}</span>
-            <strong>{{ username || 'Trojan Panel' }}</strong>
+            <button
+              class="prototype-profile-entry"
+              type="button"
+              title="我的"
+              aria-label="我的个人资料"
+              :aria-current="activePath === '/modify/index' ? 'page' : null"
+              @click="go('/modify/index')"
+            >
+              <span class="prototype-avatar" aria-hidden="true">{{ initials }}</span>
+              <strong>{{ username || 'Trojan Panel' }}</strong>
+            </button>
             <button
               class="prototype-icon-btn"
               type="button"

@@ -58,62 +58,25 @@
 .liquid-form.is-label-top .liquid-form-item__label { float: none; display: block; width: 100% !important; padding: 0 0 7px; text-align: left; }
 .liquid-form.is-label-top .liquid-form-item__content { margin-left: 0 !important; }
 
-.tp-ui-dialog-layer,
-.liquid-feedback-layer {
-  position: fixed;
-  z-index: 5000;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: color-mix(in srgb, var(--bg-base) 22%, transparent);
-  backdrop-filter: blur(10px) saturate(115%);
-}
-
-.tp-ui-dialog,
-.liquid-message-box {
-  width: min(94vw, 720px);
-  max-height: min(90vh, 920px);
-  overflow: hidden;
-  border: 1px solid var(--rim);
-  border-radius: 24px;
-  color: var(--ink);
-  background: var(--glass-popover);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(28px) saturate(135%);
-}
-.tp-ui-dialog__header { display: flex; align-items: center; justify-content: space-between; min-height: 62px; padding: 18px 22px; border-bottom: 1px solid var(--hairline); }
-.tp-ui-dialog__title { font-size: 18px; font-weight: 700; }
-.tp-ui-dialog__close { display: grid; width: 32px; height: 32px; padding: 0; border: 1px solid var(--control-border); border-radius: 11px; color: var(--ink); background: var(--control-fill); place-items: center; font-size: 12px; line-height: 1; white-space: nowrap; cursor: pointer; }
-.tp-ui-dialog__body { max-height: calc(90vh - 132px); overflow: auto; padding: 22px; }
-.tp-ui-dialog__footer { padding: 16px 22px 20px; border-top: 1px solid var(--hairline); }
-
 .liquid-descriptions { display: grid; gap: 1px; overflow: hidden; border-radius: 14px; background: var(--hairline); }
 .liquid-descriptions__item { min-width: 0; background: var(--glass); }
 .liquid-descriptions dt { padding: 10px 12px 4px; color: var(--ink-2); font-size: 12px; }
 .liquid-descriptions dd { min-height: 38px; margin: 0; padding: 3px 12px 10px; color: var(--ink); }
 
 .liquid-message-host { position: fixed; z-index: 7000; top: 20px; left: 50%; display: flex; flex-direction: column; gap: 10px; width: min(92vw, 440px); transform: translateX(-50%); pointer-events: none; }
-.liquid-message { padding: 12px 16px; border: 1px solid var(--rim); border-radius: 14px; color: var(--ink); background: var(--glass-popover); box-shadow: var(--shadow-soft); opacity: 0; transform: translateY(-8px); transition: 180ms ease; backdrop-filter: blur(18px); }
+.liquid-message { padding: 12px 16px; border: 1px solid var(--rim); border-radius: 14px; color: var(--ink); background: var(--glass-popover); box-shadow: var(--shadow-soft); opacity: 0; transform: translateY(-8px); transition: var(--ui-motion-normal) var(--ui-motion-easing-standard); backdrop-filter: var(--ui-backdrop-message); }
 .liquid-message.is-visible { opacity: 1; transform: translateY(0); }
 .liquid-message.is-success { border-color: var(--ok-fg); }
 .liquid-message.is-warning { border-color: var(--warn-fg); }
 .liquid-message.is-error { border-color: var(--bad-fg); }
-.liquid-message-box { width: min(92vw, 440px); padding: 22px; }
-.liquid-message-box h3 { margin: 0 0 12px; }
-.liquid-message-box p { margin: 0 0 18px; color: var(--ink-2); line-height: 1.6; }
-.liquid-message-box__input { width: 100%; min-height: 42px; padding: 0 12px; border: 1px solid var(--control-border); border-radius: 13px; outline: 0; color: var(--ink); background: var(--control-fill); }
-.liquid-message-box__input:focus { border-color: var(--accent); }
-.liquid-message-box__error { min-height: 20px; padding-top: 4px; color: var(--bad-fg); font-size: 12px; }
-.liquid-message-box__actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 14px; }
-
-
 @media (max-width: 760px) {
-  .tp-ui-dialog-layer { align-items: center; padding: max(10px, env(safe-area-inset-top)) 10px max(10px, env(safe-area-inset-bottom)); }
-  .tp-ui-dialog { width: 100% !important; max-height: calc(100dvh - max(30px, env(safe-area-inset-top)) - max(10px, env(safe-area-inset-bottom))); border-radius: 22px; }
-  .tp-ui-dialog__body { max-height: calc(100dvh - 162px - max(30px, env(safe-area-inset-top)) - max(10px, env(safe-area-inset-bottom))); padding: 18px; }
   .liquid-form-item__label { float: none; display: block; width: 100% !important; min-height: auto; padding: 0 0 7px; text-align: left !important; }
   .liquid-form-item__content { margin-left: 0 !important; }
   .liquid-descriptions { grid-template-columns: 1fr !important; }
 }
+
+/* Content only: geometry and material belong to the shared dialog packages. */
+.dialog-footer { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+.ui-feedback-description { margin: 0; color: var(--ink-2); line-height: 1.6; overflow-wrap: anywhere; }
+.ui-feedback-dialog form { margin-top: 18px; }
+.ui-feedback-error { min-height: 20px; padding-top: 4px; color: var(--bad-fg); font-size: 12px; }

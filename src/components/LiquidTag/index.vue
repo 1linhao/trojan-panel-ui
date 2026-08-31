@@ -1,12 +1,13 @@
 <template>
   <span class="liquid-tag" :class="`is-${type}`">
-    <slot />
+    <button v-if="$listeners.click" class="liquid-tag__action" type="button" @click="$emit('click', $event)"><slot /></button>
+    <slot v-else />
     <button
       v-if="closable"
       class="liquid-tag__close"
       type="button"
       aria-label="移除"
-      @click="$emit('close', $event)"
+      @click.stop="$emit('close', $event)"
     >
       <app-icon name="close" aria-hidden="true" />
     </button>
@@ -60,6 +61,15 @@ export default {
   border-radius: 50%;
   color: inherit;
   background: color-mix(in srgb, currentColor 10%, transparent);
+  cursor: pointer;
+}
+.liquid-tag__action {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  font: inherit;
   cursor: pointer;
 }
 </style>

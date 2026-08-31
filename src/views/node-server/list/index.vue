@@ -225,7 +225,7 @@
           <span class="kicker">Server State</span>
           <h2>{{ detailServer.name }} · 运行状态</h2>
         </div>
-        <button class="icon-btn" type="button" @click="detailServer = null">
+                  <button class="icon-btn" type="button" aria-label="关闭服务器详情" @click="detailServer = null">
           <app-icon name="close" />
         </button>
       </div>

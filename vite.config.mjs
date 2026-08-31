@@ -33,6 +33,7 @@ export default defineConfig(({ mode }) => {
       alias: {
         '@': resolve('./src'),
         '@tp-ui/icons': resolve('./packages/ui-icons/src'),
+        '@tp-ui/material-frosted': resolve('./packages/ui-material-frosted/src'),
         '@tp-ui/components-vue2': resolve('./packages/ui-components-vue2/src'),
         '@tp-ui/motion-native': resolve('./packages/ui-motion-native/src')
       },

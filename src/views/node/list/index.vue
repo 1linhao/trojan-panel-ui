@@ -151,7 +151,7 @@
               <span class="kicker">Connection</span>
               <h2>{{ row.name }} · 连接参数</h2>
             </div>
-            <button class="icon-btn" type="button" @click="detailId = 0">
+                  <button class="icon-btn" type="button" aria-label="关闭节点详情" @click="detailId = 0">
               <app-icon name="close" />
             </button>
           </div>

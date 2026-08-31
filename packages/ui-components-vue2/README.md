@@ -18,6 +18,13 @@ creates a backdrop root and isolates descendant frosted-glass sampling.
 Mobile dialogs remain vertically centered within the safe-area viewport;
 long content scrolls inside the dialog body.
 
+Dialogs default to a body portal (`appendToBody=false` opts out). A shared
+stack owns topmost Escape, Tab focus containment, scroll locking, focus return
+and parent-unmount cleanup. `role`/`describedBy` support alert dialogs without
+a second implementation. `data-ui-overlay="modal"` and surface parts are public;
+width uses `--ui-dialog-width` so mobile geometry can override it without priority hacks.
+Control sizes are `sm/md/lg`; geometry consumes `data-ui-size`.
+
 `createButtonInteractionController()` discovers native buttons and semantic
 `role="button"` controls, then connects them through an injected Adapter. The
 default CSS Adapter exposes the shared `data-ui-interaction="nav-lift"`

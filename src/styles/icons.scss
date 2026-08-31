@@ -18,17 +18,11 @@
 }
 
 .app-icon--loading {
-  animation: app-icon-spin 0.8s linear infinite;
+  animation: app-icon-spin var(--ui-motion-spin) linear infinite;
 }
 
 @keyframes app-icon-spin {
   to {
     transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .app-icon--loading {
-    animation: none;
   }
 }

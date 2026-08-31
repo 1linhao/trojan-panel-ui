@@ -1,13 +1,13 @@
 <template>
-  <div class="liquid-date-picker" :class="{ 'is-focused': open, 'is-disabled': disabled }">
-    <button ref="trigger" class="liquid-date-picker__trigger" type="button" :disabled="disabled" :aria-expanded="String(open)" aria-haspopup="dialog" @click="togglePopover" @keydown.esc.prevent="closePopover">
+  <div class="liquid-date-picker" data-ui-control :data-ui-size="controlSize" :class="{ 'is-focused': open, 'is-disabled': disabled }">
+    <button ref="trigger" v-bind="controlAttrs" :aria-controls="`liquid-date-popover-${_uid}`" class="liquid-date-picker__trigger" type="button" :disabled="disabled" :aria-expanded="String(open)" aria-haspopup="dialog" @click="togglePopover" @keydown.esc="handleEscape">
       <app-icon name="date" aria-hidden="true" />
       <span :class="{ 'is-placeholder': !displayValue }">{{ displayValue || placeholder || defaultPlaceholder }}</span>
-      <span v-if="clearable && displayValue" class="liquid-date-picker__clear" role="button" aria-label="清空日期" @click.stop="clearValue"><app-icon name="close" aria-hidden="true" /></span>
-      <app-icon v-else name="arrow-down" class="liquid-date-picker__arrow" />
+      <app-icon v-if="!clearable || !displayValue" name="arrow-down" class="liquid-date-picker__arrow" />
     </button>
+      <button type="button" :disabled="disabled" v-if="clearable && displayValue" class="liquid-date-picker__clear" aria-label="清空日期" @click.stop="clearValue"><app-icon name="close" aria-hidden="true" /></button>
 
-    <div ref="popover" class="liquid-date-picker__popover" popover="manual" role="dialog" aria-label="日期选择器" :style="popoverStyle" @click.stop>
+    <div ref="popover" :id="`liquid-date-popover-${_uid}`" @keydown.esc.prevent.stop="closePopover" class="liquid-date-picker__popover" popover="manual" role="dialog" aria-label="日期选择器" :style="popoverStyle" @click.stop>
       <label class="liquid-date-picker__manual" :class="{ 'has-error': manualError }">
         <span>日期输入</span>
         <input ref="manualInput" v-model.trim="manualText" type="text" :placeholder="manualPlaceholder" :aria-invalid="String(manualError)" @input="manualError = false" @keydown.enter.prevent="applyManualInput" />
@@ -45,6 +45,8 @@
 
 <script>
 import emitter from '@/mixins/liquid-control-emitter'
+import formControl from '@/mixins/liquid-form-control'
+import controlSize from '@/mixins/liquid-control-size'
 
 function pad(value) { return String(value).padStart(2, '0') }
 function localDate(year, month, day, hour = 0, minute = 0) {
@@ -55,7 +57,7 @@ function localDate(year, month, day, hour = 0, minute = 0) {
 
 export default {
   name: 'LiquidDatePicker',
-  mixins: [emitter],
+  mixins: [formControl, emitter, controlSize],
   inheritAttrs: false,
   props: {
     value: { type: [String, Number, Date], default: '' },
@@ -89,6 +91,13 @@ export default {
     window.removeEventListener('scroll', this.updatePosition, true)
   },
   methods: {
+    handleEscape(event) {
+      if (!this.open) return
+      event.preventDefault()
+      event.stopPropagation()
+      this.closePopover()
+      this.$refs.trigger?.focus()
+    },
     parseExternalValue(value) {
       if (value === '' || value === undefined || value === null) return null
       if (value instanceof Date) return Number.isNaN(value.getTime()) ? null : value
@@ -118,16 +127,18 @@ export default {
     openPopover() {
       if (this.disabled || this.open) return
       this.syncDraft(); this.open = true
-      this.$nextTick(() => { this.updatePosition(); if (this.$refs.popover.showPopover) this.$refs.popover.showPopover() })
+      this.$nextTick(() => { this.updatePosition(); if (this.$refs.popover.showPopover) this.$refs.popover.showPopover(); this.$refs.manualInput?.focus() })
     },
     closePopover() {
       if (!this.open) return
+      const hadFocus = this.$refs.popover?.contains(document.activeElement)
       this.open = false
       if (this.$refs.popover && this.$refs.popover.hidePopover) {
         try { this.$refs.popover.hidePopover() } catch (error) {
           // The browser may already have dismissed the popover.
         }
       }
+      if (hadFocus) this.$refs.trigger?.focus()
       this.$emit('blur'); this.dispatch('LiquidFormItem', 'liquid.form.blur', [this.value])
     },
     updatePosition() {
@@ -173,7 +184,7 @@ export default {
       if (this.type === 'datetime') { const [hour, minute] = this.timeText.split(':').map(Number); this.selectedDate.setHours(hour || 0, minute || 0, 0, 0) }
       this.emitValue(this.outputValue(this.selectedDate)); this.closePopover()
     },
-    clearValue() { this.emitValue(''); this.closePopover() },
+    clearValue() { if (this.disabled) return; this.emitValue(''); this.closePopover(); this.$nextTick(() => this.$refs.trigger?.focus()) },
     handleOutside(event) {
       if (!this.open) return
       const inTrigger = this.$el && this.$el.contains(event.target); const inPopover = this.$refs.popover && this.$refs.popover.contains(event.target)
@@ -184,17 +195,17 @@ export default {
 </script>
 
 <style scoped>
-.liquid-date-picker { position: relative; width: min(100%, var(--control-max-width)); min-width: 0; }
-.liquid-date-picker__trigger { display: flex; align-items: center; gap: 9px; width: 100%; min-height: 42px; padding: 0 13px; border: 1px solid var(--control-border); border-radius: 14px; color: var(--ink-3); background: var(--control-fill); box-shadow: inset 0 1px 0 var(--spec-soft); font: inherit; text-align: left; transition: border-color 160ms ease, box-shadow 160ms ease; }
+.liquid-date-picker { position: relative; width: min(100%, var(--control-max-width)); max-width: var(--control-max-width); min-width: 0; }
+.liquid-date-picker__trigger { display: flex; align-items: center; gap: 9px; width: 100%; min-height: var(--ui-control-size-height, 42px); padding: 0 40px 0 13px; border: 1px solid var(--control-border); border-radius: 14px; color: var(--ink-3); background: var(--control-fill); box-shadow: inset 0 1px 0 var(--spec-soft); font: inherit; text-align: left; }
 .liquid-date-picker__trigger > span:nth-child(2) { flex: 1; min-width: 0; overflow: hidden; color: var(--ink); text-overflow: ellipsis; white-space: nowrap; }
 .liquid-date-picker__trigger .is-placeholder { color: var(--ink-3); }
 .liquid-date-picker.is-focused .liquid-date-picker__trigger { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent), inset 0 1px 0 var(--spec-soft); }
 .liquid-date-picker__arrow { margin-left: auto; }
-.liquid-date-picker__clear { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--neutral-bg); }
-.liquid-date-picker__popover { position: fixed; z-index: 5000; box-sizing: border-box; margin: 0; padding: 10px; border: 1px solid var(--rim); border-radius: var(--r-lg); color: var(--ink); background: linear-gradient(150deg, var(--spec-soft), transparent 46%), var(--glass-popover); box-shadow: var(--shadow), inset 0 1px 0 var(--spec); backdrop-filter: blur(30px) saturate(180%); overflow: auto; }
+.liquid-date-picker__clear { position: absolute; right: 12px; top: calc(50% - 12px); padding: 0; border: 0; color: var(--ink-3); display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--neutral-bg); }
+.liquid-date-picker__popover { position: fixed; z-index: 5000; box-sizing: border-box; margin: 0; padding: 10px; border: 1px solid var(--rim); border-radius: var(--r-lg); color: var(--ink); background: linear-gradient(150deg, var(--spec-soft), transparent 46%), var(--glass-popover); box-shadow: var(--shadow), inset 0 1px 0 var(--spec); backdrop-filter: var(--ui-backdrop-surface); overflow: auto; }
 .liquid-date-picker__manual { display: block; margin-bottom: 9px; }
 .liquid-date-picker__manual span, .liquid-date-picker__time span { display: block; margin: 0 0 5px 3px; color: var(--form-label-ink); font-size: 11px; font-weight: 700; }
-.liquid-date-picker__manual input, .liquid-date-picker__time input { width: 100%; min-height: 40px; padding: 0 12px; border: 1px solid var(--control-border); border-radius: 12px; outline: 0; color: var(--ink); background: var(--control-fill); font: inherit; color-scheme: only light; }
+.liquid-date-picker__manual input, .liquid-date-picker__time input { width: 100%; min-height: 40px; padding: 0 12px; border: 1px solid var(--control-border); border-radius: 12px; outline: 0; color: var(--ink); background: var(--control-fill); font: inherit; }
 .liquid-date-picker__manual.has-error input { border-color: var(--bad-fg); box-shadow: 0 0 0 3px var(--bad-bg); }
 .liquid-date-picker__manual small { display: block; margin: 5px 3px 0; color: var(--bad-fg); font-size: 11px; }
 .liquid-date-picker__calendar { padding: 10px; border: 1px solid var(--hairline); border-radius: var(--r-md); background: var(--glass-soft); }
@@ -217,5 +228,4 @@ export default {
 .liquid-date-picker footer button:hover { background: var(--glass-soft); }
 .liquid-date-picker footer .is-primary { color: var(--on-accent); background: var(--accent); }
 .liquid-date-picker.is-disabled { opacity: 0.58; }
-@media (max-width: 760px) { .liquid-date-picker { width: 100%; max-width: none; } }
 </style>

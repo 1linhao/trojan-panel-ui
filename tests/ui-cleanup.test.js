@@ -28,6 +28,197 @@ const loadBranding = (setting) => loadModule(read('src/utils/panel-branding.js')
   vue: { observable: (value) => value }, '@/api/system': { setting }
 })
 
+test('mobile fields and search boxes retain the shared width cap', () => {
+  const postcss = require('postcss')
+  for (const [name, selector] of Object.entries({ LiquidInput: '.liquid-input', LiquidNumberInput: '.liquid-number-input', LiquidSelect: '.liquid-select', LiquidDatePicker: '.liquid-date-picker' })) {
+    const css = compiler.parse({ source: read(`src/components/${name}/index.vue`) }).styles[0].content
+    let bounded = false
+    postcss.parse(css).walkRules((rule) => {
+      if (rule.selector !== selector) return
+      rule.walkDecls((decl) => {
+        if (decl.prop === 'max-width') {
+          assert.notEqual(decl.value, 'none', `${name} must not remove its width cap on mobile`)
+          if (decl.value === 'var(--control-max-width)') bounded = true
+        }
+      })
+    })
+    assert.ok(bounded, `${name} must declare the shared maximum width`)
+  }
+  const css = postcss.parse(read('src/styles/prototype-runtime.scss'))
+  let searchBounded = false, shrinkableInput = false
+  css.walkRules((rule) => {
+    if (rule.selector === '.search-box') rule.walkDecls('max-width', (decl) => { searchBounded ||= decl.value === 'min(100%, var(--control-max-width))' })
+    if (rule.selector === '.search-box input') rule.walkDecls('min-width', (decl) => { shrinkableInput ||= decl.value === '0' })
+  })
+  assert.ok(searchBounded, 'search shell must cap its width even when mobile flex grows')
+  assert.ok(shrinkableInput, 'search input must shrink within its shell')
+})
+
+test('form controls inherit stable labels and errors without replacing explicit accessible names', () => {
+  const adapter = loadModule(read('src/mixins/liquid-form-control.js'), {}).default
+  const item = { label: '服务器名称', labelId: 'label-1', errorId: 'error-1', error: '' }
+  const control = { _uid: 2, liquidFormItem: item, $attrs: {} }
+  let attrs = adapter.computed.controlAttrs.call(control)
+  assert.equal(attrs.id, 'liquid-control-2')
+  assert.equal(attrs['aria-labelledby'], 'label-1')
+  item.error = '必填'
+  control.$attrs = { id: 'explicit', 'aria-label': '自定义名称', 'aria-describedby': 'hint' }
+  attrs = adapter.computed.controlAttrs.call(control)
+  assert.equal(attrs.id, 'explicit')
+  assert.equal(attrs['aria-label'], '自定义名称')
+  assert.equal(attrs['aria-labelledby'], undefined)
+  assert.equal(attrs['aria-describedby'], 'hint error-1')
+  assert.equal(attrs['aria-invalid'], 'true')
+  item.error = ''
+  attrs = adapter.computed.controlAttrs.call(control)
+  assert.equal(attrs['aria-describedby'], 'hint')
+  assert.equal(attrs['aria-invalid'], undefined)
+  control.liquidFormItem = null
+  assert.equal(adapter.computed.controlAttrs.call(control).id, 'explicit')
+})
+
+test('form item labels target registered primary controls and follow conditional removal', () => {
+  const { LiquidFormItem } = loadModule(read('src/components/LiquidStructural/index.js'), { vue: {} })
+  const item = { controls: [] }
+  const first = { controlAttrs: { id: 'first' } }, second = { controlAttrs: { id: 'second' } }
+  LiquidFormItem.methods.addControl.call(item, first)
+  LiquidFormItem.methods.addControl.call(item, first)
+  LiquidFormItem.methods.addControl.call(item, second)
+  assert.equal(item.controls.length, 2)
+  assert.equal(LiquidFormItem.computed.labelTarget.call(item), 'first')
+  LiquidFormItem.methods.removeControl.call(item, first)
+  assert.equal(LiquidFormItem.computed.labelTarget.call(item), 'second')
+  for (const name of ['LiquidInput', 'LiquidNumberInput', 'LiquidSelect', 'LiquidDatePicker', 'LiquidSwitch']) {
+    assert.match(read(`src/components/${name}/index.vue`), /v-bind="controlAttrs"/)
+  }
+})
+
+test('navigation interaction owns button transitions; component skins cannot override them', () => {
+  const postcss = require('postcss')
+  const targets = {
+    'src/styles/buttons.scss': ['.liquid-button'],
+    'src/styles/prototype-runtime.scss': ['.cap', '.icon-btn', '.dd-item', '.nav-item', '.prototype-mobile-nav button'],
+    'src/components/LiquidNumberInput/index.vue': ['.liquid-number-input__step'],
+    'src/components/LiquidSwitch/index.vue': ['.liquid-switch'],
+    'src/components/LiquidCodeEditor/index.vue': ['.liquid-code-editor__toolbar button'],
+    'src/components/LiquidSelect/index.vue': ['.liquid-select__trigger', '.liquid-select__option'],
+    'src/components/LiquidDatePicker/index.vue': ['.liquid-date-picker__trigger'],
+    'src/views/node/list/components/NodeClientSelector.vue': ['.client-choice']
+  }
+  for (const [file, selectors] of Object.entries(targets)) {
+    const source = read(file)
+    const css = file.endsWith('.vue') ? compiler.parse({ source }).styles[0].content : source
+    postcss.parse(css).walkRules((rule) => {
+      if (selectors.includes(rule.selector)) rule.walkDecls(/^transition/, () => assert.fail(file + ': duplicate button transition'))
+    })
+  }
+  assert.match(read('packages/ui-components-vue2/src/button-interactions.css'), /transition-duration: var\(--ui-motion-slow, 300ms\)/)
+})
+
+test('avatar and account name form a separate keyboard-operable profile entry', () => {
+  const source = read('src/layout/index.vue')
+  assert.match(source, /class="prototype-profile-entry"[\s\S]*?type="button"[\s\S]*?aria-label="我的个人资料"[\s\S]*?@click="go\('\/modify\/index'\)"/)
+  assert.match(source, /<strong>\{\{ username \|\| 'Trojan Panel' \}\}<\/strong>\s*<\/button>\s*<button[\s\S]*?aria-label="退出登录"/)
+})
+
+test('control size aliases resolve to the public size contract and compact controls consume it', () => {
+  const sizes = loadModule(read('src/mixins/liquid-control-size.js'), {}).default
+  for (const [size, expected] of Object.entries({ mini: 'sm', small: 'sm', medium: 'md', default: 'md', large: 'lg', sm: 'sm', md: 'md', lg: 'lg' })) {
+    assert.equal(sizes.computed.controlSize.call({ size }), expected)
+    assert.equal(sizes.props.size.validator(size), true)
+  }
+  for (const name of ['LiquidButton', 'LiquidSelect', 'LiquidDatePicker']) {
+    assert.match(read(`src/components/${name}/index.vue`), /:data-ui-size="controlSize"/)
+  }
+  assert.match(read('src/styles/buttons.scss'), /min-height: var\(--ui-control-size-height, 38px\)/)
+  assert.match(read('src/components/LiquidSelect/index.vue'), /min-height: var\(--ui-control-size-height, 42px\)/)
+})
+
+test('clear controls are native siblings and closed popovers do not swallow dialog Escape', () => {
+  for (const name of ['LiquidSelect', 'LiquidDatePicker']) {
+    const source = read(`src/components/${name}/index.vue`)
+    assert.doesNotMatch(source, /role="button"/)
+    assert.match(source, /<button[^>]*aria-label="清空(?:日期)?"/)
+    const script = compiler.parse({ source }).script.content
+    const component = loadModule(script, {
+      '@/mixins/liquid-control-emitter': {},
+      '@/mixins/liquid-form-control': {},
+      '@/mixins/liquid-control-size': {}
+    }, { document: {} }).default
+    let prevented = 0, closed = 0
+    const instance = { open: false, closeMenu: () => closed++, closePopover: () => closed++, $refs: { trigger: { focus() {} } } }
+    const event = { preventDefault: () => prevented++, stopPropagation() {} }
+    component.methods.handleEscape.call(instance, event)
+    assert.equal(prevented, 0)
+    assert.equal(closed, 0)
+    instance.open = true
+    component.methods.handleEscape.call(instance, event)
+    assert.equal(prevented, 1)
+    assert.equal(closed, 1)
+  }
+})
+
+test('confirm and prompt render shared dialog controls, validate safely, and settle exactly once', async () => {
+  let instance, removed = 0, destroyed = 0
+  const dialog = {}, input = {}, button = {}
+  function Vue(options) {
+    instance = this
+    Object.assign(this, options.data, {
+      _uid: 9, $refs: { input: { focus() {} } },
+      $el: { remove: () => removed++ },
+      $nextTick: (callback) => callback(),
+      $destroy: () => destroyed++,
+      $mount() {}
+    })
+    for (const [name, method] of Object.entries(options.methods)) this[name] = method.bind(this)
+    this.render = () => options.render.call(this, (tag, data, children) => ({ tag, data, children }))
+  }
+  const { MessageBox } = loadModule(read('src/utils/liquid-feedback.js'), {
+    vue: Vue, '@tp-ui/components-vue2': { UiDialog: dialog }, '@tp-ui/icons': { renderIcon() {} },
+    '@tp-ui/motion-native': { afterTransition() {} },
+    '@/components/LiquidInput': input, '@/components/LiquidButton': button
+  }, { document: { body: { appendChild() {} } } })
+  const promise = MessageBox.prompt('名称', '编辑', { inputPattern: /^[a-z]+$/g, inputValue: '123', inputErrorMessage: '请使用字母' })
+  const vnode = instance.render()
+  assert.equal(vnode.tag, dialog)
+  assert.equal(vnode.data.props.role, 'alertdialog')
+  assert.equal(vnode.children[1].children[0].tag, input)
+  assert.equal(vnode.children[2].children[0].tag, button)
+  instance.confirm()
+  assert.equal(instance.error, '请使用字母')
+  assert.equal(destroyed, 0)
+  instance.value = 'valid'
+  instance.confirm()
+  instance.confirm()
+  const result = await promise
+  assert.equal(result.value, 'valid')
+  assert.equal(result.action, 'confirm')
+  assert.equal(destroyed, 1)
+  assert.equal(removed, 1)
+  const cancel = MessageBox.confirm('删除？', '确认')
+  instance.render().data.on.close()
+  await assert.rejects(cancel, (error) => error === 'cancel')
+})
+
+test('production animation timings and overlay material have a single owner', () => {
+  for (const file of sourceFiles('src').filter((file) => /\.(vue|scss)$/.test(file))) {
+    assert.doesNotMatch(read(file), /(?:transition|animation)[\w-]*:\s*[^;{}]*\b\d+(?:\.\d+)?m?s\b/, file)
+    assert.doesNotMatch(read(file), /#[a-fA-F0-9]{3,8}\b|rgba?\(|blur\(\d/, file)
+  }
+  const material = read('packages/ui-material-frosted/src/overlay.css')
+  assert.doesNotMatch(material, /\.tp-ui-|(?:^|[;{])\s*(?:background|border|color|backdrop-filter):/)
+  for (const file of ['src/styles/frosted-surfaces.scss', 'src/styles/liquid-structural.scss', 'src/styles/prototype-runtime.scss']) {
+    assert.doesNotMatch(read(file), /\.tp-ui-dialog(?:__header|__body|__footer|__close|-layer)?\s*\{/)
+  }
+  assert.doesNotMatch(read('src/utils/liquid-feedback.js'), /liquid-feedback-layer|liquid-message-box|setTimeout\([^\n]*180/)
+  assert.doesNotMatch(read('src/utils/scroll-to.js'), /Math\.ease|requestAnimFrame/)
+  assert.match(read('src/styles/index.scss'), /@tp-ui\/material-frosted\/production.css/)
+  assert.match(read('src/main.js'), /setAttribute\('data-ui-material', 'frosted'\)/)
+  assert.doesNotMatch(read('src/styles/icons.scss'), /prefers-reduced-motion/)
+  assert.match(read('src/components/LiquidTag/index.vue'), /<button v-if="\$listeners.click"/)
+  assert.match(read('src/components/LiquidTag/index.vue'), /@click.stop="\$emit\('close'/)
+})
+
 function sourceFiles(directory) {
   return fs.readdirSync(path.join(root, directory), { withFileTypes: true }).flatMap((entry) => {
     const file = path.join(directory, entry.name)

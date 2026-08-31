@@ -36,6 +36,8 @@
                 autocomplete="new-password" /><button
                 type="button"
                 class="field-icon"
+                :aria-label="passwordType === 'password' ? '显示密码' : '隐藏密码'"
+                :aria-pressed="String(passwordType !== 'password')"
                 @click="showPwd"
               >
                 <app-icon :name="passwordType === 'password' ? 'eye-off' : 'eye'"

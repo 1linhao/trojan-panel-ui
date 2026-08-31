@@ -6,7 +6,7 @@
     <textarea
       v-if="type === 'textarea'"
       ref="field"
-      v-bind="$attrs"
+      v-bind="controlAttrs"
       class="liquid-input__field liquid-input__textarea"
       :value="value"
       :disabled="disabled"
@@ -18,7 +18,7 @@
     <input
       v-else
       ref="field"
-      v-bind="$attrs"
+      v-bind="controlAttrs"
       class="liquid-input__field"
       :type="type"
       :value="value"
@@ -43,10 +43,11 @@
 
 <script>
 import emitter from '@/mixins/liquid-control-emitter'
+import formControl from '@/mixins/liquid-form-control'
 
 export default {
   name: 'LiquidInput',
-  mixins: [emitter],
+  mixins: [formControl, emitter],
   inheritAttrs: false,
   props: {
     value: { type: [String, Number], default: '' },
@@ -94,6 +95,7 @@ export default {
   display: flex;
   align-items: center;
   width: min(100%, var(--control-max-width));
+  max-width: var(--control-max-width);
   min-width: 0;
   min-height: 42px;
   padding: 0 10px;
@@ -102,7 +104,7 @@ export default {
   color: var(--ink);
   background: var(--control-fill);
   box-shadow: inset 0 1px 0 var(--spec-soft);
-  transition: border-color 160ms ease, box-shadow 160ms ease;
+  transition: border-color var(--ui-motion-fast) var(--ui-motion-easing-standard), box-shadow var(--ui-motion-fast) var(--ui-motion-easing-standard);
 }
 .liquid-input.is-focused {
   border-color: var(--accent);
@@ -151,11 +153,6 @@ export default {
   opacity: 0.58;
 }
 @media (max-width: 760px) {
-  .liquid-input {
-    width: 100%;
-    max-width: none;
-  }
-
   .liquid-input__textarea {
     min-height: var(
       --ui-editor-mobile-body-min-height,

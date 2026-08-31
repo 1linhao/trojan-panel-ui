@@ -1,4 +1,5 @@
 import { BUTTON_INTERACTION } from './button-interactions.js'
+import { acquireOverlay } from './overlay-stack.js'
 
 export {
   BUTTON_INTERACTION,
@@ -157,12 +158,13 @@ export const UiDialog = {
     renderIcon: { type: Function, default: null },
     closeOnEscape: { type: Boolean, default: true },
     showClose: { type: Boolean, default: true },
-    appendToBody: Boolean,
+    appendToBody: { type: Boolean, default: true },
+    role: { type: String, default: 'dialog' },
+    describedBy: String,
     tone: { type: String, default: 'neutral' },
     motionRole: { type: String, default: 'overlay' },
     motionKey: { type: String, default: '' }
   },
-  data: () => ({ returnFocusTo: null }),
   watch: {
     visible(value) {
       if (value) this.open()
@@ -173,15 +175,21 @@ export const UiDialog = {
     if (this.visible) this.open()
   },
   beforeDestroy() {
-    this.releaseKeyboard()
     this.restoreFocus()
+    if (this.appendToBody) this.$el?.remove()
   },
   methods: {
     open() {
-      this.returnFocusTo = document.activeElement
-      document.addEventListener('keydown', this.onKeydown)
       this.$nextTick(() => {
-        this.$refs.dialog?.focus()
+        if (!this.visible || this._releaseOverlay) return
+        const dialog = this.$refs.dialog
+        if (!dialog) return
+        if (this.appendToBody) dialog.ownerDocument.body.appendChild(this.$el)
+        this._releaseOverlay = acquireOverlay(dialog, {
+          close: this.close,
+          closeOnEscape: this.closeOnEscape
+        })
+        dialog.focus()
         this.$emit('open')
       })
     },
@@ -193,16 +201,9 @@ export const UiDialog = {
       if (this.closeOnClickModal && event.target === event.currentTarget)
         this.close()
     },
-    onKeydown(event) {
-      if (event.key === 'Escape' && this.closeOnEscape) this.close()
-    },
-    releaseKeyboard() {
-      document.removeEventListener('keydown', this.onKeydown)
-    },
     restoreFocus() {
-      this.releaseKeyboard()
-      this.returnFocusTo?.focus?.()
-      this.returnFocusTo = null
+      this._releaseOverlay?.()
+      this._releaseOverlay = null
     }
   },
   render(h) {
@@ -217,6 +218,7 @@ export const UiDialog = {
       {
         class: 'tp-ui-dialog-layer',
         attrs: {
+          'data-ui-overlay': 'modal',
           'data-ui-motion-role': this.motionRole,
           'data-ui-motion-key': this.motionKey || null
         },
@@ -229,13 +231,15 @@ export const UiDialog = {
             ref: 'dialog',
             class: ['tp-ui-dialog', this.customClass],
             style: {
-              width,
+              '--ui-dialog-width': width,
               '--ui-view-transition-name': name
             },
             attrs: {
-              role: 'dialog',
+              role: this.role,
               tabindex: '-1',
               'aria-modal': 'true',
+              'aria-labelledby': `ui-dialog-title-${this._uid}`,
+              'aria-describedby': this.describedBy || null,
               'data-ui-surface': 'overlay',
               'data-ui-tone': this.tone,
               'data-ui-part': 'surface'
@@ -251,7 +255,7 @@ export const UiDialog = {
               [
                 h(
                   'span',
-                  { class: 'tp-ui-dialog__title' },
+                  { class: 'tp-ui-dialog__title', attrs: { id: `ui-dialog-title-${this._uid}` } },
                   [String(this.title == null ? '' : this.title)]
                 ),
                 this.showClose
@@ -259,7 +263,7 @@ export const UiDialog = {
                       'button',
                       {
                         class: 'tp-ui-dialog__close',
-                        attrs: { type: 'button', 'aria-label': '关闭' },
+                        attrs: { type: 'button', 'aria-label': '关闭', 'data-ui-part': 'close-action' },
                         on: { click: this.close }
                       },
                       [this.renderIcon ? this.renderIcon(h, 'close') : '关闭']

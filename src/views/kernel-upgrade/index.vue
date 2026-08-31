@@ -42,7 +42,7 @@
     >
       <div class="section-head">
         {{ $t('kernel.inventory') }}
-        <liquid-button size="mini" style="float: right" @click="loadInventory">
+        <liquid-button size="sm" style="float: right" @click="loadInventory">
           {{ $t('kernel.refreshInventory') }}
         </liquid-button>
       </div>
@@ -55,7 +55,7 @@
           <liquid-button
             v-if="currentServer.grpcTlsMode !== 'mtls'"
             type="warning"
-            size="mini"
+            size="sm"
             @click="enableMTLS"
           >
             {{ $t('kernel.probeMTLS') }}
@@ -67,7 +67,7 @@
     <ui-panel class="section" motion-key="managed-kernels">
       <div class="section-head">
         {{ $t('kernel.managedKernels') }}
-        <liquid-button size="mini" style="float: right" @click="loadReleases(true)">
+        <liquid-button size="sm" style="float: right" @click="loadReleases(true)">
           {{ $t('kernel.refreshReleases') }}
         </liquid-button>
       </div>
@@ -82,7 +82,7 @@
           <template slot-scope="{ row }">
             <liquid-select
               v-model="row.targetChannel"
-              size="mini"
+              size="sm"
               @change="row.targetVersion = ''"
             >
               <option :label="$t('kernel.stable')" value="stable" />
@@ -92,7 +92,7 @@
         </liquid-table-column>
         <liquid-table-column :label="$t('kernel.targetVersion')" min-width="180">
           <template slot-scope="{ row }">
-            <liquid-select v-model="row.targetVersion" size="mini" filterable>
+            <liquid-select v-model="row.targetVersion" size="sm" filterable>
               <option
                 v-for="release in releases[row.key][row.targetChannel]"
                 :key="release.version"
@@ -123,7 +123,7 @@
             <liquid-button
               v-for="version in row.rollbackVersions"
               :key="version.version"
-              size="mini"
+              size="sm"
               @click="
                 submitSingle(
                   row,
@@ -141,7 +141,7 @@
           <template slot-scope="{ row }">
             <liquid-button
               type="primary"
-              size="mini"
+              size="sm"
               :disabled="!row.targetVersion || !row.supported"
               @click="
                 batchMode
@@ -224,7 +224,7 @@
         <liquid-table-column prop="createdAt" :label="$t('table.createTime')" />
         <liquid-table-column :label="$t('table.actions')" width="100">
           <template slot-scope="{ row }">
-            <liquid-button size="mini" @click="openTask(row.id)">
+            <liquid-button size="sm" @click="openTask(row.id)">
               {{ $t('kernel.viewTask') }}
             </liquid-button>
           </template>

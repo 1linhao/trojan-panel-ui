@@ -127,8 +127,12 @@ export const LiquidFormItem = {
   componentName: 'LiquidFormItem',
   inject: { liquidForm: { default: null } },
   props: { label: [String, Number], prop: String, rules: [Object, Array], labelWidth: String },
-  data: () => ({ error: '', initialValue: undefined }),
+  provide() { return { liquidFormItem: this } },
+  data: () => ({ error: '', initialValue: undefined, controls: [] }),
   computed: {
+    labelId() { return `liquid-form-label-${this._uid}` },
+    errorId() { return `liquid-form-error-${this._uid}` },
+    labelTarget() { return this.controls[0]?.controlAttrs.id },
     value() { return this.liquidForm && this.prop ? getValue(this.liquidForm.model, this.prop) : undefined },
     appliedRules() {
       const formRules = this.liquidForm && this.liquidForm.rules && this.liquidForm.rules[this.prop]
@@ -144,6 +148,8 @@ export const LiquidFormItem = {
   },
   beforeDestroy() { if (this.liquidForm) this.liquidForm.removeField(this) },
   methods: {
+    addControl(control) { if (!this.controls.includes(control)) this.controls.push(control) },
+    removeControl(control) { this.controls = this.controls.filter((item) => item !== control) },
     clearValidate() { this.error = '' },
     resetField() {
       if (!this.liquidForm || !this.prop) return
@@ -181,10 +187,10 @@ export const LiquidFormItem = {
   render(h) {
     const width = this.labelWidth || (this.liquidForm && this.liquidForm.labelWidth)
     return h('div', { class: ['liquid-form-item', { 'is-error': this.error }] }, [
-      this.label != null ? h('label', { class: 'liquid-form-item__label', style: { width: width || undefined } }, [String(this.label)]) : null,
+      this.label != null ? h('label', { class: 'liquid-form-item__label', attrs: { id: this.labelId, for: this.labelTarget }, style: { width: width || undefined } }, [String(this.label)]) : null,
       h('div', { class: 'liquid-form-item__content', style: width && this.liquidForm && this.liquidForm.labelPosition !== 'top' ? { marginLeft: width } : undefined }, [
         ...(this.$slots.default || []),
-        this.error ? h('div', { class: 'liquid-form-item__error' }, [this.error]) : null
+        this.error ? h('div', { class: 'liquid-form-item__error', attrs: { id: this.errorId, role: 'status' } }, [this.error]) : null
       ])
     ])
   }

@@ -5,6 +5,8 @@ import App from './App'
 import store from '@/store'
 import router from '@/router'
 import AppIcon from '@/components/AppIcon'
+import LiquidInput from '@/components/LiquidInput'
+import LiquidButton from '@/components/LiquidButton'
 import '@/permission'
 import i18n from '@/lang'
 import { initializeTheme } from '@/utils/theme'
@@ -17,14 +19,10 @@ import { renderIcon } from '@tp-ui/icons'
 
 const LiquidNumberInput = () =>
   import('@/components/LiquidNumberInput')
-const LiquidInput = () =>
-  import('@/components/LiquidInput')
 const LiquidSelect = () =>
   import('@/components/LiquidSelect')
 const LiquidSwitch = () =>
   import('@/components/LiquidSwitch')
-const LiquidButton = () =>
-  import('@/components/LiquidButton')
 const LiquidTag = () =>
   import('@/components/LiquidTag')
 const LiquidDatePicker = () =>
@@ -55,6 +53,7 @@ Vue.prototype.$prompt = MessageBox.prompt
 Vue.prototype.$notify = Notification
 
 initializeTheme()
+document.documentElement.setAttribute('data-ui-material', 'frosted')
 installUiInteractions()
 
 new Vue({
