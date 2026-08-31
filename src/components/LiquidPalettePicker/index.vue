@@ -27,13 +27,16 @@
         选择会保存在当前浏览器中
       </span>
       <button
-        v-for="option in options"
+        v-for="(option, index) in options"
         :key="option.value"
+        ref="radio"
         type="button"
         :class="{ 'is-selected': palette === option.value }"
         role="radio"
         :aria-checked="String(palette === option.value)"
+        :tabindex="palette === option.value || (index === 0 && !options.some((item) => item.value === palette)) ? 0 : -1"
         @click="choose(option.value)"
+        @keydown="handleArrowKeydown($event, index)"
       >
         <span :data-palette-swatch="option.value" />
         {{ option.label }}
@@ -104,6 +107,20 @@ export default {
     choose(palette) {
       this.palette = applyPalette(palette).palette
       if (!this.inline) this.close()
+    },
+    // WEB-016: roving focus inside the radiogroup. Arrows/Home/End both move
+    // focus and select, matching native radio behavior.
+    handleArrowKeydown(event, index) {
+      if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return
+      event.preventDefault()
+      const last = this.options.length - 1
+      let next
+      if (event.key === 'Home') next = 0
+      else if (event.key === 'End') next = last
+      else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') next = (index - 1 + this.options.length) % this.options.length
+      else next = (index + 1) % this.options.length
+      this.choose(this.options[next].value)
+      this.$nextTick(() => this.$refs.radio && this.$refs.radio[next] && this.$refs.radio[next].focus())
     },
     updatePosition() {
       if (!this.open || !this.$refs.trigger) return

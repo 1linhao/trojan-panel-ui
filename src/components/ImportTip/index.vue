@@ -50,9 +50,9 @@
       <liquid-button
         type="primary"
         @click="submitImport"
-        :disabled="fileList.length === 0"
+        :disabled="uploading || fileList.length === 0"
       >
-        {{ $t('table.confirm') }}
+        {{ uploading ? $t('config.webFileUploading') : $t('table.confirm') }}
       </liquid-button>
     </div>
   </ui-dialog>
@@ -87,6 +87,7 @@ export default {
         cover: 0
       },
       fileList: [],
+      uploading: false,
       rules: {
         cover: [
           {
@@ -126,8 +127,14 @@ export default {
       }
     },
     submitImport() {
-      if (this.fileList.length) {
+      // WEB-027: re-entrancy guard; the dialog owner controls closing so a
+      // failed import keeps the draft and can be retried without reselecting.
+      if (this.uploading || !this.fileList.length) return
+      this.uploading = true
+      try {
         this.importData({ file: this.fileList[0].raw })
+      } finally {
+        this.uploading = false
       }
     }
   }

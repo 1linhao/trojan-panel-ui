@@ -15,12 +15,13 @@
           :value="server.id"
         />
       </liquid-select>
-      <div class="seg dashboard-segment" role="group">
+      <div class="seg dashboard-segment" role="group" aria-label="流量周期">
         <button
           v-for="option in periodOptions"
           :key="option.value"
           type="button"
           :class="{ on: query.period === option.value }"
+          :aria-pressed="String(query.period === option.value)"
           @click="setPeriod(option.value)"
         >
           {{ option.label }}

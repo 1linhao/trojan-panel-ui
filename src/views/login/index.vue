@@ -19,6 +19,7 @@
             ><span>用户名</span
             ><input
               ref="username"
+              v-bind="nativeControlAttrs"
               v-model="loginForm.username"
               placeholder="6–20 位字母或数字"
               autocomplete="username" /></label
@@ -29,6 +30,7 @@
             ><span class="password-field"
               ><input
                 ref="pass"
+                v-bind="nativeControlAttrs"
                 v-model="loginForm.pass"
                 :type="passwordType"
                 placeholder="6–20 位字母或数字"
@@ -48,6 +50,7 @@
             ><label class="fld"
               ><span>验证码</span
               ><input
+                v-bind="nativeControlAttrs"
                 v-model="loginForm.captchaCode"
                 placeholder="输入右侧字符"
                 @keyup.enter="handleLogin" /></label></liquid-form-item
@@ -84,10 +87,12 @@ import { panelBranding, loadPanelSettings } from '@/utils/panel-branding'
 import PanelLogo from '@/components/PanelLogo'
 import { generateCaptcha } from '@/api/account'
 import LiquidThemeToggle from '@/components/LiquidThemeToggle'
+import nativeFormControl from '@/mixins/native-form-control'
 
 export default {
   name: 'LoginPage',
   components: { LiquidThemeToggle, PanelLogo },
+  mixins: [nativeFormControl],
   data() {
     return {
       loginForm: {

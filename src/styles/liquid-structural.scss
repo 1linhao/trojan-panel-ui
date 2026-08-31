@@ -75,6 +75,22 @@
   .liquid-descriptions { grid-template-columns: 1fr !important; }
 }
 
+/* WEB-033: the mobile two-row form layout is the single standard across
+   devices. Label occupies its own first line; the bound control sits on the
+   second line. All items in one form share the same width cap and alignment,
+   and long labels wrap without pushing the control horizontally. */
+.liquid-form-item { display: flex; flex-direction: column; align-items: stretch; }
+.liquid-form-item__label {
+  display: block;
+  width: 100% !important;
+  min-height: auto;
+  padding: 0 0 7px;
+  text-align: left !important;
+}
+.liquid-form-item__content { margin-left: 0 !important; line-height: normal; }
+.uniform-dialog-form .liquid-form-item__label { width: 100% !important; padding-right: 0; line-height: inherit; text-align: left !important; }
+.uniform-dialog-form .liquid-form-item__content { margin-left: 0 !important; }
+
 /* Content only: geometry and material belong to the shared dialog packages. */
 .dialog-footer { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
 .ui-feedback-description { margin: 0; color: var(--ink-2); line-height: 1.6; overflow-wrap: anywhere; }

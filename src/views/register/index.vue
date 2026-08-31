@@ -20,6 +20,7 @@
             ><span>用户名</span
             ><input
               ref="username"
+              v-bind="nativeControlAttrs"
               v-model="registerForm.username"
               placeholder="6–20 位字母或数字"
               autocomplete="username" /></label
@@ -30,6 +31,7 @@
             ><span class="password-field"
               ><input
                 ref="pass"
+                v-bind="nativeControlAttrs"
                 v-model="registerForm.passOne"
                 :type="passwordType"
                 placeholder="6–20 位字母或数字"
@@ -47,6 +49,7 @@
           ><label class="fld"
             ><span>确认密码</span
             ><input
+              v-bind="nativeControlAttrs"
               v-model="registerForm.pass"
               :type="passwordType"
               placeholder="再次输入密码"
@@ -58,6 +61,7 @@
             ><label class="fld"
               ><span>验证码</span
               ><input
+                v-bind="nativeControlAttrs"
                 v-model="registerForm.captchaCode"
                 placeholder="输入右侧字符"
                 @keyup.enter="handleRegister" /></label></liquid-form-item
@@ -92,10 +96,12 @@ import { generateCaptcha } from '@/api/account'
 import { panelBranding, loadPanelSettings } from '@/utils/panel-branding'
 import PanelLogo from '@/components/PanelLogo'
 import LiquidThemeToggle from '@/components/LiquidThemeToggle'
+import nativeFormControl from '@/mixins/native-form-control'
 
 export default {
   name: 'RegisterPage',
   components: { LiquidThemeToggle, PanelLogo },
+  mixins: [nativeFormControl],
   data() {
     const validatePass = (rule, value, callback) => {
       if (this.registerForm.passOne !== this.registerForm.pass) {

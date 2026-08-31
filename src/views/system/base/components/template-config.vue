@@ -7,12 +7,11 @@
       label-position="top"
     >
       <div class="template-mode-switches">
-        <div class="seg liquid-tabs" role="tablist" aria-label="订阅模板客户端">
-          <button v-for="client in clients" :key="client.name" type="button"
-            :class="{ on: activeClient === client.name }" @click="activeClient = client.name">
-            {{ client.label }}
-          </button>
-        </div>
+        <liquid-tabs
+          :tabs="clientTabs"
+          v-model="activeClient"
+          aria-label="订阅模板客户端"
+        />
       </div>
 
       <client-template-editor
@@ -22,7 +21,6 @@
         :template-select-label="$t('config.templateSelect')"
         :template-name-label="$t('config.templateName')"
         :format-button-label="$t('config.formatTemplate')"
-        :format-error-prefix="$t('valid.jsonFormat')"
         @select-template="selectTemplate"
         @update-template="updateTemplate"
       />
@@ -65,9 +63,9 @@ export default {
     return {
       activeClient: 'clash-meta',
       clients: [
-        { name: 'clash-meta', label: 'Clash.Meta' },
-        { name: 'sing-box', label: 'sing-box' },
-        { name: 'xray', label: 'Xray' }
+        { value: 'clash-meta', label: 'Clash.Meta' },
+        { value: 'sing-box', label: 'sing-box' },
+        { value: 'xray', label: 'Xray' }
       ],
       activeTemplateIds: {
         'clash-meta': 'default',
@@ -126,7 +124,7 @@ export default {
             contentProp: 'clashRule',
             contentLabel: this.$t('config.clashRule'),
             languageLabel: 'YAML',
-            format: ''
+            format: 'yaml'
           }
         ],
         'sing-box': [
@@ -164,6 +162,9 @@ export default {
           }
         ]
       }
+    },
+    clientTabs() {
+      return this.clients
     },
     activeTemplates() {
       return this.templateCatalog[this.activeClient]

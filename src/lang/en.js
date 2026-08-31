@@ -3,7 +3,6 @@ export default {
     dashboard: 'Dashboard',
     serverManage: 'Server Manage',
     serverList: 'Server List',
-    serverDetail: 'Server Detail',
     kernelUpgrade: 'Kernel Management',
     nodeManage: 'Node Manage',
     nodeList: 'Node List',
@@ -304,6 +303,7 @@ export default {
     trafficRankEnable: 'Whether to enable traffic ranking',
     captchaEnable: 'Whether to enable verification code login',
     webFileBtn: 'upload to server',
+    webFileUploading: 'Uploading…',
     webFileSelect: 'select file',
     webFileTip:
       'The file format only supports .zip, and the size cannot exceed 10MB',
@@ -452,6 +452,7 @@ export default {
     templateName: 'Please enter a template name',
     templateNameRange: 'Template names must be between 1 and 32 characters',
     jsonFormat: 'Invalid JSON format',
+    yamlFormat: 'Invalid YAML format',
     cover: 'Please enter whether to overwrite',
     code: 'please enter verification code',
     emailAOrUsernameExist: 'E-mail and username must fill in one',

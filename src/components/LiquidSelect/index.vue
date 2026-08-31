@@ -297,13 +297,19 @@ export default {
 }
 .liquid-select__trigger {
   --ui-button-hover-lift: 0px;
+  --ui-select-tail-gap: 8px;
+  --ui-select-tail-width: 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
   min-width: 0;
   min-height: var(--ui-control-size-height, 42px);
-  padding: 0 40px 0 14px;
+  padding: var(--ui-control-size-padding, 0 14px);
+  padding-right: calc(
+    var(--ui-select-tail-gap) + var(--ui-select-tail-width) +
+      var(--ui-control-size-padding, 0 14px) / 2
+  );
   border: 1px solid var(--control-border);
   border-radius: 14px;
   color: var(--ink);
@@ -333,7 +339,7 @@ export default {
 .liquid-select__arrow,
 .liquid-select__clear {
   flex: 0 0 auto;
-  margin-left: 10px;
+  margin-left: var(--ui-select-tail-gap, 8px);
   color: var(--ink-3);
 }
 .liquid-select__arrow {
@@ -344,7 +350,7 @@ export default {
 }
 .liquid-select__clear {
   position: absolute;
-  right: 12px;
+  right: calc(var(--ui-control-size-padding, 0 14px) / 2 + var(--ui-select-tail-width, 20px) - 22px);
   top: calc(50% - 12px);
   display: grid;
   place-items: center;

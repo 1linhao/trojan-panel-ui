@@ -1,11 +1,12 @@
 <template>
   <div class="dashboard-table-block">
-    <div class="seg dashboard-segment dashboard-segment-3" role="group">
+    <div class="seg dashboard-segment dashboard-segment-3" role="group" aria-label="排行周期">
       <button
         v-for="option in periodOptions"
         :key="option.value"
         type="button"
         :class="{ on: period === option.value }"
+        :aria-pressed="String(period === option.value)"
         @click="setPeriod(option.value)"
       >
         {{ option.label }}

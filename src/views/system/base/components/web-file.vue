@@ -13,10 +13,12 @@
       </liquid-button>
       <liquid-button
         @click="submitUpload"
-        :disabled="fileList.length === 0"
+        :disabled="uploading || fileList.length === 0"
       >
-        {{ $t('config.webFileBtn') }}
+        {{ uploading ? $t('config.webFileUploading') : $t('config.webFileBtn') }}
       </liquid-button>
+      <span v-if="uploading" class="ui-supporting-text">上传中…</span>
+      <span v-else-if="uploadError" class="liquid-file-picker__error">{{ uploadError }}</span>
       <span v-if="fileList.length" class="liquid-file-picker__name">
         {{ fileList[0].name }}
       </span>
@@ -35,7 +37,9 @@ export default {
   name: 'web-file',
   data() {
     return {
-      fileList: []
+      fileList: [],
+      uploading: false,
+      uploadError: ''
     }
   },
   methods: {
@@ -46,22 +50,34 @@ export default {
         return
       }
       this.fileList = [{ name: file.name, raw: file }]
+      this.uploadError = ''
     },
     submitUpload() {
-      if (this.fileList.length) this.uploadFile({ file: this.fileList[0].raw })
+      // WEB-027: busy guard prevents double submit; the draft file stays
+      // until the request settles so a failure can be retried directly.
+      if (this.uploading || !this.fileList.length) return
+      this.uploading = true
+      this.uploadError = ''
+      const file = this.fileList[0].raw
+      this.uploadFile({ file }).finally(() => {
+        this.uploading = false
+      })
     },
     uploadFile(params) {
       let formData = new FormData()
       formData.append('file', params.file)
-      uploadWebFile(formData).then(() => {
+      return uploadWebFile(formData).then(() => {
+        this.fileList = []
+        if (this.$refs.upload) this.$refs.upload.value = ''
         this.$notify({
           title: 'Success',
           message: this.$t('confirm.uploadWebFileSuccess'),
           type: 'success',
           duration: 2000
         })
+      }).catch(() => {
+        this.uploadError = '上传失败，可直接重试'
       })
-      this.fileList = []
     },
     beforeUpload(file) {
       if (!file.name.endsWith('.zip')) {
@@ -97,6 +113,10 @@ export default {
 }
 .liquid-file-picker__name {
   color: var(--ink-2);
+  font-size: 12px;
+}
+.liquid-file-picker__error {
+  color: var(--bad-fg);
   font-size: 12px;
 }
 .liquid-file-picker__tip {

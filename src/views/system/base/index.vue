@@ -7,12 +7,11 @@
           <h2>系统配置</h2>
         </div>
       </div>
-      <div class="seg liquid-tabs" role="tablist" aria-label="系统配置">
-        <button v-for="tab in tabs" :key="tab.name" type="button"
-          :class="{ on: activeName === tab.name }" @click="activeName = tab.name">
-          {{ tab.label }}
-        </button>
-      </div>
+      <liquid-tabs
+        :tabs="tabs"
+        v-model="activeName"
+        aria-label="系统配置"
+      />
       <account v-if="activeName === 'account-config'" />
       <email v-else-if="activeName === 'config-email'" />
       <web-file v-else-if="activeName === 'config-web-file'" />
@@ -42,11 +41,11 @@ export default {
     return {
       activeName: 'account-config',
       tabs: [
-        { name: 'account-config', label: '账号' },
-        { name: 'config-email', label: '邮件' },
-        { name: 'config-web-file', label: 'Web 文件' },
-        { name: 'config-panel', label: '面板设置' },
-        { name: 'config-template-config', label: '订阅模板' }
+        { value: 'account-config', label: '账号' },
+        { value: 'config-email', label: '邮件' },
+        { value: 'config-web-file', label: 'Web 文件' },
+        { value: 'config-panel', label: '面板设置' },
+        { value: 'config-template-config', label: '订阅模板' }
       ],
       systemConfig: {
         emailEnable: 0,

@@ -71,7 +71,6 @@
         :language-label="activeTemplate.languageLabel"
         :format="activeTemplate.format"
         :format-button-label="formatButtonLabel"
-        :format-error-prefix="formatErrorPrefix"
         @input="updateTemplate({ content: $event })"
       />
     </liquid-form-item>
@@ -95,7 +94,6 @@ export default {
     templateSelectLabel: { type: String, default: '配置模板' },
     templateNameLabel: { type: String, default: '模板名称' },
     formatButtonLabel: { type: String, default: '格式化' },
-    formatErrorPrefix: { type: String, default: 'JSON 格式错误' },
     canCreate: { type: Boolean, default: false },
     canDelete: { type: Boolean, default: false },
     createLabel: { type: String, default: '新增模板' },

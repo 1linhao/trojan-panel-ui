@@ -3,7 +3,6 @@ export default {
     dashboard: 'صفحه اول',
     serverManage: 'مدیریت سرور',
     serverList: 'لیست سرور',
-    serverDetail: 'جزئیات سرور',
     nodeManage: 'مدیریت گره',
     nodeList: 'لیست گره ها',
     accountManage: 'مدیریت کاربر',
@@ -222,6 +221,7 @@ export default {
     trafficRankEnable: 'آیا برای فعال کردن رتبه بندی ترافیک',
     captchaEnable: 'فعال کردن ورود کد تأیید صحت',
     webFileBtn: 'روی سرور آپلود کنید',
+    webFileUploading: 'در حال آپلود…',
     webFileSelect: 'فایل را انتخاب کنید',
     webFileTip:
       'فرمت فایل فقط از .zip پشتیبانی می کند و اندازه آن نمی تواند از 10 مگابایت تجاوز کند',
@@ -366,6 +366,7 @@ export default {
     templateName: 'Please enter a template name',
     templateNameRange: 'Template names must be between 1 and 32 characters',
     jsonFormat: 'Invalid JSON format',
+    yamlFormat: 'Invalid YAML format',
     cover: 'لطفاً بازنویسی را وارد کنید',
     code: 'لطفا کد تایید را وارد کنید',
     emailAOrUsernameExist: 'ایمیل و نام کاربری باید یکی را پر کنند',

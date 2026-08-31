@@ -8,12 +8,11 @@
     @open="loadOptions"
     @closed="reset"
   >
-    <div class="seg liquid-tabs" role="tablist">
-      <button v-for="client in options" :key="client.id" type="button"
-        :class="{ on: activeClient === client.id }" @click="selectClient(client.id)">
-        {{ client.name }}
-      </button>
-    </div>
+    <liquid-tabs
+      :tabs="clientTabs"
+      v-model="activeClient"
+      :aria-label="$t('exportNode.title').toString()"
+    />
 
     <liquid-form label-position="top">
       <liquid-form-item :label="$t('exportNode.template').toString()">
@@ -71,6 +70,9 @@ export default {
     }
   },
   computed: {
+    clientTabs() {
+      return this.options.map((option) => ({ value: option.id, label: option.name }))
+    },
     dialogVisible: {
       get() {
         return this.dialogVisibleProps
@@ -89,10 +91,6 @@ export default {
     }
   },
   methods: {
-    selectClient(client) {
-      this.activeClient = client
-      this.selectDefaultTemplate()
-    },
     loadOptions() {
       exportOptions().then((response) => {
         this.options = response.data || []
@@ -201,17 +199,5 @@ export default {
 <style>
 .export-node-dialog {
   max-width: 560px;
-}
-
-@media (max-width: 640px) {
-  .tp-ui-dialog.export-node-dialog {
-    align-self: flex-start;
-    max-height: calc(100dvh - 20px);
-    margin-top: max(10px, env(safe-area-inset-top));
-  }
-
-  .tp-ui-dialog.export-node-dialog .tp-ui-dialog__body {
-    max-height: calc(100dvh - 152px);
-  }
 }
 </style>

@@ -52,10 +52,11 @@
         v-if="form.trafficPeriod !== 'none'"
         :label="$t('traffic.limitMode')"
       >
-        <div class="seg dialog-mode-switch" role="group">
+        <div class="seg dialog-mode-switch" role="group" :aria-label="$t('traffic.limitMode')">
           <button
             type="button"
             :class="{ on: form.trafficLimitMode === 'combined' }"
+            :aria-pressed="String(form.trafficLimitMode === 'combined')"
             @click="form.trafficLimitMode = 'combined'"
           >
             {{ $t('traffic.combined') }}
@@ -63,6 +64,7 @@
           <button
             type="button"
             :class="{ on: form.trafficLimitMode === 'separate' }"
+            :aria-pressed="String(form.trafficLimitMode === 'separate')"
             @click="form.trafficLimitMode = 'separate'"
           >
             {{ $t('traffic.split') }}

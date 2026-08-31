@@ -223,7 +223,6 @@ const TITLES = {
   '/account-manage/account-list': '账号管理',
   '/node-manage/node-list': '节点管理',
   '/server-manage/server-list': '服务器管理',
-  '/server-manage/server-detail': '服务器详情',
   '/server-manage/kernel-upgrade': '内核升级',
   '/taskManage/task-list': '文件任务',
   '/emailManage/email-record': '邮件记录',

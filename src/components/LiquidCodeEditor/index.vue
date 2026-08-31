@@ -5,14 +5,15 @@
   >
     <div class="liquid-code-editor__toolbar">
       <span>{{ languageLabel }}</span>
-      <button v-if="format === 'json'" type="button" @click="formatContent">
+      <button v-if="processor" type="button" @click="formatContent">
         {{ formatButtonLabel }}
       </button>
     </div>
     <textarea
+      v-bind="controlAttrs"
       :value="text"
-      :aria-label="`${languageLabel} 配置编辑器`"
-      :aria-invalid="String(Boolean(error))"
+      :aria-label="$attrs['aria-label'] || `${languageLabel} 配置编辑器`"
+      :aria-invalid="error ? 'true' : controlAttrs['aria-invalid']"
       spellcheck="false"
       autocomplete="off"
       @input="handleInput"
@@ -24,14 +25,50 @@
 </template>
 
 <script>
+import jsYaml from 'js-yaml'
+import emitter from '@/mixins/liquid-control-emitter'
+import formControl from '@/mixins/liquid-form-control'
+
 function toText(value) {
   if (value === undefined || value === null || value === '') return ''
   if (typeof value === 'string') return value
   return JSON.stringify(value, null, 2)
 }
 
+// WEB-032: JSON and YAML are equal language capabilities on the same editor
+// shell. Each processor owns parse, stringify and error wording for its
+// language; neither is derived through the other.
+const languageProcessors = {
+  json: {
+    parse(text) {
+      try {
+        return { value: JSON.parse(text), error: null }
+      } catch (error) {
+        return { value: null, error }
+      }
+    },
+    stringify(value) {
+      return JSON.stringify(value, null, 2)
+    }
+  },
+  yaml: {
+    parse(text) {
+      try {
+        return { value: jsYaml.safeLoad(text), error: null }
+      } catch (error) {
+        return { value: null, error }
+      }
+    },
+    stringify(value) {
+      return jsYaml.safeDump(value, { indent: 2, lineWidth: -1, noRefs: true })
+    }
+  }
+}
+
 export default {
   name: 'LiquidCodeEditor',
+  mixins: [formControl, emitter],
+  inheritAttrs: false,
   props: {
     value: {
       type: [Object, Array, String],
@@ -51,7 +88,7 @@ export default {
     },
     formatErrorPrefix: {
       type: String,
-      default: 'JSON 格式错误'
+      default: ''
     }
   },
   data() {
@@ -59,6 +96,15 @@ export default {
       text: toText(this.value),
       focused: false,
       error: ''
+    }
+  },
+  computed: {
+    processor() {
+      return languageProcessors[this.format] || null
+    },
+    errorPrefix() {
+      if (this.formatErrorPrefix) return this.formatErrorPrefix
+      return this.format === 'yaml' ? 'YAML 格式错误' : `${this.format.toUpperCase()} 格式错误`
     }
   },
   watch: {
@@ -79,30 +125,28 @@ export default {
     handleBlur() {
       this.focused = false
       this.validate()
+      this.dispatch('LiquidFormItem', 'liquid.form.blur', [this.text])
     },
     validate() {
-      if (this.format !== 'json' || !this.text.trim()) {
+      if (!this.processor || !this.text.trim()) {
         this.error = ''
         return true
       }
-      try {
-        JSON.parse(this.text)
-        this.error = ''
-        return true
-      } catch (error) {
-        this.error = `${this.formatErrorPrefix}：${error.message}`
-        return false
-      }
+      const { error } = this.processor.parse(this.text)
+      this.error = error ? `${this.errorPrefix}：${error.message || error.reason}` : ''
+      return !error
     },
     formatContent() {
       if (!this.text.trim()) return
-      try {
-        this.text = JSON.stringify(JSON.parse(this.text), null, 2)
-        this.error = ''
-        this.$emit('input', this.text)
-      } catch (error) {
-        this.error = `${this.formatErrorPrefix}：${error.message}`
+      const { value, error } = this.processor.parse(this.text)
+      if (error) {
+        this.error = `${this.errorPrefix}：${error.message || error.reason}`
+        return
       }
+      // Preserve formatting of scalars; only structure is re-dumped.
+      this.text = this.processor.stringify(value)
+      this.error = ''
+      this.$emit('input', this.text)
     }
   }
 }

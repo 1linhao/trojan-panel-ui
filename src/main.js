@@ -27,6 +27,8 @@ const LiquidTag = () =>
   import('@/components/LiquidTag')
 const LiquidDatePicker = () =>
   import('@/components/LiquidDatePicker')
+const LiquidTabs = () =>
+  import('@/components/LiquidTabs')
 
 Object.entries(structuralComponents).forEach(([name, component]) => {
   Vue.component(name, component)
@@ -46,6 +48,7 @@ Vue.component('LiquidSwitch', LiquidSwitch)
 Vue.component('LiquidButton', LiquidButton)
 Vue.component('LiquidTag', LiquidTag)
 Vue.component('LiquidDatePicker', LiquidDatePicker)
+Vue.component('LiquidTabs', LiquidTabs)
 Vue.directive('liquid-loading', LiquidLoading)
 Vue.prototype.$message = Message
 Vue.prototype.$confirm = MessageBox.confirm

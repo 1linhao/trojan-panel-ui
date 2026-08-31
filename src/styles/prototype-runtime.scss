@@ -2207,15 +2207,15 @@ h3 {
 }
 
 .uniform-dialog-form .liquid-form-item__label {
-  width: 132px !important;
-  padding-right: 16px;
-  line-height: 42px;
-  text-align: right;
+  width: 100% !important;
+  padding-right: 0;
+  line-height: inherit;
+  text-align: left !important;
 }
 
 .uniform-dialog-form .liquid-form-item__content {
   min-width: 0;
-  margin-left: 132px !important;
+  margin-left: 0 !important;
 }
 
 .uniform-dialog-form .liquid-input,

@@ -160,6 +160,69 @@ test('pagination emits controlled page/limit updates before notifying the query'
   assert.deepEqual({ ...emitted[1][1] }, { page: 2, limit: 20 })
 })
 
+test('code editor treats JSON and YAML as equal language capabilities', async () => {
+  const { transformSync } = require('@babel/core')
+  const source = read('src/components/LiquidCodeEditor/index.vue')
+  const parsed = compiler.parse({ source })
+  const script = (parsed.descriptor || parsed).script.content
+  const { code } = transformSync(script, {
+    babelrc: false, configFile: false,
+    plugins: ['@babel/plugin-transform-modules-commonjs']
+  })
+  const exports = {}
+  vm.runInNewContext(code, {
+    exports,
+    require(name) {
+      if (name === 'js-yaml') return require('js-yaml')
+      assert.ok(name.endsWith('liquid-control-emitter') || name.endsWith('liquid-form-control'), `Unexpected dependency: ${name}`)
+      return {}
+    }
+  })
+  const component = exports.default
+
+  const makeInstance = (format, text) => ({
+    format, text, error: '', formatErrorPrefix: '',
+    $emit: () => {}, processor: component.computed.processor.call({ format }),
+    errorPrefix: component.computed.errorPrefix.call({ format, formatErrorPrefix: '' })
+  })
+
+  // JSON behavior is unchanged: legal parse, format idempotence, illegal error.
+  const json = makeInstance('json', '{"a":1}')
+  assert.ok(component.methods.validate.call(json))
+  assert.equal(json.error, '')
+  const jsonPretty = makeInstance('json', '{\n  "a": 1\n}')
+  component.methods.formatContent.call(jsonPretty)
+  assert.equal(jsonPretty.text, '{\n  "a": 1\n}')
+  assert.equal(jsonPretty.error, '')
+  const jsonBroken = makeInstance('json', '{a:1}')
+  assert.ok(!component.methods.validate.call(jsonBroken))
+  assert.match(jsonBroken.error, /JSON 格式错误/)
+
+  // YAML reaches the same capabilities natively, not via JSON round-trip.
+  const yamlHeader = 'port: 7890\n# 保持注释\nrules:\n  - A\n  - B\n'
+  const yaml = makeInstance('yaml', yamlHeader)
+  assert.ok(component.methods.validate.call(yaml))
+  assert.equal(yaml.error, '')
+  const yamlBroken = makeInstance('yaml', 'rules: [A, B')
+  assert.ok(!component.methods.validate.call(yamlBroken))
+  assert.match(yamlBroken.error, /YAML 格式错误/)
+  // Format preserves YAML semantics: comments are dropped by dump but keys,
+  // nesting and scalar values survive; empty content is a no-op.
+  const yamlFormat = makeInstance('yaml', yamlHeader)
+  component.methods.formatContent.call(yamlFormat)
+  assert.equal(yamlFormat.error, '')
+  assert.match(yamlFormat.text, /port: 7890/)
+  assert.match(yamlFormat.text, /rules:/)
+  assert.match(yamlFormat.text, /- A/)
+  const yamlAnchor = makeInstance('yaml', 'a: &x 1\nb: *x\n')
+  component.methods.formatContent.call(yamlAnchor)
+  assert.equal(yamlAnchor.error, '')
+  // Unknown language keeps the editor inert (no button, no validation).
+  const text = makeInstance('', 'anything:')
+  assert.equal(text.processor, null)
+  assert.ok(component.methods.validate.call(text))
+})
+
 test('navigation interaction owns button transitions; component skins cannot override them', () => {
   const postcss = require('postcss')
   const targets = {
