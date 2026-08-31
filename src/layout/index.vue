@@ -240,7 +240,7 @@ export default {
       return this.roles.some((role) => role === 'sysadmin' || role === 'admin')
     },
     isLocalPreview() {
-      return process.env.NODE_ENV === 'development' &&
+      return import.meta.env.DEV &&
         ['127.0.0.1', 'localhost'].includes(window.location.hostname)
     },
     visibleGroups() {

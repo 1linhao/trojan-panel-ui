@@ -9,18 +9,19 @@
     "examples/*"
   ],
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
+    "serve": "vite",
+    "build": "vite build",
+    "lint": "eslint --ext .js,.vue src tests/ui-cleanup.test.js",
     "lint:kernel-upgrade": "eslint --ext .js,.vue src/api/kernel-upgrade.js src/lang/en.js src/lang/index.js src/lang/zh.js src/router/index.js src/views/node-server/list/compoments/NodeServerForm.vue src/views/node-server/list/index.vue src/views/kernel-upgrade",
-    "svgo": "svgo -f src/icons/svg --config=src/icons/svgo.yml",
     "lint:prettier": "prettier --write \"**/*.{js,cjs,ts,json,tsx,css,less,scss,vue,html,md}\"",
     "test:ui-libraries": "node scripts/check-ui-workspace.mjs",
     "test:ui-cleanup": "node --test tests/ui-cleanup.test.js",
     "build:ui-labs": "node scripts/build-ui-labs.mjs",
     "serve:ui-labs": "node scripts/serve-ui-labs.mjs",
     "test:ui-labs:e2e": "node tests/ui-labs.e2e.js",
-    "test:live-stack:e2e": "node tests/live-stack.e2e.js"
+    "test:live-stack:e2e": "node tests/live-stack.e2e.js",
+    "preview": "vite preview",
+    "test:vite-proxy": "node --test tests/vite-proxy.test.mjs"
   },
   "dependencies": {
     "axios": "0.25.0",
@@ -29,38 +30,36 @@
     "js-cookie": "3.0.1",
     "normalize.css": "7.0.0",
     "nprogress": "0.2.0",
-    "vue": "^2.6.11",
+    "vue": "2.7.16",
     "vue-i18n": "7.3.2",
     "vue-router": "3.5.3",
     "vuex": "3.6.2"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
-    "babel-eslint": "^10.1.0",
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.3.0",
     "javascript-obfuscator": "^4.0.0",
     "prettier": "^2.5.1",
-    "sass": "1.26.8",
-    "sass-loader": "8.0.2",
-    "svg-sprite-loader": "4.1.3",
-    "svgo": "1.2.2",
-    "vue-template-compiler": "^2.6.11",
-    "webpack-obfuscator": "2.6.0"
+    "sass": "1.103.1",
+    "@vitejs/plugin-vue2": "2.3.4",
+    "vite": "7.3.6",
+    "@babel/core": "^7.28.0",
+    "@babel/plugin-transform-modules-commonjs": "^7.27.1"
   },
   "eslintConfig": {
     "root": true,
     "env": {
-      "node": true
+      "node": true,
+      "browser": true,
+      "es2021": true
     },
     "extends": [
       "plugin:vue/essential",
       "eslint:recommended"
     ],
     "parserOptions": {
-      "parser": "babel-eslint"
+      "ecmaVersion": 2021,
+      "sourceType": "module"
     },
     "rules": {}
   },
@@ -68,5 +67,8 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ]
+  ],
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  }
 }

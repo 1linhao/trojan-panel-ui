@@ -4,8 +4,6 @@ import {
   createNativeMotion
 } from '@tp-ui/motion-native'
 
-/* global globalThis */
-
 let releaseRuntime = null
 
 /**

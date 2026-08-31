@@ -95,10 +95,9 @@ async function main() {
   start(process.execPath, ['tests/mock-api-server.js'], {
     env: { ...process.env, MOCK_API_PORT: '18081' }
   })
-  const web = start('npm', ['run', 'serve', '--', '--port', '8890', '--no-progress'], {
+  const web = start('npm', ['run', 'serve', '--', '--port', '8890'], {
     env: {
       ...process.env,
-      NODE_OPTIONS: '--openssl-legacy-provider',
       MOCK_API_TARGET: 'http://127.0.0.1:18081'
     }
   })
@@ -107,7 +106,7 @@ async function main() {
   step('等待隔离服务')
   await waitFor(() => request('http://127.0.0.1:18081/auth/setting'), 'mock API')
   await waitFor(
-    () => web.output.includes('Compiled successfully') || web.output.includes('Compiled with'),
+    () => web.output.includes('Local:'),
     'Vue 编译',
     60000
   )

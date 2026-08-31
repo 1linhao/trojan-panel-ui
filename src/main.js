@@ -16,19 +16,19 @@ import { createVue2Components } from '@tp-ui/components-vue2'
 import { renderIcon } from '@tp-ui/icons'
 
 const LiquidNumberInput = () =>
-  import(/* webpackChunkName: "liquid-controls" */ '@/components/LiquidNumberInput')
+  import('@/components/LiquidNumberInput')
 const LiquidInput = () =>
-  import(/* webpackChunkName: "liquid-controls" */ '@/components/LiquidInput')
+  import('@/components/LiquidInput')
 const LiquidSelect = () =>
-  import(/* webpackChunkName: "liquid-controls" */ '@/components/LiquidSelect')
+  import('@/components/LiquidSelect')
 const LiquidSwitch = () =>
-  import(/* webpackChunkName: "liquid-controls" */ '@/components/LiquidSwitch')
+  import('@/components/LiquidSwitch')
 const LiquidButton = () =>
-  import(/* webpackChunkName: "liquid-controls" */ '@/components/LiquidButton')
+  import('@/components/LiquidButton')
 const LiquidTag = () =>
-  import(/* webpackChunkName: "liquid-controls" */ '@/components/LiquidTag')
+  import('@/components/LiquidTag')
 const LiquidDatePicker = () =>
-  import(/* webpackChunkName: "liquid-controls" */ '@/components/LiquidDatePicker')
+  import('@/components/LiquidDatePicker')
 
 Object.entries(structuralComponents).forEach(([name, component]) => {
   Vue.component(name, component)

@@ -5,7 +5,7 @@ import { getToken } from '@/utils/auth'
 import i18n from '@/lang'
 
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API,
+  baseURL: import.meta.env.VITE_BASE_API,
   timeout: 5000
 })
 

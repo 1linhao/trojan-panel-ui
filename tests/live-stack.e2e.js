@@ -33,6 +33,7 @@ function request(url, method = 'GET', body) {
         )
       }
     )
+    req.setTimeout(15000, () => req.destroy(new Error(`Request timed out: ${url}`)))
     req.on('error', reject)
     if (payload) req.write(payload)
     req.end()
@@ -67,6 +68,7 @@ async function main() {
         capabilities: {
           alwaysMatch: {
             browserName: 'chrome',
+            'goog:loggingPrefs': { browser: 'ALL' },
             'goog:chromeOptions': {
               binary: '/usr/bin/chromium',
               args: [
@@ -117,6 +119,13 @@ async function main() {
       await command(`/element/${elementId(password)}/value`, 'POST', {
         text: '123456'
       })
+      // The local mock accepts any non-empty captcha fixture; no real challenge
+      // is solved here. Supply it when the mock exposes the optional field.
+      const captcha = await execute("return Boolean(document.querySelector('.captcha-row input'))")
+      if (captcha) {
+        const field = await find('.captcha-row input')
+        await command(`/element/${elementId(field)}/value`, 'POST', { text: 'mock' })
+      }
       const submit = await find('.auth-submit.primary')
       await command(`/element/${elementId(submit)}/click`, 'POST', {})
       await waitFor(
@@ -145,6 +154,37 @@ async function main() {
           )}`
         )
       }
+      const clickText = async (selector, label) => {
+        const element = await command('/element', 'POST', {
+          using: 'xpath', value: `//${selector}[normalize-space(.)='${label}']`
+        })
+        await command(`/element/${elementId(element)}/click`, 'POST', {})
+      }
+      await clickText('aside/button', '系统配置')
+      await waitFor(() => find('.prototype-config-card'), 'system settings route')
+      await clickText('button', '面板设置')
+      await waitFor(() => find('.panel-config input'), 'panel settings form')
+      await clickText('button', '订阅模板')
+      for (const [client, content] of [
+        ['Clash.Meta', 'rules: []'],
+        ['sing-box', '{"outbounds":[]}'],
+        ['Xray', '{"routing":{"rules":[]}}']
+      ]) {
+        await clickText('button', client)
+        const editor = await waitFor(() => find('.subscription-config-editor textarea'), `${client} editor`)
+        await command(`/element/${elementId(editor)}/value`, 'POST', { text: '\uE009a\uE000' + content })
+        if (client !== 'Clash.Meta') {
+          const formatButton = await waitFor(() => find('.liquid-code-editor__toolbar button'), `${client} format button`)
+          await command(`/element/${elementId(formatButton)}/click`, 'POST', {})
+          await waitFor(() => execute("return document.querySelector('.subscription-config-editor textarea').getAttribute('aria-invalid') === 'false'"), `${client} JSON format`)
+        }
+        const value = await execute("return document.querySelector('.subscription-config-editor textarea').value")
+        if (client === 'Clash.Meta' ? value !== content : JSON.stringify(JSON.parse(value)) !== content) {
+          throw new Error(`${client} editor lost input: ${value}`)
+        }
+      }
+      await clickText('button', 'Clash.Meta')
+      await waitFor(() => execute("return document.querySelector('.subscription-config-editor textarea').value === 'rules: []'"), 'template state across clients')
       await command('/window/rect', 'POST', { width: 390, height: 844 })
       await waitFor(
         () =>
@@ -153,11 +193,20 @@ async function main() {
           ),
         'mobile navigation'
       )
+      await clickText('nav/button', '首页')
+      await waitFor(() => execute("return location.hash.includes('/dashboard/index')"), 'mobile route navigation')
+      const errors = (await command('/log', 'POST', { type: 'browser' }))
+        .filter((entry) => entry.level === 'SEVERE' || /multiple instances of Vue|Failed to resolve|Unknown custom element/i.test(entry.message))
+      if (errors.length) throw new Error(`Browser errors: ${JSON.stringify(errors)}`)
       const screenshot = await command('/screenshot')
       writeFileSync(screenshotPath, Buffer.from(screenshot, 'base64'))
       process.stdout.write(
-        `PASS live stack login, dashboard, ${dashboardButtonCoverage.covered} interactive buttons, responsive navigation; screenshot ${screenshotPath}\n`
+        `PASS live stack login, dashboard, system settings, three template editors, clean browser console, ${dashboardButtonCoverage.covered} interactive buttons, responsive navigation; screenshot ${screenshotPath}\n`
       )
+    } catch (error) {
+      const state = await execute("return {hash:location.hash, editor:document.querySelector('.subscription-config-editor textarea')?.value, alerts:[...document.querySelectorAll('[role=alert]')].map(e=>e.textContent)}").catch(() => null)
+      process.stderr.write(`UI failure state: ${JSON.stringify(state)}\n`)
+      throw error
     } finally {
       await request(base, 'DELETE').catch(() => {})
     }

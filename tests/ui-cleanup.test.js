@@ -4,7 +4,7 @@ const fs = require('node:fs')
 const path = require('node:path')
 const vm = require('node:vm')
 const { transformSync } = require('@babel/core')
-const compiler = require('vue-template-compiler')
+const compiler = require('vue/compiler-sfc')
 
 const root = path.resolve(__dirname, '..')
 const read = (file) => fs.readFileSync(path.join(root, file), 'utf8')
@@ -41,9 +41,9 @@ test('all production controls use known semantic icons and no legacy renderer', 
     const source = read(file)
     assert.doesNotMatch(source, /liquid-icon--|liquid-icon-svg|svg-icon|LiquidNavIcon/, file)
     if (!file.endsWith('.vue')) continue
-    const template = compiler.parseComponent(source).template
+    const template = compiler.parse({ source }).template
     if (!template) continue
-    assert.deepEqual(compiler.compile(template.content).errors, [], file)
+    assert.deepEqual(compiler.compileTemplate({ source: template.content, filename: file }).errors, [], file)
     for (const match of template.content.matchAll(/<app-icon\b[^>]*?\sname="([^"]+)"/g)) {
       assert.ok(iconNames.includes(match[1]), `${file}: ${match[1]}`)
     }
@@ -106,7 +106,7 @@ test('logo refresh busts caches and lets failed images retry', () => {
   const refreshed = brand.panelBranding.logoUrl
   brand.refreshPanelLogo()
   assert.notEqual(brand.panelBranding.logoUrl, refreshed)
-  const descriptor = compiler.parseComponent(read('src/components/PanelLogo/index.vue'))
+  const descriptor = compiler.parse({ source: read('src/components/PanelLogo/index.vue') })
   const component = loadModule(descriptor.script.content, { '@/utils/panel-branding': brand }).default
   const context = { branding: brand.panelBranding, failed: true }
   component.watch['branding.logoUrl'].call(context)
@@ -118,8 +118,8 @@ test('logo refresh busts caches and lets failed images retry', () => {
 test('auth and 404 share panels and branding; 404 has a real router action', () => {
   for (const file of ['src/views/login/index.vue', 'src/views/register/index.vue', 'src/views/404.vue']) {
     const source = read(file)
-    const descriptor = compiler.parseComponent(source)
-    assert.deepEqual(compiler.compile(descriptor.template.content).errors, [])
+    const descriptor = compiler.parse({ source })
+    assert.deepEqual(compiler.compileTemplate({ source: descriptor.template.content, filename: file }).errors, [])
     assert.match(source, /<ui-panel/)
     assert.match(source, /<panel-logo/)
     assert.doesNotMatch(source, /login-container|wscn-http404|FROSTED GLASS/)
@@ -130,7 +130,7 @@ test('auth and 404 share panels and branding; 404 has a real router action', () 
 
 test('logo upload refreshes shared branding only after success; failures keep the previous logo', async () => {
   let fail = false, refreshes = 0, notifications = 0
-  const descriptor = compiler.parseComponent(read('src/components/UploadLogo/index.vue'))
+  const descriptor = compiler.parse({ source: read('src/components/UploadLogo/index.vue') })
   const component = loadModule(descriptor.script.content, {
     '@/utils/liquid-feedback': { Message() {} },
     '@/api/system': { uploadLogo: async () => { if (fail) throw new Error('upload failed') } },
@@ -163,4 +163,17 @@ test('removed CSS cannot override current labels and controls', () => {
   assert.match(styles, /\.liquid-table th\s*{\s*color: var\(--table-header-ink\)/)
   assert.match(read('src/layout/components/AppMain.vue'), /state.tagsView.cachedViews/)
   assert.equal(fs.existsSync(path.join(root, 'src/layout/components/Sidebar/index.vue')), false)
+})
+
+test('tables render an empty state while async callers supply null, then render loaded rows', () => {
+  const Vue = require('vue')
+  const { LiquidTable } = loadModule(read('src/components/LiquidStructural/index.js'), { vue: Vue })
+  const table = new Vue({ ...LiquidTable, propsData: { data: null } })
+  const text = (node) => node.text || (node.children || []).map(text).join('')
+  const render = () => LiquidTable.render.call(table, table.$createElement)
+  assert.match(text(render()), /暂无数据/)
+  table.columns = [{ prop: 'name', label: 'Name', $scopedSlots: {} }]
+  table.data = [{ id: 1, name: 'Loaded row' }]
+  assert.match(text(render()), /Loaded row/)
+  table.$destroy()
 })

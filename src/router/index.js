@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 const Layout = () =>
-  import(/* webpackChunkName: "app-shell" */ '@/layout')
+  import('@/layout')
 
 Vue.use(Router)
 
@@ -15,7 +15,7 @@ export const constantRoutes = [
       {
         path: '/redirect/:path(.*)',
         component: () =>
-          import(/* webpackChunkName: "page-redirect" */ '@/views/redirect/index')
+          import('@/views/redirect/index')
       }
     ]
   },
@@ -23,14 +23,14 @@ export const constantRoutes = [
   {
     path: '/login',
     component: () =>
-      import(/* webpackChunkName: "page-auth" */ '@/views/login/index'),
+      import('@/views/login/index'),
     hidden: true
   },
 
   {
     path: '/register',
     component: () =>
-      import(/* webpackChunkName: "page-auth" */ '@/views/register/index'),
+      import('@/views/register/index'),
     hidden: true
   },
 
@@ -50,7 +50,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'index',
         component: () =>
-          import(/* webpackChunkName: "page-dashboard" */ '@/views/dashboard'),
+          import('@/views/dashboard'),
         meta: {
           title: 'dashboard',
           name: 'dashboard',
@@ -71,7 +71,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'index',
         component: () =>
-          import(/* webpackChunkName: "page-account-modify" */ '@/views/account/modify'),
+          import('@/views/account/modify'),
         meta: {
           title: 'modify',
           name: 'modify'
@@ -91,7 +91,7 @@ export const constantRoutes = [
         path: 'node-list',
         name: 'nodeList',
         component: () =>
-          import(/* webpackChunkName: "page-node-list" */ '@/views/node/list'),
+          import('@/views/node/list'),
         meta: {
           title: 'nodeList',
           name: 'nodeList'
@@ -103,7 +103,7 @@ export const constantRoutes = [
   {
     path: '/404',
     component: () =>
-      import(/* webpackChunkName: "page-error" */ '@/views/404'),
+      import('@/views/404'),
     hidden: true
   }
 ]
@@ -125,7 +125,7 @@ export const asyncRoutes = [
         path: 'account-list',
         name: 'accountList',
         component: () =>
-          import(/* webpackChunkName: "page-account-list" */ '@/views/account/list'),
+          import('@/views/account/list'),
         meta: {
           title: 'accountList',
           name: 'accountList',
@@ -151,7 +151,7 @@ export const asyncRoutes = [
         path: 'server-list',
         name: 'serverList',
         component: () =>
-          import(/* webpackChunkName: "page-server-list" */ '@/views/node-server/list'),
+          import('@/views/node-server/list'),
         meta: {
           title: 'serverList',
           name: 'serverList',
@@ -162,7 +162,7 @@ export const asyncRoutes = [
         path: 'server-detail',
         name: 'serverDetail',
         component: () =>
-          import(/* webpackChunkName: "page-server-detail" */ '@/views/node-server/detail'),
+          import('@/views/node-server/detail'),
         hidden: true,
         meta: {
           title: 'serverDetail',
@@ -174,7 +174,7 @@ export const asyncRoutes = [
         path: 'kernel-upgrade',
         name: 'kernelUpgrade',
         component: () =>
-          import(/* webpackChunkName: "page-kernel-upgrade" */ '@/views/kernel-upgrade'),
+          import('@/views/kernel-upgrade'),
         hidden: true,
         meta: {
           title: 'kernelUpgrade',
@@ -201,7 +201,7 @@ export const asyncRoutes = [
         path: 'email-record',
         name: 'emailRecord',
         component: () =>
-          import(/* webpackChunkName: "page-email-record" */ '@/views/email/record'),
+          import('@/views/email/record'),
         meta: {
           title: 'emailRecord',
           name: 'emailRecord',
@@ -227,7 +227,7 @@ export const asyncRoutes = [
         path: 'task-list',
         name: 'taskList',
         component: () =>
-          import(/* webpackChunkName: "page-task-list" */ '@/views/task-manage/list'),
+          import('@/views/task-manage/list'),
         meta: {
           title: 'taskList',
           name: 'taskList',
@@ -253,7 +253,7 @@ export const asyncRoutes = [
         path: 'base-config',
         name: 'baseConfig',
         component: () =>
-          import(/* webpackChunkName: "page-system-base" */ '@/views/system/base'),
+          import('@/views/system/base'),
         meta: {
           title: 'baseConfig',
           name: 'baseConfig',
@@ -264,7 +264,7 @@ export const asyncRoutes = [
         path: 'black-list',
         name: 'blackList',
         component: () =>
-          import(/* webpackChunkName: "page-system-black" */ '@/views/system/black'),
+          import('@/views/system/black'),
         meta: {
           title: 'blackList',
           name: 'blackList',
