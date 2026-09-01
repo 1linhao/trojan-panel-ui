@@ -48,15 +48,14 @@
 .liquid-table__empty-row td { height: 92px; text-align: center !important; color: var(--ink-2); }
 
 .liquid-form { width: 100%; }
-.liquid-form-item { position: relative; width: 100%; min-height: 42px; margin: 0 0 20px; }
+.liquid-form-item { position: relative; display: flex; flex-direction: column; align-items: stretch; width: 100%; min-height: 42px; margin: 0 0 20px; }
 .liquid-form-item::after { display: block; clear: both; content: ''; }
-.liquid-form-item__label { float: left; min-height: 42px; padding: 10px 16px 0 0; color: var(--ink); font-size: 14px; line-height: 22px; }
-.liquid-form-item__content { position: relative; min-height: 42px; line-height: 42px; }
+.liquid-form-item__label { display: block; width: 100%; min-height: auto; padding: 0 0 7px; color: var(--ink); font-size: 14px; line-height: 22px; text-align: left; }
+.liquid-form-item__content { position: relative; min-width: 0; min-height: 42px; margin-left: 0; line-height: normal; }
 .liquid-form-item__error { padding-top: 4px; color: var(--bad-fg); font-size: 12px; line-height: 18px; }
 .liquid-form.is-label-left .liquid-form-item__label { text-align: left; }
-.liquid-form.is-label-right .liquid-form-item__label { text-align: right; }
-.liquid-form.is-label-top .liquid-form-item__label { float: none; display: block; width: 100% !important; padding: 0 0 7px; text-align: left; }
-.liquid-form.is-label-top .liquid-form-item__content { margin-left: 0 !important; }
+.liquid-form.is-label-right .liquid-form-item__label { text-align: left; }
+.liquid-form.is-label-top .liquid-form-item__label { padding: 0 0 7px; text-align: left; }
 
 .liquid-descriptions { display: grid; gap: 1px; overflow: hidden; border-radius: 14px; background: var(--hairline); }
 .liquid-descriptions__item { min-width: 0; background: var(--glass); }
@@ -70,26 +69,8 @@
 .liquid-message.is-warning { border-color: var(--warn-fg); }
 .liquid-message.is-error { border-color: var(--bad-fg); }
 @media (max-width: 760px) {
-  .liquid-form-item__label { float: none; display: block; width: 100% !important; min-height: auto; padding: 0 0 7px; text-align: left !important; }
-  .liquid-form-item__content { margin-left: 0 !important; }
   .liquid-descriptions { grid-template-columns: 1fr !important; }
 }
-
-/* WEB-033: the mobile two-row form layout is the single standard across
-   devices. Label occupies its own first line; the bound control sits on the
-   second line. All items in one form share the same width cap and alignment,
-   and long labels wrap without pushing the control horizontally. */
-.liquid-form-item { display: flex; flex-direction: column; align-items: stretch; }
-.liquid-form-item__label {
-  display: block;
-  width: 100% !important;
-  min-height: auto;
-  padding: 0 0 7px;
-  text-align: left !important;
-}
-.liquid-form-item__content { margin-left: 0 !important; line-height: normal; }
-.uniform-dialog-form .liquid-form-item__label { width: 100% !important; padding-right: 0; line-height: inherit; text-align: left !important; }
-.uniform-dialog-form .liquid-form-item__content { margin-left: 0 !important; }
 
 /* Content only: geometry and material belong to the shared dialog packages. */
 .dialog-footer { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }

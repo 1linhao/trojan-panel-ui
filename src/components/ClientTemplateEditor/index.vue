@@ -66,11 +66,13 @@
       :prop="activeTemplate.contentProp"
     >
       <liquid-code-editor
+        ref="codeEditor"
         class="subscription-config-editor"
         :value="activeTemplate.content"
         :language-label="activeTemplate.languageLabel"
         :format="activeTemplate.format"
         :format-button-label="formatButtonLabel"
+        :format-error-prefix="$t(activeTemplate.format === 'yaml' ? 'valid.yamlFormat' : 'valid.jsonFormat').toString()"
         @input="updateTemplate({ content: $event })"
       />
     </liquid-form-item>
@@ -111,6 +113,9 @@ export default {
     }
   },
   methods: {
+    validate() {
+      return !this.$refs.codeEditor || this.$refs.codeEditor.validate()
+    },
     updateTemplate(patch) {
       this.$emit('update-template', {
         clientId: this.clientId,

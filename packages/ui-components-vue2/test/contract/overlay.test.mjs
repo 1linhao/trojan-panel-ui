@@ -1,5 +1,10 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
+import fs from 'node:fs'
+import os from 'node:os'
+import path from 'node:path'
+import { spawnSync } from 'node:child_process'
+import { fileURLToPath } from 'node:url'
 import { acquireOverlay } from '../../src/overlay-stack.js'
 import { UiDialog } from '../../src/index.js'
 
@@ -38,6 +43,10 @@ test('nested overlays own Escape, trap Tab, lock scroll, and restore focus in or
   assert.equal(doc.body.style.overflow, 'hidden')
   dialog.focus()
   key('Tab')
+  assert.equal(doc.activeElement, first)
+  key('Tab')
+  assert.equal(doc.activeElement, last, 'forward Tab must advance through real dialog controls')
+  key('Tab', true)
   assert.equal(doc.activeElement, first)
   key('Tab', true)
   assert.equal(doc.activeElement, last)
@@ -110,4 +119,37 @@ test('opening then hiding before nextTick cannot register an invisible overlay',
   instance.visible = false
   tick()
   assert.equal(instance._releaseOverlay, undefined)
+})
+
+test('real Chromium DOM advances forward from the mobile dialog close button', (t) => {
+  const chromium = ['/usr/bin/chromium', '/usr/bin/chromium-browser'].find(fs.existsSync)
+  if (!chromium) return t.skip('Chromium is not available')
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'tp-overlay-dom-'))
+  try {
+    const here = path.dirname(fileURLToPath(import.meta.url))
+    fs.copyFileSync(path.resolve(here, '../../src/overlay-stack.js'), path.join(directory, 'overlay-stack.js'))
+    const fields = Array.from({ length: 12 }, (_, index) => `<input id="field-${index + 1}">`).join('')
+    fs.writeFileSync(path.join(directory, 'index.html'), `<!doctype html><body>
+      <section id="dialog" tabindex="-1"><button id="close">关闭</button>${fields}</section>
+      <script type="module">
+        import { acquireOverlay } from './overlay-stack.js'
+        const dialog = document.querySelector('#dialog')
+        acquireOverlay(dialog)
+        document.querySelector('#close').focus()
+        const visited = []
+        for (let index = 0; index < 12; index++) {
+          document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true }))
+          visited.push(document.activeElement.id)
+        }
+        document.body.dataset.visited = visited.join(',')
+      </script></body>`)
+    const result = spawnSync(chromium, [
+      '--headless', '--no-sandbox', '--disable-gpu', '--allow-file-access-from-files',
+      '--virtual-time-budget=1000', '--dump-dom', `file://${path.join(directory, 'index.html')}`
+    ], { encoding: 'utf8' })
+    assert.equal(result.status, 0, result.stderr)
+    assert.match(result.stdout, /data-visited="field-1,field-2,field-3,field-4,field-5,field-6,field-7,field-8,field-9,field-10,field-11,field-12"/)
+  } finally {
+    fs.rmSync(directory, { recursive: true, force: true })
+  }
 })

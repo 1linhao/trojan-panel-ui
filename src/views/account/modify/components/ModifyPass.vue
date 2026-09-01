@@ -87,6 +87,7 @@ export default {
         oldPass: [
           {
             required: true,
+            message: this.$t('table.oldPassRequired'),
             validator: validateOldPassRequired,
             trigger: ['change', 'blur']
           },

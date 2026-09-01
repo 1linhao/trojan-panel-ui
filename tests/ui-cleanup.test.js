@@ -211,16 +211,231 @@ test('code editor treats JSON and YAML as equal language capabilities', async ()
   const yamlFormat = makeInstance('yaml', yamlHeader)
   component.methods.formatContent.call(yamlFormat)
   assert.equal(yamlFormat.error, '')
+  assert.match(yamlFormat.text, /# 保持注释/)
   assert.match(yamlFormat.text, /port: 7890/)
   assert.match(yamlFormat.text, /rules:/)
   assert.match(yamlFormat.text, /- A/)
   const yamlAnchor = makeInstance('yaml', 'a: &x 1\nb: *x\n')
   component.methods.formatContent.call(yamlAnchor)
   assert.equal(yamlAnchor.error, '')
+  assert.match(yamlAnchor.text, /&x/)
+  assert.match(yamlAnchor.text, /\*x/)
+  assert.deepEqual(require('js-yaml').safeLoad(yamlAnchor.text), { a: 1, b: 1 })
+  const brokenOriginal = 'rules: [A, B'
+  const invalidFormat = makeInstance('yaml', brokenOriginal)
+  component.methods.formatContent.call(invalidFormat)
+  assert.equal(invalidFormat.text, brokenOriginal, 'invalid YAML must not overwrite the draft')
+  const described = component.computed.describedBy.call({
+    controlAttrs: { 'aria-describedby': 'form-error' }, error: 'bad', localErrorId: 'editor-error'
+  })
+  assert.equal(described, 'form-error editor-error')
   // Unknown language keeps the editor inert (no button, no validation).
   const text = makeInstance('', 'anything:')
   assert.equal(text.processor, null)
   assert.ok(component.methods.validate.call(text))
+})
+
+test('import busy ownership awaits the caller promise and permits failure retry', async () => {
+  const parsed = compiler.parse({ source: read('src/components/ImportTip/index.vue') })
+  const component = loadModule(parsed.script.content, {
+    '@/utils/liquid-feedback': { Message() {} }
+  }).default
+  let settle
+  let calls = 0
+  const instance = {
+    uploading: false,
+    fileList: [{ raw: { name: 'accounts.json' } }],
+    importData: () => { calls++; return new Promise((resolve, reject) => { settle = { resolve, reject } }) }
+  }
+  const first = component.methods.submitImport.call(instance)
+  assert.equal(instance.uploading, true)
+  assert.equal(await component.methods.submitImport.call(instance), false)
+  assert.equal(calls, 1)
+  settle.reject(new Error('network'))
+  await assert.rejects(first, /network/)
+  assert.equal(instance.uploading, false)
+  const retry = component.methods.submitImport.call(instance)
+  assert.equal(calls, 2)
+  settle.resolve()
+  assert.equal(await retry, true)
+})
+
+test('latest list request owns stale responses, loading, and unmount invalidation', () => {
+  const mixin = loadModule(read('src/mixins/latest-list-request.js'), {}).default
+  const instance = { listRequestVersion: 0, listRequestActive: true, listLoading: false, listError: 'old' }
+  Object.assign(instance, Object.fromEntries(Object.entries(mixin.methods).map(([key, method]) => [key, method.bind(instance)])))
+  const first = instance.beginListRequest()
+  const second = instance.beginListRequest()
+  assert.equal(instance.ownsListRequest(first), false)
+  instance.finishListRequest(first)
+  assert.equal(instance.listLoading, true, 'stale request cannot clear a newer loading state')
+  instance.finishListRequest(second)
+  assert.equal(instance.listLoading, false)
+  mixin.beforeDestroy.call(instance)
+  assert.equal(instance.ownsListRequest(second), false)
+})
+
+test('native form item binds label, change/blur validation, and live error ARIA', async () => {
+  const { LiquidFormItem } = loadModule(read('src/components/LiquidStructural/index.js'), { vue: {} })
+  const attrs = new Map()
+  const listeners = {}
+  const control = {
+    id: '',
+    addEventListener: (name, fn) => { listeners[name] = fn },
+    removeEventListener: (name) => { delete listeners[name] },
+    hasAttribute: (name) => attrs.has(name),
+    setAttribute: (name, value) => attrs.set(name, value),
+    getAttribute: (name) => attrs.get(name) || '',
+    removeAttribute: (name) => attrs.delete(name)
+  }
+  const triggers = []
+  const item = {
+    _uid: 7, label: '用户名', labelId: 'label-7', errorId: 'error-7', error: '', nativeControl: null,
+    $el: { querySelector: () => control },
+    validate: async (trigger) => { triggers.push(trigger); item.error = '必填'; return false }
+  }
+  for (const name of ['bindNativeControl', 'unbindNativeControl', 'syncNativeControlAttrs']) item[name] = LiquidFormItem.methods[name].bind(item)
+  item.bindNativeControl()
+  assert.equal(control.id, 'liquid-native-control-7')
+  assert.equal(attrs.get('aria-labelledby'), 'label-7')
+  await listeners.change()
+  await listeners.blur()
+  assert.deepEqual(triggers, ['change', 'blur'])
+  assert.equal(attrs.get('aria-invalid'), 'true')
+  assert.equal(attrs.get('aria-describedby'), 'error-7')
+})
+
+test('tabs expose real tab-panel ids and retain roving keyboard behavior', () => {
+  const parsed = compiler.parse({ source: read('src/components/LiquidTabs/index.vue') })
+  const component = loadModule(parsed.script.content, {}).default
+  const focused = []
+  const emitted = []
+  const instance = {
+    tabs: [{ value: 'one' }, { value: 'two' }], resolvedIdPrefix: 'settings',
+    $refs: { tab: [{ focus: () => focused.push('one') }, { focus: () => focused.push('two') }] },
+    $emit: (...args) => emitted.push(args), $nextTick: (fn) => fn(),
+    idPart: component.methods.idPart
+  }
+  assert.equal(component.methods.tabId.call(instance, 'one'), 'settings-tab-one')
+  assert.equal(component.methods.panelId.call(instance, 'one'), 'settings-panel-one')
+  const event = { key: 'ArrowRight', preventDefault() {} }
+  component.methods.handleKeydown.call(instance, event, 'one')
+  assert.deepEqual(emitted[0], ['change', 'two'])
+  assert.deepEqual(focused, ['two'])
+})
+
+test('date Enter and confirm share the same commit-and-close path', () => {
+  const parsed = compiler.parse({ source: read('src/components/LiquidDatePicker/index.vue') })
+  const component = loadModule(parsed.script.content, {
+    '@/mixins/liquid-control-emitter': {}, '@/mixins/liquid-form-control': {}, '@/mixins/liquid-control-size': {}
+  }, { document: {}, window: {} }).default
+  let emitted, closed = 0
+  const selected = new Date(2026, 8, 1, 9, 30)
+  const instance = {
+    resolveDraftSelection: () => selected, manualError: true, selectedDate: null,
+    outputValue: () => 123, emitValue: (value) => { emitted = value }, closePopover: () => { closed++ },
+    $nextTick() {}, $refs: {}
+  }
+  component.methods.confirmSelection.call(instance)
+  assert.equal(emitted, 123)
+  assert.equal(closed, 1)
+  assert.equal(instance.manualError, false)
+})
+
+test('export client changes reset the template and stale QR result', () => {
+  const parsed = compiler.parse({ source: read('src/views/node/list/components/ExportNodeDialog.vue') })
+  const component = loadModule(parsed.script.content, new Proxy({}, {
+    has: () => true,
+    get: (_, name) => name === 'copy-to-clipboard' ? () => true : {}
+  }), { window: {} }).default
+  const instance = {
+    activeClient: 'one', selectedTemplate: 'old', qrCodeSrc: 'data:image/png;base64,old',
+    options: [
+      { id: 'one', templates: [{ id: 'a' }] },
+      { id: 'two', templates: [{ id: 'b' }] }
+    ]
+  }
+  Object.defineProperty(instance, 'activeOption', {
+    get() { return component.computed.activeOption.call(instance) }
+  })
+  instance.selectDefaultTemplate = component.methods.selectDefaultTemplate.bind(instance)
+  component.methods.selectClient.call(instance, 'two')
+  assert.equal(instance.activeClient, 'two')
+  assert.equal(instance.selectedTemplate, 'b')
+  assert.equal(instance.qrCodeSrc, '')
+})
+
+test('separate traffic computes each direction ratio before choosing the dominant one', () => {
+  const parsed = compiler.parse({ source: read('src/views/node-server/list/index.vue') })
+  const component = loadModule(parsed.script.content, new Proxy({}, {
+    has: () => true,
+    get: () => ({})
+  })).default
+  const percent = component.methods.trafficPercent
+  assert.equal(percent({ limitMode: 'separate', uploadUsed: 80, uploadLimit: 100, downloadUsed: 100, downloadLimit: 1000 }), 80)
+  assert.equal(percent({ limitMode: 'separate', uploadUsed: 20, uploadLimit: 0, downloadUsed: 50, downloadLimit: 100 }), 50)
+  assert.equal(percent({ limitMode: 'combined', totalUsed: 30, totalLimit: 120 }), 25)
+})
+
+test('invalid active template blocks settings save before serialization or API work', () => {
+  const parsed = compiler.parse({ source: read('src/views/system/base/components/template-config.vue') })
+  let saves = 0
+  const component = loadModule(parsed.script.content, {
+    '@/api/system': { updateSystemById: () => { saves++; return Promise.resolve() } },
+    '@/components/ClientTemplateEditor': {},
+    'js-yaml': require('js-yaml')
+  }).default
+  const instance = {
+    $refs: { templateEditor: { validate: () => false } },
+    get systemConfig() { throw new Error('serialization must not run') }
+  }
+  component.methods.updateData.call(instance)
+  assert.equal(saves, 0)
+})
+
+test('select/date tail geometry uses scalar horizontal tokens for every size', () => {
+  const postcss = require('postcss')
+  for (const name of ['LiquidSelect', 'LiquidDatePicker']) {
+    const css = compiler.parse({ source: read(`src/components/${name}/index.vue`) }).styles[0].content
+    postcss.parse(css).walkDecls((decl) => {
+      if (decl.value.includes('calc(')) assert.doesNotMatch(decl.value, /ui-control-size-padding(?:,|\))/)
+    })
+    assert.match(css, /--ui-control-size-padding-x/)
+  }
+  const geometry = read('packages/ui-components-vue2/src/geometry.css')
+  for (const size of ['sm', 'md', 'lg']) {
+    assert.match(geometry, new RegExp(`data-ui-size='${size}'[\\s\\S]*?--ui-control-size-padding-x`))
+  }
+})
+
+test('LiquidInput readonly reaches the native input and textarea VNodes', () => {
+  const Vue = require('vue/dist/vue.common.js')
+  const parsed = compiler.parse({ source: read('src/components/LiquidInput/index.vue') })
+  const component = loadModule(parsed.script.content, {
+    '@/mixins/liquid-control-emitter': {},
+    '@/mixins/liquid-form-control': { computed: { controlAttrs: () => ({}) } }
+  }).default
+  const compiled = Vue.compile(parsed.template.content)
+  const Control = Vue.extend({ ...component, render: compiled.render, staticRenderFns: compiled.staticRenderFns })
+  for (const type of ['text', 'textarea']) {
+    const vm = new Control({ propsData: { readonly: true, type } })
+    const field = vm._render().children.find((child) => child.tag === (type === 'textarea' ? 'textarea' : 'input'))
+    assert.equal(field.data.attrs.readonly, true)
+    vm.$destroy()
+  }
+})
+
+test('old password empty validation uses the dedicated required message', async () => {
+  const parsed = compiler.parse({ source: read('src/views/account/modify/components/ModifyPass.vue') })
+  const component = loadModule(parsed.script.content, new Proxy({}, { has: () => true, get: () => ({}) })).default
+  const instance = { $t: (key) => key, $store: { getters: { username: 'demo' } } }
+  const state = component.data.call(instance)
+  const rule = state.updateRules.oldPass[0]
+  assert.equal(rule.message, 'table.oldPassRequired')
+  await new Promise((resolve) => rule.validator(rule, '', (error) => {
+    assert.equal(error.message, 'table.oldPassRequired')
+    resolve()
+  }))
 })
 
 test('navigation interaction owns button transitions; component skins cannot override them', () => {

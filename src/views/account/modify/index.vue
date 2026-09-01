@@ -8,13 +8,16 @@
         </div>
       </div>
       <liquid-tabs
+        id-prefix="profile"
         :tabs="profileTabs"
         v-model="activeName"
-        aria-label="个人资料"
+        label="个人资料"
       />
-      <ModifyPass v-if="activeName === 'modify-pass'" />
-      <ModifyProperty v-else-if="activeName === 'modify-property'" />
-      <LiquidPalettePicker v-else inline />
+      <div :id="`profile-panel-${activeName}`" role="tabpanel" :aria-labelledby="`profile-tab-${activeName}`">
+        <ModifyPass v-if="activeName === 'modify-pass'" />
+        <ModifyProperty v-else-if="activeName === 'modify-property'" />
+        <LiquidPalettePicker v-else inline />
+      </div>
     </ui-panel>
   </div>
 </template>

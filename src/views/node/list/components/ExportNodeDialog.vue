@@ -9,11 +9,14 @@
     @closed="reset"
   >
     <liquid-tabs
+      id-prefix="export-client"
       :tabs="clientTabs"
-      v-model="activeClient"
-      :aria-label="$t('exportNode.title').toString()"
+      :active-value="activeClient"
+      @change="selectClient"
+      :label="$t('exportNode.title').toString()"
     />
 
+    <div :id="`export-client-panel-${activeClient}`" role="tabpanel" :aria-labelledby="`export-client-tab-${activeClient}`">
     <liquid-form label-position="top">
       <liquid-form-item :label="$t('exportNode.template').toString()">
         <liquid-select v-model="selectedTemplate">
@@ -43,6 +46,7 @@
 
     <div v-if="qrCodeSrc" class="qrcode">
       <img :src="qrCodeSrc" :alt="$t('exportNode.qrcode').toString()" />
+    </div>
     </div>
   </ui-dialog>
 </template>
@@ -91,6 +95,10 @@ export default {
     }
   },
   methods: {
+    selectClient(client) {
+      this.activeClient = client
+      this.selectDefaultTemplate()
+    },
     loadOptions() {
       exportOptions().then((response) => {
         this.options = response.data || []

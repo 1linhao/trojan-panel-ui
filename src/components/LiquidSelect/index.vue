@@ -305,10 +305,10 @@ export default {
   width: 100%;
   min-width: 0;
   min-height: var(--ui-control-size-height, 42px);
-  padding: var(--ui-control-size-padding, 0 14px);
+  padding: var(--ui-control-size-padding-y, 0) var(--ui-control-size-padding-x, 14px);
   padding-right: calc(
     var(--ui-select-tail-gap) + var(--ui-select-tail-width) +
-      var(--ui-control-size-padding, 0 14px) / 2
+      var(--ui-control-size-padding-x, 14px)
   );
   border: 1px solid var(--control-border);
   border-radius: 14px;
@@ -350,7 +350,7 @@ export default {
 }
 .liquid-select__clear {
   position: absolute;
-  right: calc(var(--ui-control-size-padding, 0 14px) / 2 + var(--ui-select-tail-width, 20px) - 22px);
+  right: var(--ui-control-size-padding-x, 14px);
   top: calc(50% - 12px);
   display: grid;
   place-items: center;

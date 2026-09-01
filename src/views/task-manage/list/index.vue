@@ -93,8 +93,10 @@ import Pagination from '@/components/Pagination'
 import checkPermission from '@/utils/permission'
 import { timeStampToDate } from '@/utils'
 import { downloadFileTask, selectFileTaskPage } from '@/api/file-task'
+import latestListRequest from '@/mixins/latest-list-request'
 
 export default {
+  mixins: [latestListRequest],
   name: 'TaskList',
   components: { Pagination },
   data() {
@@ -172,18 +174,17 @@ export default {
     checkPermission,
     timeStampToDate,
     getList() {
-      this.listLoading = true
-      this.listError = ''
-      selectFileTaskPage(this.listQuery).then((response) => {
+      const request = this.beginListRequest()
+      return selectFileTaskPage(this.listQuery).then((response) => {
+        if (!this.ownsListRequest(request)) return
         this.list = response.data.fileTasks
         this.total = response.data.total
-        this.listLoading = false
       }).catch(() => {
+        if (!this.ownsListRequest(request)) return
         this.list = []
         this.total = 0
         this.listError = '请求失败，请重试'
-        this.listLoading = false
-      })
+      }).finally(() => this.finishListRequest(request))
     },
     handleFilter() {
       this.listQuery.pageNum = 1

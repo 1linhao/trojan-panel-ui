@@ -159,10 +159,19 @@
 [data-ui-control][data-ui-size='sm'] {
   --ui-control-size-height: 32px;
   --ui-control-size-padding: 0 12px;
+  --ui-control-size-padding-y: 0;
+  --ui-control-size-padding-x: 12px;
 }
 .tp-ui-button[data-ui-size='lg'],
 .tp-ui-input[data-ui-size='lg'],
 [data-ui-control][data-ui-size='lg'] {
   --ui-control-size-height: 48px;
   --ui-control-size-padding: 0 20px;
+  --ui-control-size-padding-y: 0;
+  --ui-control-size-padding-x: 20px;
+}
+
+[data-ui-control][data-ui-size='md'] {
+  --ui-control-size-padding-y: 0;
+  --ui-control-size-padding-x: 14px;
 }

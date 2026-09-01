@@ -312,6 +312,7 @@ import {
 } from '@/api/account'
 import Pagination from '@/components/Pagination'
 import ImportTip from '@/components/ImportTip'
+import latestListRequest from '@/mixins/latest-list-request'
 
 import { Message, MessageBox } from '@/utils/liquid-feedback'
 import { timeStampToDate } from '@/utils'
@@ -335,6 +336,7 @@ export default {
     }
   },
   components: { BatchOperation, Pagination, ImportTip },
+  mixins: [latestListRequest],
   data() {
     const validateUsername = (rule, value, callback) => {
       if (this.temp.username.trim().indexOf('admin') >= 0) {
@@ -605,19 +607,18 @@ export default {
       })
     },
     getList() {
-      this.listLoading = true
-      this.listError = ''
+      const request = this.beginListRequest()
       this.listQuery.orderFields = this.orderFieldArr.join(',')
-      selectAccountPage(this.listQuery).then((response) => {
+      return selectAccountPage(this.listQuery).then((response) => {
+        if (!this.ownsListRequest(request)) return
         this.list = response.data.accounts
         this.total = response.data.total
-        this.listLoading = false
       }).catch(() => {
+        if (!this.ownsListRequest(request)) return
         this.list = []
         this.total = 0
         this.listError = '请求失败，请重试'
-        this.listLoading = false
-      })
+      }).finally(() => this.finishListRequest(request))
     },
     resetTemp() {
       this.temp = {
@@ -749,24 +750,21 @@ export default {
         })
       })
     },
-    importData(params) {
-      this.$refs['importTip'].$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          const tempData = Object.assign({}, this.$refs['importTip'].temp)
-          let formData = new FormData()
-          formData.append('file', params.file)
-          formData.append('cover', tempData.cover)
-          importAccount(formData).then(() => {
-            this.importVisible = false
-            this.$notify({
-              title: 'Success',
-              message: this.$t('confirm.taskSubmitSuccess'),
-              type: 'success',
-              duration: 2000
-            })
-          })
-        }
+    async importData(params) {
+      const valid = await this.$refs.importTip.$refs.dataForm.validate()
+      if (!valid) return false
+      const formData = new FormData()
+      formData.append('file', params.file)
+      formData.append('cover', this.$refs.importTip.temp.cover)
+      await importAccount(formData)
+      this.importVisible = false
+      this.$notify({
+        title: 'Success',
+        message: this.$t('confirm.taskSubmitSuccess'),
+        type: 'success',
+        duration: 2000
       })
+      return true
     },
     handleImport() {
       this.importVisible = true

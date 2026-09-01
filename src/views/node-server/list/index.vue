@@ -310,6 +310,7 @@
 import { timeStampToDate } from '@/utils'
 import Pagination from '@/components/Pagination'
 import ImportTip from '@/components/ImportTip'
+import latestListRequest from '@/mixins/latest-list-request'
 import { MessageBox } from '@/utils/liquid-feedback'
 import checkPermission from '@/utils/permission'
 import {
@@ -327,6 +328,7 @@ import { getFlow } from '@/utils/account'
 export default {
   name: 'NodeServer',
   components: { NodeServerForm, Pagination, ImportTip },
+  mixins: [latestListRequest],
   data() {
     return {
       tableKey: 0,
@@ -398,32 +400,33 @@ export default {
     // renders empty rather than a fake percentage.
     trafficPercent(trafficStatus) {
       if (!trafficStatus) return 0
-      const limit =
-        trafficStatus.limitMode === 'separate'
-          ? Math.max(trafficStatus.uploadLimit || 0, trafficStatus.downloadLimit || 0)
-          : trafficStatus.totalLimit || 0
-      if (limit <= 0) return 0
-      const used =
-        trafficStatus.limitMode === 'separate'
-          ? Math.max(trafficStatus.uploadUsed || 0, trafficStatus.downloadUsed || 0)
-          : trafficStatus.totalUsed || 0
-      return Math.min(100, Math.round((used / limit) * 100))
+      if (trafficStatus.limitMode === 'separate') {
+        const ratios = [
+          [trafficStatus.uploadUsed, trafficStatus.uploadLimit],
+          [trafficStatus.downloadUsed, trafficStatus.downloadLimit]
+        ].filter(([, limit]) => Number(limit) > 0)
+          .map(([used, limit]) => Number(used || 0) / Number(limit))
+        return ratios.length ? Math.min(100, Math.round(Math.max(...ratios) * 100)) : 0
+      }
+      const limit = Number(trafficStatus.totalLimit || 0)
+      return limit > 0
+        ? Math.min(100, Math.round((Number(trafficStatus.totalUsed || 0) / limit) * 100))
+        : 0
     },
     checkPermission,
     timeStampToDate,
     getList() {
-      this.listLoading = true
-      this.listError = ''
-      selectNodeServerPage(this.listQuery).then((response) => {
+      const request = this.beginListRequest()
+      return selectNodeServerPage(this.listQuery).then((response) => {
+        if (!this.ownsListRequest(request)) return
         this.list = response.data.nodeServers
         this.total = response.data.total
-        this.listLoading = false
       }).catch(() => {
+        if (!this.ownsListRequest(request)) return
         this.list = []
         this.total = 0
         this.listError = '请求失败，请重试'
-        this.listLoading = false
-      })
+      }).finally(() => this.finishListRequest(request))
     },
     resetTemp() {
       this.temp = {
@@ -537,24 +540,21 @@ export default {
     handleBatchUpgrade() {
       this.$router.push({ path: 'kernel-upgrade' })
     },
-    importData(params) {
-      this.$refs['importTip'].$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          const tempData = Object.assign({}, this.$refs['importTip'].temp)
-          let formData = new FormData()
-          formData.append('file', params.file)
-          formData.append('cover', tempData.cover)
-          importNodeServer(formData).then(() => {
-            this.importVisible = false
-            this.$notify({
-              title: 'Success',
-              message: this.$t('confirm.taskSubmitSuccess'),
-              type: 'success',
-              duration: 2000
-            })
-          })
-        }
+    async importData(params) {
+      const valid = await this.$refs.importTip.$refs.dataForm.validate()
+      if (!valid) return false
+      const formData = new FormData()
+      formData.append('file', params.file)
+      formData.append('cover', this.$refs.importTip.temp.cover)
+      await importNodeServer(formData)
+      this.importVisible = false
+      this.$notify({
+        title: 'Success',
+        message: this.$t('confirm.taskSubmitSuccess'),
+        type: 'success',
+        duration: 2000
       })
+      return true
     },
     handleImport() {
       this.importVisible = true

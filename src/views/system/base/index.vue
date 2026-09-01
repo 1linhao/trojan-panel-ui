@@ -8,15 +8,18 @@
         </div>
       </div>
       <liquid-tabs
+        id-prefix="system-settings"
         :tabs="tabs"
         v-model="activeName"
-        aria-label="系统配置"
+        label="系统配置"
       />
-      <account v-if="activeName === 'account-config'" />
-      <email v-else-if="activeName === 'config-email'" />
-      <web-file v-else-if="activeName === 'config-web-file'" />
-      <panel-config v-else-if="activeName === 'config-panel'" />
-      <template-config v-else />
+      <div :id="`system-settings-panel-${activeName}`" role="tabpanel" :aria-labelledby="`system-settings-tab-${activeName}`">
+        <account v-if="activeName === 'account-config'" />
+        <email v-else-if="activeName === 'config-email'" />
+        <web-file v-else-if="activeName === 'config-web-file'" />
+        <panel-config v-else-if="activeName === 'config-panel'" />
+        <template-config v-else />
+      </div>
     </ui-panel>
   </div>
 </template>

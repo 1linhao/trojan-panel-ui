@@ -14,13 +14,14 @@
       :value="text"
       :aria-label="$attrs['aria-label'] || `${languageLabel} 配置编辑器`"
       :aria-invalid="error ? 'true' : controlAttrs['aria-invalid']"
+      :aria-describedby="describedBy"
       spellcheck="false"
       autocomplete="off"
       @input="handleInput"
       @focus="focused = true"
       @blur="handleBlur"
     />
-    <small v-if="error" role="alert">{{ error }}</small>
+    <small v-if="error" :id="localErrorId" role="alert">{{ error }}</small>
   </div>
 </template>
 
@@ -33,6 +34,13 @@ function toText(value) {
   if (value === undefined || value === null || value === '') return ''
   if (typeof value === 'string') return value
   return JSON.stringify(value, null, 2)
+}
+
+function formatYamlText(text) {
+  // js-yaml 3 does not expose a comment-preserving CST. Keep the user's YAML
+  // representation (including comments, anchors, aliases and scalar styles)
+  // and limit formatting to representation-safe whitespace normalization.
+  return text.split(/\r?\n/).map((line) => line.replace(/[ \t]+$/, '')).join('\n').replace(/\n*$/, '\n')
 }
 
 // WEB-032: JSON and YAML are equal language capabilities on the same editor
@@ -59,8 +67,8 @@ const languageProcessors = {
         return { value: null, error }
       }
     },
-    stringify(value) {
-      return jsYaml.safeDump(value, { indent: 2, lineWidth: -1, noRefs: true })
+    stringify(value, text) {
+      return formatYamlText(text)
     }
   }
 }
@@ -105,6 +113,13 @@ export default {
     errorPrefix() {
       if (this.formatErrorPrefix) return this.formatErrorPrefix
       return this.format === 'yaml' ? 'YAML 格式错误' : `${this.format.toUpperCase()} 格式错误`
+    },
+    localErrorId() {
+      return `liquid-code-editor-error-${this._uid}`
+    },
+    describedBy() {
+      return [this.controlAttrs['aria-describedby'], this.error ? this.localErrorId : '']
+        .filter(Boolean).join(' ') || undefined
     }
   },
   watch: {
@@ -144,7 +159,7 @@ export default {
         return
       }
       // Preserve formatting of scalars; only structure is re-dumped.
-      this.text = this.processor.stringify(value)
+      this.text = this.processor.stringify(value, this.text)
       this.error = ''
       this.$emit('input', this.text)
     }

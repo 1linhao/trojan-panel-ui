@@ -7,6 +7,8 @@
       type="button"
       :class="{ on: activeValue === tab.value }"
       role="tab"
+      :id="tabId(tab.value)"
+      :aria-controls="panelId(tab.value)"
       :aria-selected="String(activeValue === tab.value)"
       :tabindex="activeValue === tab.value ? 0 : -1"
       @click="$emit('change', tab.value)"
@@ -31,9 +33,24 @@ export default {
       validator: (tabs) => tabs.every((tab) => tab && tab.value !== undefined && tab.label != null)
     },
     activeValue: { type: [String, Number], required: true },
-    label: { type: String, default: '' }
+    label: { type: String, default: '' },
+    idPrefix: { type: String, default: '' }
+  },
+  computed: {
+    resolvedIdPrefix() {
+      return this.idPrefix || `liquid-tabs-${this._uid}`
+    }
   },
   methods: {
+    idPart(value) {
+      return String(value).replace(/[^A-Za-z0-9_-]+/g, '-')
+    },
+    tabId(value) {
+      return `${this.resolvedIdPrefix}-tab-${this.idPart(value)}`
+    },
+    panelId(value) {
+      return `${this.resolvedIdPrefix}-panel-${this.idPart(value)}`
+    },
     handleKeydown(event, value) {
       if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return
       event.preventDefault()

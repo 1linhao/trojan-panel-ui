@@ -8,13 +8,16 @@
     >
       <div class="template-mode-switches">
         <liquid-tabs
+          id-prefix="subscription-template-client"
           :tabs="clientTabs"
           v-model="activeClient"
-          aria-label="订阅模板客户端"
+          label="订阅模板客户端"
         />
       </div>
 
+      <div :id="`subscription-template-client-panel-${activeClient}`" role="tabpanel" :aria-labelledby="`subscription-template-client-tab-${activeClient}`">
       <client-template-editor
+        ref="templateEditor"
         :client-id="activeClient"
         :templates="activeTemplates"
         :active-template-id="activeTemplateId"
@@ -24,6 +27,7 @@
         @select-template="selectTemplate"
         @update-template="updateTemplate"
       />
+      </div>
 
       <liquid-form-item class="actions">
         <liquid-button type="primary" icon="check" @click="updateData">
@@ -37,6 +41,7 @@
 <script>
 import { updateSystemById } from '@/api/system'
 import ClientTemplateEditor from '@/components/ClientTemplateEditor'
+import jsYaml from 'js-yaml'
 
 export default {
   name: 'TemplateConfigForm',
@@ -199,6 +204,15 @@ export default {
       return JSON.stringify(entity)
     },
     updateData() {
+      if (!this.$refs.templateEditor.validate()) return
+      try {
+        if (String(this.systemConfig.clashRule || '').trim()) {
+          jsYaml.safeLoad(this.systemConfig.clashRule)
+        }
+      } catch (error) {
+        this.$message.error(this.$t('valid.yamlFormat').toString())
+        return
+      }
       try {
         this.systemConfig.singBoxTun = this.serializeEditor(
           'singBoxTunEntity'

@@ -19,11 +19,12 @@ export function acquireOverlay(element, { close, closeOnEscape = true } = {}) {
           .filter((node) => node.tabIndex >= 0 && node.getClientRects().length && !node.closest('[inert]'))
         const first = targets[0] || top.element
         const last = targets[targets.length - 1] || top.element
-        if (!top.element.contains(doc.activeElement) || doc.activeElement === top.element ||
-            (event.shiftKey ? doc.activeElement === first : doc.activeElement === last)) {
-          event.preventDefault()
-          ;(event.shiftKey ? last : first).focus()
-        }
+        const current = targets.indexOf(doc.activeElement)
+        const next = current < 0
+          ? (event.shiftKey ? last : first)
+          : targets[(current + (event.shiftKey ? -1 : 1) + targets.length) % targets.length]
+        event.preventDefault()
+        next.focus()
       }
     }
     state.focusin = (event) => {

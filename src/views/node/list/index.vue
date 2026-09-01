@@ -231,6 +231,7 @@ import { timeStampToDate } from '@/utils'
 import { getFlow } from '@/utils/account'
 import { selectNodeServerList } from '@/api/node-server'
 import NodeForm from '@/views/node/list/components/NodeForm'
+import latestListRequest from '@/mixins/latest-list-request'
 
 export default {
   name: 'NodeListPage',
@@ -239,6 +240,7 @@ export default {
     ExportNodeDialog,
     Pagination
   },
+  mixins: [latestListRequest],
   filters: {
     statusTypeFilter(status) {
       return status > 0 ? 'success' : 'danger'
@@ -605,18 +607,17 @@ export default {
       }
     },
     getList() {
-      this.listLoading = true
-      this.listError = ''
-      selectNodePage(this.listQuery).then((response) => {
+      const request = this.beginListRequest()
+      return selectNodePage(this.listQuery).then((response) => {
+        if (!this.ownsListRequest(request)) return
         this.list = response.data.nodes
         this.total = response.data.total
-        this.listLoading = false
       }).catch(() => {
+        if (!this.ownsListRequest(request)) return
         this.list = []
         this.total = 0
         this.listError = '请求失败，请重试'
-        this.listLoading = false
-      })
+      }).finally(() => this.finishListRequest(request))
     },
     handleFilter() {
       this.listQuery.pageNum = 1

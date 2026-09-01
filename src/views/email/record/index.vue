@@ -82,8 +82,10 @@
 import Pagination from '@/components/Pagination'
 import { timeStampToDate } from '@/utils'
 import { selectEmailRecordPage } from '@/api/email-record'
+import latestListRequest from '@/mixins/latest-list-request'
 
 export default {
+  mixins: [latestListRequest],
   name: 'EmailRecordPage',
   components: { Pagination },
 
@@ -135,18 +137,17 @@ export default {
   methods: {
     timeStampToDate,
     getList() {
-      this.listLoading = true
-      this.listError = ''
-      selectEmailRecordPage(this.listQuery).then((response) => {
+      const request = this.beginListRequest()
+      return selectEmailRecordPage(this.listQuery).then((response) => {
+        if (!this.ownsListRequest(request)) return
         this.list = response.data.emailRecords
         this.total = response.data.total
-        this.listLoading = false
       }).catch(() => {
+        if (!this.ownsListRequest(request)) return
         this.list = []
         this.total = 0
         this.listError = '请求失败，请重试'
-        this.listLoading = false
-      })
+      }).finally(() => this.finishListRequest(request))
     },
     handleFilter() {
       this.listQuery.pageNum = 1

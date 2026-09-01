@@ -155,11 +155,11 @@ export const LiquidFormItem = {
   inject: { liquidForm: { default: null } },
   props: { label: [String, Number], prop: String, rules: [Object, Array], labelWidth: String },
   provide() { return { liquidFormItem: this } },
-  data: () => ({ error: '', initialValue: undefined, controls: [] }),
+  data: () => ({ error: '', initialValue: undefined, controls: [], nativeControl: null }),
   computed: {
     labelId() { return `liquid-form-label-${this._uid}` },
     errorId() { return `liquid-form-error-${this._uid}` },
-    labelTarget() { return this.controls[0]?.controlAttrs.id },
+    labelTarget() { return this.controls[0]?.controlAttrs?.id || this.nativeControl?.id },
     value() { return this.liquidForm && this.prop ? getValue(this.liquidForm.model, this.prop) : undefined },
     appliedRules() {
       const formRules = this.liquidForm && this.liquidForm.rules && this.liquidForm.rules[this.prop]
@@ -172,11 +172,51 @@ export const LiquidFormItem = {
     if (this.liquidForm && this.prop) this.liquidForm.addField(this)
     this.$on('liquid.form.change', () => this.validate('change'))
     this.$on('liquid.form.blur', () => this.validate('blur'))
+    this.bindNativeControl()
   },
-  beforeDestroy() { if (this.liquidForm) this.liquidForm.removeField(this) },
+  updated() { this.bindNativeControl(); this.syncNativeControlAttrs() },
+  beforeDestroy() {
+    this.unbindNativeControl()
+    if (this.liquidForm) this.liquidForm.removeField(this)
+  },
   methods: {
     addControl(control) { if (!this.controls.includes(control)) this.controls.push(control) },
     removeControl(control) { this.controls = this.controls.filter((item) => item !== control) },
+    bindNativeControl() {
+      const control = this.$el?.querySelector('input:not([type="hidden"]), textarea, select')
+      if (control === this.nativeControl) return
+      this.unbindNativeControl()
+      if (!control) return
+      this.nativeControl = control
+      if (!control.id) control.id = `liquid-native-control-${this._uid}`
+      this._nativeChange = () => this.validate('change').then(() => this.syncNativeControlAttrs())
+      this._nativeBlur = () => this.validate('blur').then(() => this.syncNativeControlAttrs())
+      control.addEventListener('change', this._nativeChange)
+      control.addEventListener('blur', this._nativeBlur)
+      this.syncNativeControlAttrs()
+    },
+    unbindNativeControl() {
+      if (!this.nativeControl) return
+      this.nativeControl.removeEventListener('change', this._nativeChange)
+      this.nativeControl.removeEventListener('blur', this._nativeBlur)
+      this.nativeControl = null
+    },
+    syncNativeControlAttrs() {
+      const control = this.nativeControl
+      if (!control) return
+      if (this.label != null && !control.hasAttribute('aria-label')) control.setAttribute('aria-labelledby', this.labelId)
+      if (this.error) {
+        control.setAttribute('aria-invalid', 'true')
+        const ids = new Set((control.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean))
+        ids.add(this.errorId)
+        control.setAttribute('aria-describedby', Array.from(ids).join(' '))
+      } else {
+        control.removeAttribute('aria-invalid')
+        const ids = (control.getAttribute('aria-describedby') || '').split(/\s+/).filter((id) => id && id !== this.errorId)
+        if (ids.length) control.setAttribute('aria-describedby', ids.join(' '))
+        else control.removeAttribute('aria-describedby')
+      }
+    },
     clearValidate() { this.error = '' },
     resetField() {
       if (!this.liquidForm || !this.prop) return
@@ -211,10 +251,9 @@ export const LiquidFormItem = {
     }
   },
   render(h) {
-    const width = this.labelWidth || (this.liquidForm && this.liquidForm.labelWidth)
     return h('div', { class: ['liquid-form-item', { 'is-error': this.error }] }, [
-      this.label != null ? h('label', { class: 'liquid-form-item__label', attrs: { id: this.labelId, for: this.labelTarget }, style: { width: width || undefined } }, [String(this.label)]) : null,
-      h('div', { class: 'liquid-form-item__content', style: width && this.liquidForm && this.liquidForm.labelPosition !== 'top' ? { marginLeft: width } : undefined }, [
+      this.label != null ? h('label', { class: 'liquid-form-item__label', attrs: { id: this.labelId, for: this.labelTarget } }, [String(this.label)]) : null,
+      h('div', { class: 'liquid-form-item__content' }, [
         ...(this.$slots.default || []),
         this.error ? h('div', { class: 'liquid-form-item__error', attrs: { id: this.errorId, role: 'status' } }, [this.error]) : null
       ])

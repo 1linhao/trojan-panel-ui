@@ -101,8 +101,10 @@ import {
   selectBlackListPage
 } from '@/api/black-list'
 import checkPermission from '@/utils/permission' // 权限判断指令
+import latestListRequest from '@/mixins/latest-list-request'
 
 export default {
+  mixins: [latestListRequest],
   name: 'BlacklistPage',
   components: { Pagination },
   data() {
@@ -158,18 +160,17 @@ export default {
     checkPermission,
     timeStampToDate,
     getList() {
-      this.listLoading = true
-      this.listError = ''
-      selectBlackListPage(this.listQuery).then((response) => {
+      const request = this.beginListRequest()
+      return selectBlackListPage(this.listQuery).then((response) => {
+        if (!this.ownsListRequest(request)) return
         this.list = response.data.blackLists
         this.total = response.data.total
-        this.listLoading = false
       }).catch(() => {
+        if (!this.ownsListRequest(request)) return
         this.list = []
         this.total = 0
         this.listError = '请求失败，请重试'
-        this.listLoading = false
-      })
+      }).finally(() => this.finishListRequest(request))
     },
     resetTemp() {
       this.temp = {

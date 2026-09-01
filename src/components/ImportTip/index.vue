@@ -126,13 +126,14 @@ export default {
         return false
       }
     },
-    submitImport() {
+    async submitImport() {
       // WEB-027: re-entrancy guard; the dialog owner controls closing so a
       // failed import keeps the draft and can be retried without reselecting.
-      if (this.uploading || !this.fileList.length) return
+      if (this.uploading || !this.fileList.length) return false
       this.uploading = true
       try {
-        this.importData({ file: this.fileList[0].raw })
+        await this.importData({ file: this.fileList[0].raw })
+        return true
       } finally {
         this.uploading = false
       }

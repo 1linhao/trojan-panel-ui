@@ -15,23 +15,18 @@
         auto-complete="on"
         @submit.native.prevent
       >
-        <liquid-form-item prop="username"
-          ><label class="fld"
-            ><span>用户名</span
-            ><input
+        <liquid-form-item prop="username" label="用户名">
+          <div class="fld"><input
               ref="username"
-              v-bind="nativeControlAttrs"
               v-model="registerForm.username"
               placeholder="6–20 位字母或数字"
-              autocomplete="username" /></label
-        ></liquid-form-item>
-        <liquid-form-item prop="passOne"
-          ><label class="fld"
-            ><span>密码</span
-            ><span class="password-field"
+              autocomplete="username" /></div>
+        </liquid-form-item>
+        <liquid-form-item prop="passOne" label="密码">
+          <div class="fld">
+            <span class="password-field"
               ><input
                 ref="pass"
-                v-bind="nativeControlAttrs"
                 v-model="registerForm.passOne"
                 :type="passwordType"
                 placeholder="6–20 位字母或数字"
@@ -43,28 +38,22 @@
                 @click="showPwd"
               >
                 <app-icon :name="passwordType === 'password' ? 'eye-off' : 'eye'"
-                /></button></span></label
-        ></liquid-form-item>
-        <liquid-form-item prop="pass"
-          ><label class="fld"
-            ><span>确认密码</span
-            ><input
-              v-bind="nativeControlAttrs"
+                /></button></span></div>
+        </liquid-form-item>
+        <liquid-form-item prop="pass" label="确认密码">
+            <div class="fld"><input
               v-model="registerForm.pass"
               :type="passwordType"
               placeholder="再次输入密码"
               autocomplete="new-password"
-              @keyup.enter="handleRegister" /></label
-        ></liquid-form-item>
+              @keyup.enter="handleRegister" /></div>
+        </liquid-form-item>
         <div v-if="captchaEnable" class="captcha-row">
-          <liquid-form-item prop="captchaCode"
-            ><label class="fld"
-              ><span>验证码</span
-              ><input
-                v-bind="nativeControlAttrs"
+          <liquid-form-item prop="captchaCode" label="验证码">
+              <div class="fld"><input
                 v-model="registerForm.captchaCode"
                 placeholder="输入右侧字符"
-                @keyup.enter="handleRegister" /></label></liquid-form-item
+                @keyup.enter="handleRegister" /></div></liquid-form-item
           ><button
             type="button"
             class="captcha-img"
@@ -96,12 +85,10 @@ import { generateCaptcha } from '@/api/account'
 import { panelBranding, loadPanelSettings } from '@/utils/panel-branding'
 import PanelLogo from '@/components/PanelLogo'
 import LiquidThemeToggle from '@/components/LiquidThemeToggle'
-import nativeFormControl from '@/mixins/native-form-control'
 
 export default {
   name: 'RegisterPage',
   components: { LiquidThemeToggle, PanelLogo },
-  mixins: [nativeFormControl],
   data() {
     const validatePass = (rule, value, callback) => {
       if (this.registerForm.passOne !== this.registerForm.pass) {
