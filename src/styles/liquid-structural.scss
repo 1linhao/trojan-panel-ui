@@ -45,7 +45,7 @@
 .liquid-table tbody tr:hover td { background: var(--glass-soft); }
 .liquid-table.is-bordered th,
 .liquid-table.is-bordered td { border-right: 1px solid var(--hairline); }
-.liquid-table__empty-row td { height: 92px; text-align: center !important; color: var(--ink-2); }
+.liquid-table__empty-row td { height: 92px; text-align: center; color: var(--ink-2); }
 
 .liquid-form { width: 100%; }
 .liquid-form-item { position: relative; display: flex; flex-direction: column; align-items: stretch; width: 100%; min-height: 42px; margin: 0 0 20px; }
@@ -69,7 +69,7 @@
 .liquid-message.is-warning { border-color: var(--warn-fg); }
 .liquid-message.is-error { border-color: var(--bad-fg); }
 @media (max-width: 760px) {
-  .liquid-descriptions { grid-template-columns: 1fr !important; }
+  .liquid-descriptions { grid-template-columns: 1fr; }
 }
 
 /* Content only: geometry and material belong to the shared dialog packages. */

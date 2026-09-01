@@ -78,3 +78,17 @@ test('runtime composes theme and material without owning DOM', () => {
   assert.equal(runtime.motion.getCapabilities().available, true)
   assert.ok(UI_CUSTOM_PROPERTIES.includes('--ui-surface-bg'))
 })
+
+test('custom-property contract has unique, well-formed names for every public seam', () => {
+  assert.equal(new Set(UI_CUSTOM_PROPERTIES).size, UI_CUSTOM_PROPERTIES.length)
+  UI_CUSTOM_PROPERTIES.forEach((property) => assert.match(property, /^--ui-[a-z0-9-]+$/))
+  for (const property of [
+    '--ui-dialog-bg',
+    '--ui-overlay-backdrop-bg',
+    '--ui-button-interaction-shadow',
+    '--ui-control-size-padding-x',
+    '--ui-navigation-mobile-selected-bg',
+    '--ui-view-transition-name',
+    '--ui-motion-easing-emphasized'
+  ]) assert.ok(UI_CUSTOM_PROPERTIES.includes(property), property)
+})

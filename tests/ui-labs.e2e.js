@@ -1,4 +1,4 @@
-const { spawn } = require('child_process')
+const { spawn, spawnSync } = require('child_process')
 const http = require('http')
 
 const root = process.cwd()
@@ -65,6 +65,11 @@ async function waitFor(check, label, timeout = 30000) {
 }
 
 async function main() {
+  const build = spawnSync(process.execPath, ['scripts/build-ui-labs.mjs'], {
+    cwd: root,
+    stdio: 'inherit'
+  })
+  if (build.status !== 0) throw new Error('UI lab build failed')
   start(process.execPath, ['scripts/serve-ui-labs.mjs'])
   start('chromedriver', [
     '--port=9517',

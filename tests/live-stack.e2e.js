@@ -91,6 +91,34 @@ async function main() {
       command('/element', 'POST', { using: 'css selector', value: selector })
     const elementId = (element) =>
       element['element-6066-11e4-a52e-4f735466cecf']
+    const assertNavigationControls = async (label, selectors) => {
+      const controls = await execute(
+        `const groups=${JSON.stringify(selectors)}; return groups.flatMap(({selector,kind}) => [...document.querySelectorAll(selector)].map((element) => { const style=getComputedStyle(element); const painted=style.backgroundImage !== 'none' || !['rgba(0, 0, 0, 0)','transparent'].includes(style.backgroundColor); return {selector,kind,text:element.textContent.trim(),display:style.display,painted,selected:element.matches('.on,.is-selected'),borderWidth:parseFloat(style.borderTopWidth),radius:parseFloat(style.borderTopLeftRadius),shadow:style.boxShadow,backdrop:style.backdropFilter || style.webkitBackdropFilter,interaction:element.dataset.uiInteraction,transition:style.transitionProperty}; }));`
+      )
+      const failures = controls.filter((control) => {
+        if (control.kind === 'shell') {
+          return !control.display.includes('flex') || control.painted ||
+            control.borderWidth < 1 || control.radius < 16 ||
+            control.shadow !== 'none' || control.backdrop !== 'none'
+        }
+        const invalidStateSkin = control.selected
+          ? !control.painted || control.shadow === 'none'
+          : control.painted || control.shadow !== 'none'
+        return invalidStateSkin || control.borderWidth !== 0 ||
+          control.radius < 10 ||
+          control.interaction !== 'nav-lift' ||
+          !control.transition.includes('transform')
+      })
+      if (!controls.length || failures.length) {
+        throw new Error(
+          `${label} navigation small-control skin failed: ${JSON.stringify({
+            controls,
+            failures
+          })}`
+        )
+      }
+      return controls.length
+    }
     try {
       await command('/url', 'POST', { url: webUrl })
       const username = await waitFor(
@@ -158,6 +186,11 @@ async function main() {
         const element = await command('/element', 'POST', {
           using: 'xpath', value: `//${selector}[normalize-space(.)='${label}']`
         })
+        await command('/execute/sync', 'POST', {
+          script:
+            "arguments[0].scrollIntoView({ block: 'nearest', inline: 'center' })",
+          args: [element]
+        })
         await command(`/element/${elementId(element)}/click`, 'POST', {})
       }
       await clickText('aside/button', '系统配置')
@@ -173,26 +206,93 @@ async function main() {
         await clickText('button', client)
         const editor = await waitFor(() => find('.subscription-config-editor textarea'), `${client} editor`)
         await command(`/element/${elementId(editor)}/value`, 'POST', { text: '\uE009a\uE000' + content })
-        if (client !== 'Clash.Meta') {
-          const formatButton = await waitFor(() => find('.liquid-code-editor__toolbar button'), `${client} format button`)
-          await command(`/element/${elementId(formatButton)}/click`, 'POST', {})
-          await waitFor(() => execute("return document.querySelector('.subscription-config-editor textarea').getAttribute('aria-invalid') === 'false'"), `${client} JSON format`)
-        }
+        const formatButton = await waitFor(() => find('.liquid-code-editor__toolbar button'), `${client} format button`)
+        await command(`/element/${elementId(formatButton)}/click`, 'POST', {})
+        await waitFor(
+          () => execute(
+            client === 'Clash.Meta'
+              ? `const field=document.querySelector('.subscription-config-editor textarea'); return field.getAttribute('aria-invalid') !== 'true' && field.value.trim() === ${JSON.stringify(content)}`
+              : `const field=document.querySelector('.subscription-config-editor textarea'); try { return field.getAttribute('aria-invalid') !== 'true' && JSON.stringify(JSON.parse(field.value)) === ${JSON.stringify(content)} } catch (_) { return false }`
+          ),
+          `${client} format`
+        )
         const value = await execute("return document.querySelector('.subscription-config-editor textarea').value")
-        if (client === 'Clash.Meta' ? value !== content : JSON.stringify(JSON.parse(value)) !== content) {
+        if (client === 'Clash.Meta' ? value.trim() !== content : JSON.stringify(JSON.parse(value)) !== content) {
           throw new Error(`${client} editor lost input: ${value}`)
         }
       }
       await clickText('button', 'Clash.Meta')
-      await waitFor(() => execute("return document.querySelector('.subscription-config-editor textarea').value === 'rules: []'"), 'template state across clients')
+      await waitFor(() => execute("return document.querySelector('.subscription-config-editor textarea').value.trim() === 'rules: []'"), 'template state across clients')
+      const settingsSmallControls = await waitFor(
+        () => assertNavigationControls(
+          'system settings',
+          [
+            { selector: '.prototype-config-card .liquid-tabs', kind: 'shell' },
+            { selector: '.prototype-config-card .liquid-tabs button', kind: 'action' },
+            {
+              selector: '.prototype-config-card .liquid-code-editor__toolbar button',
+              kind: 'action'
+            }
+          ]
+        ),
+        'settled system settings navigation controls'
+      )
+      await clickText('button', 'sing-box')
+      const selectTrigger = await waitFor(
+        () => find('.template-config-editor__template-select .liquid-select__trigger'),
+        'template selector'
+      )
+      await command(`/element/${elementId(selectTrigger)}/click`, 'POST', {})
+      await waitFor(() => find('.liquid-select__option'), 'template selector options')
+      const selectSmallControls = await waitFor(
+        () => assertNavigationControls(
+          'system settings select',
+          [{ selector: '.liquid-select__option', kind: 'action' }]
+        ),
+        'settled select navigation controls'
+      )
+      const profileEntry = await find('.prototype-profile-entry')
+      await command(`/element/${elementId(profileEntry)}/click`, 'POST', {})
+      await waitFor(() => find('.profile-card'), 'profile route')
+      await clickText('button', '颜色主题')
+      await waitFor(
+        () => find('.profile-card .liquid-palette-picker__menu.is-inline'),
+        'profile palette'
+      )
+      const profileSmallControls = await waitFor(
+        () => assertNavigationControls(
+          'profile',
+          [
+            { selector: '.profile-card .liquid-tabs', kind: 'shell' },
+            { selector: '.profile-card .liquid-tabs button', kind: 'action' },
+            {
+              selector: '.profile-card .liquid-palette-picker__menu button',
+              kind: 'action'
+            }
+          ]
+        ),
+        'settled profile navigation controls'
+      )
       await command('/window/rect', 'POST', { width: 390, height: 844 })
       await waitFor(
         () =>
           execute(
-            "const nav=document.querySelector('.prototype-mobile-nav'); return nav && getComputedStyle(nav).display !== 'none'"
+            "const nav=document.querySelector('.tp-ui-shell__mobile-nav'); return nav && getComputedStyle(nav).display !== 'none'"
           ),
         'mobile navigation'
       )
+      const navigationParity = await execute(
+        `const read=(element,keys)=>{const style=getComputedStyle(element);return Object.fromEntries(keys.map((key)=>[key,style[key]]))}; const itemKeys=['backgroundColor','backgroundImage','borderTopColor','borderTopWidth','borderTopLeftRadius','boxShadow','color','fontWeight']; const activeNav=document.querySelector('.tp-ui-shell__mobile-nav .tp-ui-shell__nav-item.is-active'); const inactiveNav=document.querySelector('.tp-ui-shell__mobile-nav .tp-ui-shell__nav-item:not(.is-active)'); const pairs=[['inactive tab',document.querySelector('.profile-card .liquid-tabs button:not(.on)'),inactiveNav,itemKeys],['selected tab',document.querySelector('.profile-card .liquid-tabs button.on'),activeNav,itemKeys],['inactive palette action',document.querySelector('.profile-card .liquid-palette-picker__menu button:not(.is-selected)'),inactiveNav,itemKeys],['selected palette action',document.querySelector('.profile-card .liquid-palette-picker__menu button.is-selected'),activeNav,itemKeys]]; return pairs.map(([kind,control,navigation,keys])=>({kind,control:control&&read(control,keys),navigation:navigation&&read(navigation,keys)}));`
+      )
+      const parityFailures = navigationParity.filter(
+        ({ control, navigation }) =>
+          !control || !navigation || JSON.stringify(control) !== JSON.stringify(navigation)
+      )
+      if (parityFailures.length) {
+        throw new Error(
+          `Small controls differ from mobile navigation: ${JSON.stringify(parityFailures)}`
+        )
+      }
       await clickText('nav/button', '首页')
       await waitFor(() => execute("return location.hash.includes('/dashboard/index')"), 'mobile route navigation')
       const errors = (await command('/log', 'POST', { type: 'browser' }))
@@ -201,7 +301,7 @@ async function main() {
       const screenshot = await command('/screenshot')
       writeFileSync(screenshotPath, Buffer.from(screenshot, 'base64'))
       process.stdout.write(
-        `PASS live stack login, dashboard, system settings, three template editors, clean browser console, ${dashboardButtonCoverage.covered} interactive buttons, responsive navigation; screenshot ${screenshotPath}\n`
+        `PASS live stack login, dashboard, system settings, three template editors, ${settingsSmallControls + selectSmallControls + profileSmallControls} navigation-style small controls without nested surface tint, mobile navigation item parity, clean browser console, ${dashboardButtonCoverage.covered} interactive buttons, responsive navigation; screenshot ${screenshotPath}\n`
       )
     } catch (error) {
       const state = await execute("return {hash:location.hash, editor:document.querySelector('.subscription-config-editor textarea')?.value, alerts:[...document.querySelectorAll('[role=alert]')].map(e=>e.textContent)}").catch(() => null)

@@ -1,13 +1,15 @@
+@import '@tp-ui/contracts/base.css';
+@import '@tp-ui/motion-native/motion.css';
+@import '@tp-ui/components-vue2/geometry.css';
+@import '@tp-ui/layout-app-shell-vue2/layout.css';
+@import '@tp-ui/components-vue2/button-interactions.css';
 @import '@tp-ui/material-frosted/production.css';
+@import '@tp-ui/material-frosted/overlay.css';
 @import './frosted-surfaces.scss';
 @import './buttons.scss';
 @import './icons.scss';
 @import './liquid-structural.scss';
 @import './prototype-runtime.scss';
-@import '@tp-ui/motion-native/motion.css';
-@import '@tp-ui/components-vue2/geometry.css';
-@import '@tp-ui/material-frosted/overlay.css';
-@import '@tp-ui/components-vue2/button-interactions.css';
 
 body {
   height: 100%;
@@ -73,4 +75,24 @@ div:focus {
       color: var(--accent-deep);
     }
   }
+}
+
+.align-action-right {
+  float: right;
+}
+
+.table-actions {
+  text-align: right;
+}
+
+.account-actions-cell {
+  min-width: 180px;
+}
+
+.server-actions-cell {
+  min-width: 190px;
+}
+
+.full-width-table {
+  width: 100%;
 }

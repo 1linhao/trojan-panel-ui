@@ -2,9 +2,11 @@
 
 The composition root may pass `renderIcon` to `createVue2Components({ include, renderIcon })`. Dialog close actions then use the same renderer as application navigation and buttons. Direct `UiDialog` consumers may supply its `renderIcon` function prop; without an icon adapter the close action has a text label. Components do not import an icon package.
 
+`include` defaults to an empty set; consumers must opt into every global registration. `dialogLabels` injects localized accessible action text while the standalone component retains a safe English fallback. Semantic props use the validators exported by `@tp-ui/contracts`.
+
 Vue 2 control and surface anatomy, interaction, accessibility, and geometry. The public surface exports `UiButton`, `UiInput`, `UiPanel`, `UiSheet`, `UiDialog`, and the selective `createVue2Components()` plugin.
 
-`UiPanel` owns the common `auth | content | metric` panel recipes. `UiSheet`
+`UiPanel` owns the common `auth | content | metric` panel recipes without emitting legacy `glass`/`card` classes. `UiSheet`
 owns in-page detail surfaces and `UiDialog` owns modal lifecycle, focus return,
 Escape/backdrop closing, and overlay anatomy. Their stable animation Interface is
 `motion-role`, `motion-key`, and `data-ui-part`; animation engines stay outside

@@ -32,7 +32,7 @@
       :placeholder="$t('traffic.selectDay')"
       @input="setSelectedDate('day', $event)"
     />
-    <liquid-table :data="list" style="width: 100%" v-liquid-loading="loading">
+    <liquid-table :data="list" class="full-width-table" v-liquid-loading="loading">
       <liquid-table-column
         :label="$t('dashboard.ranking')"
         width="100"

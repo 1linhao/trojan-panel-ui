@@ -23,22 +23,9 @@ body {
 #app .app-container,
 #app .dashboard-container {
   position: relative;
-  padding: 24px !important;
+  padding: 24px;
   color: var(--ink);
-  background: transparent !important;
-}
-
-:root[data-ui-material='frosted'] {
-  /* Application palette → reusable overlay material contract. */
-  --ui-overlay-z: 5000;
-  --ui-overlay-backdrop-bg: color-mix(in srgb, var(--bg-base) 22%, transparent);
-  --ui-dialog-bg: var(--glass-popover);
-  --ui-dialog-border: var(--rim);
-  --ui-dialog-shadow: var(--shadow);
-  --ui-dialog-ink: var(--ink);
-  --ui-dialog-divider: var(--hairline);
-  --ui-dialog-control-bg: var(--control-fill);
-  --ui-dialog-control-border: var(--control-border);
+  background: transparent;
 }
 
 .auth-theme-toggle {
@@ -49,12 +36,12 @@ body {
 }
 
 .liquid-theme-toggle {
-  display: inline-grid !important;
+  display: inline-grid;
   place-items: center;
   width: 38px;
   min-width: 38px;
-  height: 38px !important;
-  padding: 0 !important;
+  height: 38px;
+  padding: 0;
   border: 1px solid var(--rim);
   border-radius: 50%;
   color: var(--ink-2);
@@ -62,8 +49,8 @@ body {
   box-shadow: inset 0 1px 0 var(--spec), var(--shadow-soft);
   -webkit-backdrop-filter: var(--ui-backdrop-control);
   backdrop-filter: var(--ui-backdrop-control);
-  font-size: 19px !important;
-  line-height: 1 !important;
+  font-size: 19px;
+  line-height: 1;
   cursor: pointer;
 }
 
@@ -74,6 +61,6 @@ body {
 @media (max-width: 992px) {
   #app .app-container,
   #app .dashboard-container {
-    padding: 16px 6px !important;
+    padding: 16px 6px;
   }
 }

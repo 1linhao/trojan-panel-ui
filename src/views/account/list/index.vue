@@ -92,7 +92,7 @@
               <th class="account-expiry-column">到期时间</th>
               <th>最近登录</th>
               <th>状态</th>
-              <th style="text-align: right">操作</th>
+              <th class="table-actions">操作</th>
             </tr>
           </thead>
           <tbody>
@@ -114,7 +114,7 @@
                   >{{ roleFilter(row.roleId) }}</span
                 >
               </td>
-              <td style="min-width: 180px">
+              <td class="account-actions-cell">
                 <div class="traffic-label">
                   <span class="muted num">{{
                     getFlow(Number(row.upload || 0) + Number(row.download || 0))

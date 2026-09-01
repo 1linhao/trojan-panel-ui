@@ -17,9 +17,10 @@
     "./package.json": "./package.json"
   },
   "scripts": {
+    "lint": "node ../../scripts/lint-ui-package.mjs .",
     "build": "node ../../scripts/build-ui-package.mjs .",
     "test": "node --test test/contract/*.test.mjs",
     "check:exports": "node scripts/check-exports.mjs",
-    "check": "npm run test && npm run build && npm run check:exports && node ../../scripts/pack-ui-package.mjs ."
+    "check": "npm run lint && npm run test && npm run build && npm run check:exports && node ../../scripts/pack-ui-package.mjs ."
   }
 }

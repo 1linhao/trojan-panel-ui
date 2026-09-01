@@ -25,7 +25,7 @@
               <th>状态</th>
               <th>错误信息</th>
               <th>创建时间</th>
-              <th style="text-align: right">操作</th>
+              <th class="table-actions">操作</th>
             </tr>
           </thead>
           <tbody>

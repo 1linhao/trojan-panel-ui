@@ -429,22 +429,8 @@ export default {
   width: 100%;
   min-height: 38px;
   padding: 8px 11px;
-  border: 0;
-  border-radius: 10px;
-  color: var(--ink-2);
-  background: transparent;
-  font: inherit;
   text-align: left;
   cursor: pointer;
-}
-.liquid-select__option:hover:not(:disabled) {
-  color: var(--ink);
-  background: var(--glass-soft);
-}
-.liquid-select__option.is-selected {
-  color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 13%, transparent);
-  font-weight: 650;
 }
 .liquid-select__option:disabled {
   cursor: not-allowed;

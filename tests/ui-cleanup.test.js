@@ -558,7 +558,11 @@ test('production animation timings and overlay material have a single owner', ()
   assert.doesNotMatch(read('src/utils/liquid-feedback.js'), /liquid-feedback-layer|liquid-message-box|setTimeout\([^\n]*180/)
   assert.doesNotMatch(read('src/utils/scroll-to.js'), /Math\.ease|requestAnimFrame/)
   assert.match(read('src/styles/index.scss'), /@tp-ui\/material-frosted\/production.css/)
-  assert.match(read('src/main.js'), /setAttribute\('data-ui-material', 'frosted'\)/)
+  const composition = read('src/adapters/trojan-panel-ui-composition.js')
+  assert.match(composition, /createUiRuntime\(/)
+  assert.match(composition, /createFrostedMaterial\(/)
+  assert.match(read('src/main.js'), /installProductionUi\(Vue\)/)
+  assert.doesNotMatch(read('src/main.js'), /Vue\.component\(['"]Liquid|structuralComponents/)
   assert.doesNotMatch(read('src/styles/icons.scss'), /prefers-reduced-motion/)
   assert.match(read('src/components/LiquidTag/index.vue'), /<button v-if="\$listeners.click"/)
   assert.match(read('src/components/LiquidTag/index.vue'), /@click.stop="\$emit\('close'/)
@@ -587,10 +591,41 @@ test('all production controls use known semantic icons and no legacy renderer', 
       assert.ok(iconNames.includes(match[1]), `${file}: ${match[1]}`)
     }
   }
-  assert.match(read('src/main.js'), /createVue2Components\([\s\S]*?renderIcon/)
+  assert.match(read('src/adapters/trojan-panel-ui-composition.js'), /createVue2Components\([\s\S]*?renderIcon/)
   assert.match(read('src/components/AppIcon/index.js'), /renderIcon\(h, props.name, \{\}, data\)/)
   assert.match(read('src/styles/icons.scss'), /app-icon--loading[\s\S]*animation:/)
   assert.doesNotMatch(read('src/styles/icons.scss'), /background:|box-shadow:|padding:|border-radius:/)
+})
+
+test('production composition uses package exports and a business-only shell adapter', () => {
+  assert.doesNotMatch(read('vite.config.mjs'), /@tp-ui[^\n]+packages\//)
+  assert.match(read('src/layout/index.vue'), /<ui-app-shell/)
+  const adapter = read('src/adapters/trojan-panel-shell.js')
+  assert.match(adapter, /createShellModel\(/)
+  assert.doesNotMatch(read('packages/ui-layout-app-shell-vue2/src/index.js'), /vuex|vue-router|@\/|sysadmin/)
+  assert.doesNotMatch(read('packages/ui-components-vue2/src/index.js'), /['"](?:glass|card|sheet)['"]/)
+})
+
+test('shell adapter preserves role filtering, mobile labels, branding, and profile navigation', () => {
+  const { createTrojanPanelShellModel } = loadModule(
+    read('src/adapters/trojan-panel-shell.js'),
+    { '@tp-ui/contracts': { createShellModel: (value) => value } }
+  )
+  const branding = { systemName: 'Trojan Panel' }
+  const sysadmin = createTrojanPanelShellModel({
+    roles: ['sysadmin'], username: 'root', activePath: '/dashboard/index', pageTitle: '仪表板', branding
+  })
+  const user = createTrojanPanelShellModel({
+    roles: ['user'], username: 'guest', activePath: '/dashboard/index', pageTitle: '我的首页', branding
+  })
+  assert.ok(sysadmin.groups.flatMap((group) => group.items).some((item) => item.key === '/system/base-config'))
+  assert.deepEqual(
+    Array.from(user.groups.flatMap((group) => group.items), (item) => item.key),
+    ['/dashboard/index', '/node-manage/node-list', '/modify/index']
+  )
+  assert.equal(user.groups[0].items[0].mobileLabel, '首页')
+  assert.equal(user.brand.name, 'Trojan Panel')
+  assert.equal(user.user.label, 'guest')
 })
 
 test('central ambient color is theme-aware and limited to phone/tablet layouts', () => {

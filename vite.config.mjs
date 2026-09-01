@@ -31,11 +31,7 @@ export default defineConfig(({ mode }) => {
     plugins: [vue(), obfuscateApplication()],
     resolve: {
       alias: {
-        '@': resolve('./src'),
-        '@tp-ui/icons': resolve('./packages/ui-icons/src'),
-        '@tp-ui/material-frosted': resolve('./packages/ui-material-frosted/src'),
-        '@tp-ui/components-vue2': resolve('./packages/ui-components-vue2/src'),
-        '@tp-ui/motion-native': resolve('./packages/ui-motion-native/src')
+        '@': resolve('./src')
       },
       extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
       dedupe: ['vue']

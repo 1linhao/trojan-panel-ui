@@ -194,16 +194,7 @@ export default {
   width: 100%;
   min-height: 40px;
   padding: 6px 10px;
-  border: 0;
-  border-radius: 11px;
-  color: var(--ink-2);
-  background: transparent;
   text-align: left;
-}
-.liquid-palette-picker__menu button:hover,
-.liquid-palette-picker__menu button.is-selected {
-  color: var(--ink);
-  background: var(--glass-soft);
 }
 .liquid-palette-picker__menu.is-inline {
   position: static;

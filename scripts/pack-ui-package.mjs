@@ -1,10 +1,11 @@
-import { mkdir, mkdtemp, readFile, rm } from 'node:fs/promises'
+import { cp, mkdir, mkdtemp, readFile, rm } from 'node:fs/promises'
 import { spawnSync } from 'node:child_process'
 import os from 'node:os'
 import path from 'node:path'
-import { pathToFileURL } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 
 const packageDirectory = path.resolve(process.argv[2] || process.cwd())
+const workspaceRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const temporaryDirectory = await mkdtemp(path.join(os.tmpdir(), 'tp-ui-pack-'))
 try {
   const manifest = JSON.parse(
@@ -45,6 +46,12 @@ try {
   ])
   if (extraction.status !== 0)
     throw new Error(`${manifest.name}: cannot unpack tarball`)
+  for (const dependency of Object.keys(manifest.dependencies || {}).filter((name) => name.startsWith('@tp-ui/'))) {
+    const dependencyDirectory = path.join(workspaceRoot, 'packages', dependency.replace('@tp-ui/', 'ui-'))
+    const target = path.join(extractionDirectory, 'package', 'node_modules', ...dependency.split('/'))
+    await mkdir(path.dirname(target), { recursive: true })
+    await cp(dependencyDirectory, target, { recursive: true })
+  }
   const rootExport = manifest.exports['.']
   const rootTarget =
     typeof rootExport === 'string' ? rootExport : rootExport.import

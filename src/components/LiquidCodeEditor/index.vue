@@ -205,19 +205,8 @@ export default {
 .liquid-code-editor__toolbar button {
   min-height: 30px;
   padding: 0 11px;
-  border: 1px solid var(--rim);
-  border-radius: 10px;
-  color: var(--ink-2);
-  background: var(--glass-input);
-  font: inherit;
   line-height: 1.2;
   letter-spacing: 0;
-  cursor: pointer;
-}
-
-.liquid-code-editor__toolbar button:hover {
-  border-color: var(--accent);
-  color: var(--accent);
 }
 
 .liquid-code-editor textarea {

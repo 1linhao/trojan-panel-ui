@@ -33,6 +33,12 @@ test('exports named components and selective plugin registration', () => {
   )
 })
 
+test('selective plugin defaults to an empty registration set', () => {
+  const names = []
+  createVue2Components().install({ component: (name) => names.push(name) })
+  assert.deepEqual(names, [])
+})
+
 test('panel variants expose stable anatomy and motion identity', () => {
   const vnode = UiPanel.render(
     (tag, data, children) => ({ tag, data, children }),
@@ -103,6 +109,7 @@ test('dialog exposes overlay anatomy and close events', () => {
       width: 480,
       customClass: '',
       showClose: true,
+      labels: { close: '关闭对话框' },
       renderIcon: (h, name) => h('svg', { attrs: { 'data-icon': name } }),
       tone: 'neutral',
       motionRole: 'overlay',
@@ -120,6 +127,7 @@ test('dialog exposes overlay anatomy and close events', () => {
   assert.equal(surface.data.style.viewTransitionName, undefined)
   assert.equal(surface.children[1].data.attrs['data-ui-part'], 'body')
   assert.equal(surface.children[0].children[1].children[0].data.attrs['data-icon'], 'close')
+  assert.equal(surface.children[0].children[1].data.attrs['aria-label'], '关闭对话框')
   surface.children[0].children[1].data.on.click()
   assert.deepEqual(emitted, ['close'])
 })
@@ -133,6 +141,15 @@ test('composition root can supply one icon renderer without a package dependency
   assert.equal(registered.UiDialog.props.renderIcon.default, renderIcon)
   assert.equal(registered.UiPanel, UiPanel)
   assert.equal(UiDialog.props.renderIcon.default, null)
+})
+
+test('composition root can inject localized dialog accessibility labels', () => {
+  const registered = {}
+  createVue2Components({ include: ['UiDialog'], dialogLabels: { close: '关闭对话框' } }).install({
+    component: (name, component) => { registered[name] = component }
+  })
+  assert.deepEqual(registered.UiDialog.props.labels.default(), { close: '关闭对话框' })
+  assert.deepEqual(UiDialog.props.labels.default(), { close: 'Close dialog' })
 })
 
 test('button anatomy exposes semantic attributes and loading behavior', () => {

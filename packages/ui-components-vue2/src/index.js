@@ -1,5 +1,13 @@
 import { BUTTON_INTERACTION } from './button-interactions.js'
 import { acquireOverlay } from './overlay-stack.js'
+import {
+  validateDensity,
+  validateMotionRole,
+  validateSize,
+  validateState,
+  validateSurface,
+  validateTone
+} from '@tp-ui/contracts'
 
 export {
   BUTTON_INTERACTION,
@@ -26,11 +34,10 @@ function semanticData(component, overrides = {}) {
 export const PANEL_VARIANTS = Object.freeze(['auth', 'content', 'metric'])
 
 const sharedSurfaceProps = {
-  tone: { type: String, default: 'neutral' },
-  density: { type: String, default: 'comfortable' },
-  state: { type: String, default: 'idle' },
-  // Values are owned and validated by @tp-ui/contracts at the composition seam.
-  motionRole: { type: String, default: 'panel' },
+  tone: { type: String, default: 'neutral', validator: validateTone },
+  density: { type: String, default: 'comfortable', validator: validateDensity },
+  state: { type: String, default: 'idle', validator: validateState },
+  motionRole: { type: String, default: 'panel', validator: validateMotionRole },
   motionKey: { type: String, default: '' }
 }
 
@@ -113,14 +120,9 @@ export const UiPanel = {
   },
   render(h, context) {
     const { variant, tag } = context.props
-    const legacyClasses = {
-      auth: ['glass', 'raised', 'auth-card'],
-      content: ['glass', 'card'],
-      metric: ['glass']
-    }
     const data = surfaceData(context, {
       surface: variant === 'auth' ? 'raised' : 'panel',
-      classes: ['tp-ui-panel', `tp-ui-panel--${variant}`, legacyClasses[variant]]
+      classes: ['tp-ui-panel', `tp-ui-panel--${variant}`]
     })
     data.attrs['data-ui-panel-variant'] = variant
     return h(tag, data, surfaceChildren(h, context, 'tp-ui-panel'))
@@ -139,7 +141,7 @@ export const UiSheet = {
       context.props.tag,
       surfaceData(context, {
         surface: 'raised',
-        classes: ['tp-ui-sheet', 'glass', 'sheet']
+        classes: ['tp-ui-sheet']
       }),
       surfaceChildren(h, context, 'tp-ui-sheet')
     )
@@ -156,13 +158,17 @@ export const UiDialog = {
     customClass: String,
     closeOnClickModal: { type: Boolean, default: true },
     renderIcon: { type: Function, default: null },
+    labels: {
+      type: Object,
+      default: () => ({ close: 'Close dialog' })
+    },
     closeOnEscape: { type: Boolean, default: true },
     showClose: { type: Boolean, default: true },
     appendToBody: { type: Boolean, default: true },
     role: { type: String, default: 'dialog' },
     describedBy: String,
-    tone: { type: String, default: 'neutral' },
-    motionRole: { type: String, default: 'overlay' },
+    tone: { type: String, default: 'neutral', validator: validateTone },
+    motionRole: { type: String, default: 'overlay', validator: validateMotionRole },
     motionKey: { type: String, default: '' }
   },
   watch: {
@@ -263,10 +269,10 @@ export const UiDialog = {
                       'button',
                       {
                         class: 'tp-ui-dialog__close',
-                        attrs: { type: 'button', 'aria-label': '关闭', 'data-ui-part': 'close-action' },
+                        attrs: { type: 'button', 'aria-label': this.labels.close, 'data-ui-part': 'close-action' },
                         on: { click: this.close }
                       },
-                      [this.renderIcon ? this.renderIcon(h, 'close') : '关闭']
+                      [this.renderIcon ? this.renderIcon(h, 'close') : this.labels.close]
                     )
                   : null
               ]
@@ -300,9 +306,9 @@ export const UiButton = {
   name: 'UiButton',
   inheritAttrs: false,
   props: {
-    tone: { type: String, default: 'neutral' },
-    surface: { type: String, default: 'control' },
-    size: { type: String, default: 'md' },
+    tone: { type: String, default: 'neutral', validator: validateTone },
+    surface: { type: String, default: 'control', validator: validateSurface },
+    size: { type: String, default: 'md', validator: validateSize },
     disabled: Boolean,
     loading: Boolean,
     type: { type: String, default: 'button' }
@@ -341,8 +347,8 @@ export const UiInput = {
   inheritAttrs: false,
   props: {
     value: { type: [String, Number], default: '' },
-    tone: { type: String, default: 'neutral' },
-    size: { type: String, default: 'md' },
+    tone: { type: String, default: 'neutral', validator: validateTone },
+    size: { type: String, default: 'md', validator: validateSize },
     disabled: Boolean,
     invalid: Boolean
   },
@@ -373,8 +379,9 @@ export const COMPONENTS = Object.freeze({
 })
 
 export function createVue2Components({
-  include = Object.keys(COMPONENTS),
-  renderIcon = null
+  include = [],
+  renderIcon = null,
+  dialogLabels = null
 } = {}) {
   const unknown = include.filter((name) => !COMPONENTS[name])
   if (unknown.length)
@@ -383,8 +390,12 @@ export function createVue2Components({
     install(Vue) {
       include.forEach((name) => {
         const component = COMPONENTS[name]
-        Vue.component(name, name === 'UiDialog' && renderIcon
-          ? { ...component, props: { ...component.props, renderIcon: { type: Function, default: renderIcon } } }
+        Vue.component(name, name === 'UiDialog' && (renderIcon || dialogLabels)
+          ? { ...component, props: {
+            ...component.props,
+            ...(renderIcon ? { renderIcon: { type: Function, default: renderIcon } } : {}),
+            ...(dialogLabels ? { labels: { type: Object, default: () => dialogLabels } } : {})
+          } }
           : component)
       })
     }

@@ -22,7 +22,11 @@ function navButton(component, h, item, mobile = false) {
       on: { click: () => component.$emit('navigate', item.key, item) }
     },
     [
-      ...iconSlot(component, h, item),
+      h(
+        'span',
+        { class: 'tp-ui-shell__nav-icon', attrs: { 'aria-hidden': 'true' } },
+        iconSlot(component, h, item)
+      ),
       h('span', mobile ? item.mobileLabel : item.label)
     ]
   )
@@ -30,7 +34,37 @@ function navButton(component, h, item, mobile = false) {
 
 export const UiAppShell = {
   name: 'UiAppShell',
-  props: { model: { type: Object, required: true } },
+  props: {
+    model: { type: Object, required: true },
+    showUser: { type: Boolean, default: true },
+    labels: {
+      type: Object,
+      default: () => ({ navigation: 'Application navigation', profile: 'Profile', logout: 'Log out' })
+    }
+  },
+  mounted() {
+    this.shellResizeView = this.$el?.ownerDocument?.defaultView
+    this.shellResizeHandler = () => this.revealActiveMobileItem()
+    this.shellResizeView?.addEventListener?.('resize', this.shellResizeHandler)
+    this.revealActiveMobileItem()
+  },
+  beforeDestroy() {
+    this.shellResizeView?.removeEventListener?.('resize', this.shellResizeHandler)
+  },
+  updated() {
+    this.revealActiveMobileItem()
+  },
+  methods: {
+    revealActiveMobileItem() {
+      const nav = this.$refs.mobileNav
+      const activeItem = nav?.querySelector?.('.is-active')
+      if (!activeItem || nav.scrollWidth <= nav.clientWidth) return
+      nav.scrollTo({
+        left: Math.max(0, activeItem.offsetLeft - (nav.clientWidth - activeItem.offsetWidth) / 2),
+        behavior: 'smooth'
+      })
+    }
+  },
   render(h) {
     const allItems = this.model.groups.flatMap((group) => group.items)
     return h(
@@ -57,7 +91,7 @@ export const UiAppShell = {
                 attrs: { type: 'button' },
                 on: { click: () => this.$emit('action', 'brand') }
               },
-              [
+              this.$scopedSlots.brand ? this.$scopedSlots.brand({ brand: this.model.brand }) : [
                 h(
                   'span',
                   { class: 'tp-ui-shell__brand-mark' },
@@ -90,12 +124,14 @@ export const UiAppShell = {
               h('h1', this.model.pageTitle),
               h('div', { class: 'tp-ui-shell__actions' }, [
                 ...(this.$slots.actions || []),
-                this.model.user
+                this.$scopedSlots.user
+                  ? this.$scopedSlots.user({ user: this.model.user })
+                  : this.showUser && this.model.user
                   ? h(
                       'button',
                       {
                         class: 'tp-ui-shell__user',
-                        attrs: { type: 'button' },
+                        attrs: { type: 'button', 'aria-label': this.labels.logout },
                         on: { click: () => this.$emit('logout') }
                       },
                       this.model.user.label || this.model.user.name || ''
@@ -109,10 +145,14 @@ export const UiAppShell = {
         h(
           'nav',
           {
-            class: 'tp-ui-shell__mobile-nav',
+            ref: 'mobileNav',
+            class: [
+              'tp-ui-shell__mobile-nav',
+              { 'is-scrollable': allItems.length > 5 }
+            ],
             attrs: {
               'data-ui-surface': 'navigation',
-              'aria-label': 'Application navigation'
+              'aria-label': this.labels.navigation
             }
           },
           allItems.map((item) => navButton(this, h, item, true))

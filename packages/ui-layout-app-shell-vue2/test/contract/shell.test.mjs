@@ -28,6 +28,8 @@ test('shell emits navigation intent without router knowledge', () => {
     },
     $slots: {},
     $scopedSlots: {},
+    labels: { navigation: 'Primary navigation', profile: 'Profile', logout: 'Log out' },
+    showUser: true,
     $emit: (...args) => emitted.push(args)
   }
   const h = (tag, data, children) => ({
@@ -43,6 +45,56 @@ test('shell emits navigation intent without router knowledge', () => {
   nav.data.on.click()
   assert.equal(emitted[0][0], 'navigate')
   assert.equal(emitted[0][1], '/home')
+})
+
+test('shell accessibility labels and business content are injectable', () => {
+  const component = {
+    model: { brand: {}, activeKey: '', pageTitle: '', user: null, groups: [] },
+    labels: { navigation: '主导航', profile: '个人资料', logout: '退出' },
+    showUser: true,
+    $slots: {},
+    $scopedSlots: { brand: () => ['brand'], user: () => ['user'] },
+    $emit() {}
+  }
+  const h = (tag, data, children) => ({ tag, data: data || {}, children: children || [] })
+  const vnode = UiAppShell.render.call(component, h)
+  assert.equal(vnode.children[2].data.attrs['aria-label'], '主导航')
+  assert.deepEqual(vnode.children[0].children[0].children, ['brand'])
+})
+
+test('shell marks overflowing mobile navigation and exposes a stable icon part', () => {
+  const items = Array.from({ length: 6 }, (_, index) => ({
+    key: `/item-${index}`,
+    label: `Item ${index}`,
+    mobileLabel: `I${index}`,
+    icon: `icon-${index}`
+  }))
+  const component = {
+    model: {
+      brand: {},
+      activeKey: '/item-0',
+      pageTitle: '',
+      user: null,
+      groups: [{ key: 'main', label: 'Main', items }]
+    },
+    labels: { navigation: '主导航', profile: '个人资料', logout: '退出' },
+    showUser: false,
+    $slots: {},
+    $scopedSlots: { icon: ({ name }) => [name] },
+    $emit() {}
+  }
+  const h = (tag, data, children) => ({
+    tag,
+    data: data || {},
+    children: children || []
+  })
+  const vnode = UiAppShell.render.call(component, h)
+  const mobileNav = vnode.children[2]
+  assert.equal(mobileNav.data.class[1]['is-scrollable'], true)
+  assert.equal(
+    mobileNav.children[0].children[0].data.class,
+    'tp-ui-shell__nav-icon'
+  )
 })
 
 test('shell source has no business framework imports', async () => {

@@ -42,7 +42,7 @@
     >
       <div class="section-head">
         {{ $t('kernel.inventory') }}
-        <liquid-button size="sm" style="float: right" @click="loadInventory">
+        <liquid-button size="sm" class="align-action-right" @click="loadInventory">
           {{ $t('kernel.refreshInventory') }}
         </liquid-button>
       </div>
@@ -68,7 +68,7 @@
     <ui-panel class="section" motion-key="managed-kernels">
       <div class="section-head">
         {{ $t('kernel.managedKernels') }}
-        <liquid-button size="sm" style="float: right" @click="loadReleases(true)">
+        <liquid-button size="sm" class="align-action-right" @click="loadReleases(true)">
           {{ $t('kernel.refreshReleases') }}
         </liquid-button>
       </div>

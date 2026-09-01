@@ -1,6 +1,8 @@
 import { cp, mkdir, rm } from 'node:fs/promises'
 import path from 'node:path'
+import { buildUiPackages } from './build-ui-packages.mjs'
 
+await buildUiPackages()
 const output = path.resolve('dist/ui-labs')
 await rm(output, { recursive: true, force: true })
 await mkdir(output, { recursive: true })

@@ -86,7 +86,7 @@
                   </button>
                 </div>
               </th>
-              <th style="text-align: right">操作</th>
+              <th class="table-actions">操作</th>
             </tr>
           </thead>
           <tbody>
@@ -109,7 +109,7 @@
                   >{{ row.grpcTlsMode || 'legacy' }}</span
                 >
               </td>
-              <td style="min-width: 190px">
+              <td class="server-actions-cell">
                 <span
                   v-if="
                     !row.trafficStatus || row.trafficStatus.period === 'none'

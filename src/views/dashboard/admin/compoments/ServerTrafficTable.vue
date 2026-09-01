@@ -28,7 +28,7 @@
         </button>
       </div>
     </div>
-    <liquid-table :data="rows" v-liquid-loading="loading" style="width: 100%">
+    <liquid-table :data="rows" v-liquid-loading="loading" class="full-width-table">
       <liquid-table-column
         prop="username"
         :label="$t('dashboard.username')"
