@@ -1,15 +1,18 @@
-const THEME_KEY = 'trojan-panel-color-scheme'
+import { PALETTES } from '@tp-ui/contracts'
+
 const PALETTE_KEY = 'trojan-panel-color-palette'
-export const COLOR_PALETTES = ['blue', 'violet', 'emerald', 'amber']
+export { PALETTES as COLOR_PALETTES }
 let runtime
 
 function normalizePalette(palette) {
-  return COLOR_PALETTES.includes(palette) ? palette : 'blue'
+  return PALETTES.includes(palette) ? palette : 'blue'
 }
 
 function notifyThemeChange(theme) {
   if (typeof window.CustomEvent !== 'function') return
-  window.dispatchEvent(new CustomEvent('trojan-theme-change', { detail: theme }))
+  window.dispatchEvent(
+    new CustomEvent('trojan-theme-change', { detail: theme })
+  )
 }
 
 export function getThemeState() {
@@ -18,7 +21,10 @@ export function getThemeState() {
     return { mode: state.resolvedMode, palette: state.palette }
   }
   return {
-    mode: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light',
+    mode:
+      document.documentElement.getAttribute('data-theme') === 'dark'
+        ? 'dark'
+        : 'light',
     palette: normalizePalette(
       document.documentElement.getAttribute('data-palette')
     )
@@ -51,14 +57,10 @@ export function getInitialTheme() {
     : 'light'
 }
 
-export function initializeTheme() {
-  localStorage.removeItem(THEME_KEY)
-  return getThemeState()
-}
-
 export function bindUiRuntime(uiRuntime) {
   runtime = uiRuntime
-  const publish = (state) => notifyThemeChange({ mode: state.resolvedMode, palette: state.palette })
+  const publish = (state) =>
+    notifyThemeChange({ mode: state.resolvedMode, palette: state.palette })
   runtime.theme.subscribe(publish)
   publish(runtime.theme.getState())
 }

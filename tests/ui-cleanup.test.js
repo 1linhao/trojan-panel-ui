@@ -557,12 +557,32 @@ test('production animation timings and overlay material have a single owner', ()
   }
   assert.doesNotMatch(read('src/utils/liquid-feedback.js'), /liquid-feedback-layer|liquid-message-box|setTimeout\([^\n]*180/)
   assert.doesNotMatch(read('src/utils/scroll-to.js'), /Math\.ease|requestAnimFrame/)
-  assert.match(read('src/styles/index.scss'), /@tp-ui\/material-frosted\/production.css/)
+  const styleEntry = read('src/styles/index.scss')
+  assert.doesNotMatch(styleEntry, /@import\b/)
+  for (const module of ['frosted-surfaces', 'buttons', 'icons', 'liquid-structural', 'prototype-runtime']) {
+    assert.match(styleEntry, new RegExp(`@use ['"]\\./${module}['"]`))
+  }
+  const main = read('src/main.js')
+  const styleLayers = [
+    '@tp-ui/contracts/base.css',
+    '@tp-ui/motion-native/motion.css',
+    '@tp-ui/components-vue2/geometry.css',
+    '@tp-ui/layout-app-shell-vue2/layout.css',
+    '@tp-ui/components-vue2/button-interactions.css',
+    '@tp-ui/material-frosted/production.css',
+    '@tp-ui/material-frosted/overlay.css',
+    '@/styles/index.scss'
+  ]
+  styleLayers.reduce((previous, layer) => {
+    const position = main.indexOf(`import '${layer}'`)
+    assert.ok(position > previous, `${layer} must keep the public style order`)
+    return position
+  }, -1)
   const composition = read('src/adapters/trojan-panel-ui-composition.js')
   assert.match(composition, /createUiRuntime\(/)
   assert.match(composition, /createFrostedMaterial\(/)
-  assert.match(read('src/main.js'), /installProductionUi\(Vue\)/)
-  assert.doesNotMatch(read('src/main.js'), /Vue\.component\(['"]Liquid|structuralComponents/)
+  assert.match(main, /installProductionUi\(Vue\)/)
+  assert.doesNotMatch(main, /Vue\.component\(['"]Liquid|structuralComponents/)
   assert.doesNotMatch(read('src/styles/icons.scss'), /prefers-reduced-motion/)
   assert.match(read('src/components/LiquidTag/index.vue'), /<button v-if="\$listeners.click"/)
   assert.match(read('src/components/LiquidTag/index.vue'), /@click.stop="\$emit\('close'/)
@@ -603,7 +623,13 @@ test('production composition uses package exports and a business-only shell adap
   const adapter = read('src/adapters/trojan-panel-shell.js')
   assert.match(adapter, /createShellModel\(/)
   assert.doesNotMatch(read('packages/ui-layout-app-shell-vue2/src/index.js'), /vuex|vue-router|@\/|sysadmin/)
-  assert.doesNotMatch(read('packages/ui-components-vue2/src/index.js'), /['"](?:glass|card|sheet)['"]/)
+  assert.doesNotMatch(
+    read('packages/ui-components-vue2/src/index.js'),
+    /classes:\s*\[[^\]]*['"](?:glass|card|sheet)['"]/
+  )
+  for (const file of sourceFiles('src').filter((name) => /\.(?:vue|scss|css)$/.test(name))) {
+    assert.doesNotMatch(read(file), /\.tp-ui-[a-z0-9_-]+/, file)
+  }
 })
 
 test('shell adapter preserves role filtering, mobile labels, branding, and profile navigation', () => {

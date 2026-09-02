@@ -1,8 +1,11 @@
-import { createUiRuntime } from '@tp-ui/contracts'
+import { PALETTES, createUiRuntime } from '@tp-ui/contracts'
 import { createVue2Components } from '@tp-ui/components-vue2'
 import { createAppShell } from '@tp-ui/layout-app-shell-vue2'
 import { createFrostedMaterial } from '@tp-ui/material-frosted'
-import { createNativeMotion, createMotionEnvironment } from '@tp-ui/motion-native'
+import {
+  createNativeMotion,
+  createMotionEnvironment
+} from '@tp-ui/motion-native'
 import { renderIcon } from '@tp-ui/icons'
 import { bindUiRuntime } from '@/utils/theme'
 import AppIcon from '@/components/AppIcon'
@@ -24,7 +27,6 @@ const lazyComponents = Object.freeze({
 
 const PALETTE_KEY = 'trojan-panel-color-palette'
 const LEGACY_THEME_KEY = 'trojan-panel-color-scheme'
-const PALETTES = ['blue', 'violet', 'emerald', 'amber']
 let productionRuntime
 
 function createThemeEnvironment(scope) {
@@ -59,17 +61,23 @@ export function installProductionUi(Vue, scope = window) {
     environment: createThemeEnvironment(scope)
   })
   bindUiRuntime(productionRuntime)
-  Vue.use(createVue2Components({
-    include: ['UiPanel', 'UiSheet', 'UiDialog'],
-    renderIcon,
-    dialogLabels: { close: '关闭对话框' }
-  }))
+  Vue.use(
+    createVue2Components({
+      include: ['UiPanel', 'UiSheet', 'UiDialog'],
+      renderIcon,
+      dialogLabels: { close: '关闭对话框' }
+    })
+  )
   Vue.use(createAppShell())
-  Object.entries(structuralComponents).forEach(([name, component]) => Vue.component(name, component))
+  Object.entries(structuralComponents).forEach(([name, component]) =>
+    Vue.component(name, component)
+  )
   Vue.component('AppIcon', AppIcon)
   Vue.component('LiquidInput', LiquidInput)
   Vue.component('LiquidButton', LiquidButton)
-  Object.entries(lazyComponents).forEach(([name, component]) => Vue.component(name, component))
+  Object.entries(lazyComponents).forEach(([name, component]) =>
+    Vue.component(name, component)
+  )
   Vue.directive('liquid-loading', LiquidLoading)
   Vue.prototype.$message = Message
   Vue.prototype.$confirm = MessageBox.confirm

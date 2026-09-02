@@ -1,12 +1,12 @@
 import { BUTTON_INTERACTION } from './button-interactions.js'
 import { acquireOverlay } from './overlay-stack.js'
 import {
-  validateDensity,
-  validateMotionRole,
-  validateSize,
-  validateState,
-  validateSurface,
-  validateTone
+  isDensity,
+  isMotionRole,
+  isSize,
+  isState,
+  isSurface,
+  isTone
 } from '@tp-ui/contracts'
 
 export {
@@ -34,10 +34,10 @@ function semanticData(component, overrides = {}) {
 export const PANEL_VARIANTS = Object.freeze(['auth', 'content', 'metric'])
 
 const sharedSurfaceProps = {
-  tone: { type: String, default: 'neutral', validator: validateTone },
-  density: { type: String, default: 'comfortable', validator: validateDensity },
-  state: { type: String, default: 'idle', validator: validateState },
-  motionRole: { type: String, default: 'panel', validator: validateMotionRole },
+  tone: { type: String, default: 'neutral', validator: isTone },
+  density: { type: String, default: 'comfortable', validator: isDensity },
+  state: { type: String, default: 'idle', validator: isState },
+  motionRole: { type: String, default: 'panel', validator: isMotionRole },
   motionKey: { type: String, default: '' }
 }
 
@@ -68,7 +68,10 @@ function surfaceData(context, { surface, classes }) {
     class: [classes, context.data.class],
     // Keep animation identity inert until the motion adapter opts into capture.
     // A permanent view-transition-name creates a backdrop root, isolating glass.
-    style: [context.data.style, name ? { '--ui-view-transition-name': name } : null]
+    style: [
+      context.data.style,
+      name ? { '--ui-view-transition-name': name } : null
+    ]
   }
 }
 
@@ -124,6 +127,7 @@ export const UiPanel = {
       surface: variant === 'auth' ? 'raised' : 'panel',
       classes: ['tp-ui-panel', `tp-ui-panel--${variant}`]
     })
+    data.attrs['data-ui-component'] = 'panel'
     data.attrs['data-ui-panel-variant'] = variant
     return h(tag, data, surfaceChildren(h, context, 'tp-ui-panel'))
   }
@@ -137,12 +141,14 @@ export const UiSheet = {
     tag: { type: String, default: 'aside' }
   },
   render(h, context) {
+    const data = surfaceData(context, {
+      surface: 'raised',
+      classes: ['tp-ui-sheet']
+    })
+    data.attrs['data-ui-component'] = 'sheet'
     return h(
       context.props.tag,
-      surfaceData(context, {
-        surface: 'raised',
-        classes: ['tp-ui-sheet']
-      }),
+      data,
       surfaceChildren(h, context, 'tp-ui-sheet')
     )
   }
@@ -167,8 +173,8 @@ export const UiDialog = {
     appendToBody: { type: Boolean, default: true },
     role: { type: String, default: 'dialog' },
     describedBy: String,
-    tone: { type: String, default: 'neutral', validator: validateTone },
-    motionRole: { type: String, default: 'overlay', validator: validateMotionRole },
+    tone: { type: String, default: 'neutral', validator: isTone },
+    motionRole: { type: String, default: 'overlay', validator: isMotionRole },
     motionKey: { type: String, default: '' }
   },
   watch: {
@@ -247,6 +253,7 @@ export const UiDialog = {
               'aria-labelledby': `ui-dialog-title-${this._uid}`,
               'aria-describedby': this.describedBy || null,
               'data-ui-surface': 'overlay',
+              'data-ui-component': 'dialog',
               'data-ui-tone': this.tone,
               'data-ui-part': 'surface'
             }
@@ -261,7 +268,10 @@ export const UiDialog = {
               [
                 h(
                   'span',
-                  { class: 'tp-ui-dialog__title', attrs: { id: `ui-dialog-title-${this._uid}` } },
+                  {
+                    class: 'tp-ui-dialog__title',
+                    attrs: { id: `ui-dialog-title-${this._uid}` }
+                  },
                   [String(this.title == null ? '' : this.title)]
                 ),
                 this.showClose
@@ -269,10 +279,18 @@ export const UiDialog = {
                       'button',
                       {
                         class: 'tp-ui-dialog__close',
-                        attrs: { type: 'button', 'aria-label': this.labels.close, 'data-ui-part': 'close-action' },
+                        attrs: {
+                          type: 'button',
+                          'aria-label': this.labels.close,
+                          'data-ui-part': 'close-action'
+                        },
                         on: { click: this.close }
                       },
-                      [this.renderIcon ? this.renderIcon(h, 'close') : this.labels.close]
+                      [
+                        this.renderIcon
+                          ? this.renderIcon(h, 'close')
+                          : this.labels.close
+                      ]
                     )
                   : null
               ]
@@ -306,9 +324,9 @@ export const UiButton = {
   name: 'UiButton',
   inheritAttrs: false,
   props: {
-    tone: { type: String, default: 'neutral', validator: validateTone },
-    surface: { type: String, default: 'control', validator: validateSurface },
-    size: { type: String, default: 'md', validator: validateSize },
+    tone: { type: String, default: 'neutral', validator: isTone },
+    surface: { type: String, default: 'control', validator: isSurface },
+    size: { type: String, default: 'md', validator: isSize },
     disabled: Boolean,
     loading: Boolean,
     type: { type: String, default: 'button' }
@@ -347,8 +365,8 @@ export const UiInput = {
   inheritAttrs: false,
   props: {
     value: { type: [String, Number], default: '' },
-    tone: { type: String, default: 'neutral', validator: validateTone },
-    size: { type: String, default: 'md', validator: validateSize },
+    tone: { type: String, default: 'neutral', validator: isTone },
+    size: { type: String, default: 'md', validator: isSize },
     disabled: Boolean,
     invalid: Boolean
   },
@@ -390,13 +408,23 @@ export function createVue2Components({
     install(Vue) {
       include.forEach((name) => {
         const component = COMPONENTS[name]
-        Vue.component(name, name === 'UiDialog' && (renderIcon || dialogLabels)
-          ? { ...component, props: {
-            ...component.props,
-            ...(renderIcon ? { renderIcon: { type: Function, default: renderIcon } } : {}),
-            ...(dialogLabels ? { labels: { type: Object, default: () => dialogLabels } } : {})
-          } }
-          : component)
+        Vue.component(
+          name,
+          name === 'UiDialog' && (renderIcon || dialogLabels)
+            ? {
+                ...component,
+                props: {
+                  ...component.props,
+                  ...(renderIcon
+                    ? { renderIcon: { type: Function, default: renderIcon } }
+                    : {}),
+                  ...(dialogLabels
+                    ? { labels: { type: Object, default: () => dialogLabels } }
+                    : {})
+                }
+              }
+            : component
+        )
       })
     }
   })

@@ -1,5 +1,7 @@
 /* eslint-env browser, es2021 */
 
+import { PALETTES } from '@tp-ui/contracts'
+
 const THEME_COLORS = Object.freeze({
   light: Object.freeze({
     blue: '#0a7cff',
@@ -57,7 +59,7 @@ export function createFrostedMaterial({ root, document: documentTarget } = {}) {
             supports?.('-webkit-backdrop-filter', 'blur(1px)')
         ),
         colorScheme: true,
-        palettes: Object.freeze(['blue', 'violet', 'emerald', 'amber']),
+        palettes: PALETTES,
         modes: Object.freeze(['light', 'dark'])
       })
     }

@@ -2,9 +2,11 @@
    to keep the application appearance unchanged during resource migration. */
 :root[data-ui-material='frosted'] {
   --ui-canvas-bg: transparent;
-  --ui-surface-bg: linear-gradient(150deg, var(--spec-soft), transparent 46%), var(--panel-surface);
+  --ui-surface-bg: linear-gradient(150deg, var(--spec-soft), transparent 46%),
+    var(--panel-surface);
   --ui-surface-border: var(--rim);
-  --ui-surface-shadow: var(--shadow-soft), inset 0 1px 0 var(--spec), inset 0 -1px 0 var(--spec-soft);
+  --ui-surface-shadow: var(--shadow-soft), inset 0 1px 0 var(--spec),
+    inset 0 -1px 0 var(--spec-soft);
   --ui-surface-backdrop: var(--ui-backdrop-surface);
   --ui-ink: var(--ink);
   --ui-ink-muted: var(--ink-2);
@@ -56,22 +58,33 @@
   --ui-backdrop-surface: blur(30px) saturate(180%);
   --ui-ambient-blur-soft: blur(70px);
   --ui-ambient-blur-strong: blur(90px);
-  --ui-button-interaction-shadow: var(--shadow-soft), inset 0 1px 0 var(--spec-soft);
-  --ui-navigation-bg: linear-gradient(150deg, var(--spec-soft), transparent 42%), color-mix(in srgb, var(--glass) 28%, transparent);
+  --ui-button-interaction-shadow: var(--shadow-soft),
+    inset 0 1px 0 var(--spec-soft);
+  --ui-navigation-bg: linear-gradient(150deg, var(--spec-soft), transparent 42%),
+    color-mix(in srgb, var(--glass) 28%, transparent);
   --ui-navigation-border: var(--rim);
-  --ui-navigation-shadow: var(--shadow-soft), inset 0 1px 0 var(--spec), inset 0 -1px 0 var(--spec-soft);
+  --ui-navigation-shadow: var(--shadow-soft), inset 0 1px 0 var(--spec),
+    inset 0 -1px 0 var(--spec-soft);
   --ui-navigation-backdrop: var(--ui-backdrop-secondary);
   --ui-navigation-item-hover-bg: var(--glass-soft);
-  --ui-navigation-item-selected-bg: linear-gradient(150deg, var(--spec-soft), transparent 50%), color-mix(in srgb, var(--accent) 15%, transparent);
+  --ui-navigation-item-selected-bg: linear-gradient(
+      150deg,
+      var(--spec-soft),
+      transparent 50%
+    ),
+    color-mix(in srgb, var(--accent) 15%, transparent);
   --ui-navigation-item-selected-ink: var(--accent-deep);
   --ui-navigation-item-selected-shadow: inset 0 1px 0 var(--spec-soft);
   --ui-navigation-mobile-bg: var(--glass-soft);
   --ui-navigation-mobile-backdrop: var(--ui-backdrop-soft);
   --ui-navigation-mobile-selected-bg: var(--glass-strong);
+  --ui-navigation-mobile-selected-shadow: inset 0 1px 0 var(--ui-surface-border),
+    0 4px 12px -6px var(--ui-control-strong-shadow-ink);
 }
 
 :root[data-ui-material='frosted'] [data-ui-surface='raised'] {
-  --ui-surface-shadow: var(--shadow), inset 0 1px 0 var(--spec), inset 0 -1px 0 var(--spec-soft);
+  --ui-surface-shadow: var(--shadow), inset 0 1px 0 var(--spec),
+    inset 0 -1px 0 var(--spec-soft);
 }
 
 :root[data-ui-material='frosted'][data-theme='light'] {

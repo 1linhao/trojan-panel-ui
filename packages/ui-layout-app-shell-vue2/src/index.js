@@ -39,7 +39,11 @@ export const UiAppShell = {
     showUser: { type: Boolean, default: true },
     labels: {
       type: Object,
-      default: () => ({ navigation: 'Application navigation', profile: 'Profile', logout: 'Log out' })
+      default: () => ({
+        navigation: 'Application navigation',
+        profile: 'Profile',
+        logout: 'Log out'
+      })
     }
   },
   mounted() {
@@ -49,7 +53,10 @@ export const UiAppShell = {
     this.revealActiveMobileItem()
   },
   beforeDestroy() {
-    this.shellResizeView?.removeEventListener?.('resize', this.shellResizeHandler)
+    this.shellResizeView?.removeEventListener?.(
+      'resize',
+      this.shellResizeHandler
+    )
   },
   updated() {
     this.revealActiveMobileItem()
@@ -60,8 +67,10 @@ export const UiAppShell = {
       const activeItem = nav?.querySelector?.('.is-active')
       if (!activeItem || nav.scrollWidth <= nav.clientWidth) return
       nav.scrollTo({
-        left: Math.max(0, activeItem.offsetLeft - (nav.clientWidth - activeItem.offsetWidth) / 2),
-        behavior: 'smooth'
+        left: Math.max(
+          0,
+          activeItem.offsetLeft - (nav.clientWidth - activeItem.offsetWidth) / 2
+        )
       })
     }
   },
@@ -71,7 +80,11 @@ export const UiAppShell = {
       'div',
       {
         class: 'tp-ui-shell',
-        attrs: { 'data-ui-surface': 'canvas', 'data-ui-density': 'comfortable' }
+        attrs: {
+          'data-ui-component': 'app-shell',
+          'data-ui-surface': 'canvas',
+          'data-ui-density': 'comfortable'
+        }
       },
       [
         h(
@@ -91,17 +104,19 @@ export const UiAppShell = {
                 attrs: { type: 'button' },
                 on: { click: () => this.$emit('action', 'brand') }
               },
-              this.$scopedSlots.brand ? this.$scopedSlots.brand({ brand: this.model.brand }) : [
-                h(
-                  'span',
-                  { class: 'tp-ui-shell__brand-mark' },
-                  this.model.brand.mark
-                ),
-                h('span', [
-                  h('strong', this.model.brand.name),
-                  h('small', this.model.brand.subtitle)
-                ])
-              ]
+              this.$scopedSlots.brand
+                ? this.$scopedSlots.brand({ brand: this.model.brand })
+                : [
+                    h(
+                      'span',
+                      { class: 'tp-ui-shell__brand-mark' },
+                      this.model.brand.mark
+                    ),
+                    h('span', [
+                      h('strong', this.model.brand.name),
+                      h('small', this.model.brand.subtitle)
+                    ])
+                  ]
             ),
             ...this.model.groups.flatMap((group) => [
               h(
@@ -131,7 +146,10 @@ export const UiAppShell = {
                       'button',
                       {
                         class: 'tp-ui-shell__user',
-                        attrs: { type: 'button', 'aria-label': this.labels.logout },
+                        attrs: {
+                          type: 'button',
+                          'aria-label': this.labels.logout
+                        },
                         on: { click: () => this.$emit('logout') }
                       },
                       this.model.user.label || this.model.user.name || ''

@@ -36,6 +36,44 @@ export const MOTION_ROLES = Object.freeze([
   'overlay'
 ])
 
+export const MATERIAL_CUSTOM_PROPERTIES = Object.freeze([
+  '--ui-canvas-bg',
+  '--ui-surface-bg',
+  '--ui-surface-border',
+  '--ui-surface-shadow',
+  '--ui-surface-backdrop',
+  '--ui-ink',
+  '--ui-ink-muted',
+  '--ui-accent',
+  '--ui-on-accent',
+  '--ui-focus-ring',
+  '--ui-control-bg',
+  '--ui-control-border',
+  '--ui-button-interaction-shadow',
+  '--ui-dialog-bg',
+  '--ui-dialog-border',
+  '--ui-dialog-control-bg',
+  '--ui-dialog-control-border',
+  '--ui-dialog-divider',
+  '--ui-dialog-ink',
+  '--ui-dialog-material-backdrop',
+  '--ui-dialog-shadow',
+  '--ui-navigation-backdrop',
+  '--ui-navigation-bg',
+  '--ui-navigation-border',
+  '--ui-navigation-item-hover-bg',
+  '--ui-navigation-item-selected-bg',
+  '--ui-navigation-item-selected-ink',
+  '--ui-navigation-item-selected-shadow',
+  '--ui-navigation-mobile-backdrop',
+  '--ui-navigation-mobile-bg',
+  '--ui-navigation-mobile-selected-bg',
+  '--ui-navigation-mobile-selected-shadow',
+  '--ui-navigation-shadow',
+  '--ui-overlay-backdrop-bg',
+  '--ui-overlay-material-backdrop'
+])
+
 export const UI_CUSTOM_PROPERTIES = Object.freeze([
   '--ui-canvas-bg',
   '--ui-surface-bg',
@@ -87,6 +125,7 @@ export const UI_CUSTOM_PROPERTIES = Object.freeze([
   '--ui-motion-easing-emphasized',
   '--ui-motion-distance-sm',
   '--ui-motion-distance-md',
+  '--ui-motion-scroll-behavior',
   '--ui-motion-spin',
   '--ui-motion-ambient',
   '--ui-navigation-backdrop',
@@ -99,6 +138,7 @@ export const UI_CUSTOM_PROPERTIES = Object.freeze([
   '--ui-navigation-mobile-backdrop',
   '--ui-navigation-mobile-bg',
   '--ui-navigation-mobile-selected-bg',
+  '--ui-navigation-mobile-selected-shadow',
   '--ui-navigation-shadow',
   '--ui-overlay-backdrop-bg',
   '--ui-overlay-backdrop-filter',
@@ -154,6 +194,13 @@ export const validateDensity = (value) =>
 export const validateState = (value) => assertEnumValue('state', value, STATES)
 export const validateMotionRole = (value) =>
   assertEnumValue('motion role', value, MOTION_ROLES)
+
+export const isSurface = (value) => SURFACES.includes(value)
+export const isTone = (value) => TONES.includes(value)
+export const isSize = (value) => SIZES.includes(value)
+export const isDensity = (value) => DENSITIES.includes(value)
+export const isState = (value) => STATES.includes(value)
+export const isMotionRole = (value) => MOTION_ROLES.includes(value)
 
 function deepFreeze(value) {
   if (!value || typeof value !== 'object' || Object.isFrozen(value))

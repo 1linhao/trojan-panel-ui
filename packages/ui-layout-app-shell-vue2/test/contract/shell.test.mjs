@@ -28,7 +28,11 @@ test('shell emits navigation intent without router knowledge', () => {
     },
     $slots: {},
     $scopedSlots: {},
-    labels: { navigation: 'Primary navigation', profile: 'Profile', logout: 'Log out' },
+    labels: {
+      navigation: 'Primary navigation',
+      profile: 'Profile',
+      logout: 'Log out'
+    },
     showUser: true,
     $emit: (...args) => emitted.push(args)
   }
@@ -56,7 +60,11 @@ test('shell accessibility labels and business content are injectable', () => {
     $scopedSlots: { brand: () => ['brand'], user: () => ['user'] },
     $emit() {}
   }
-  const h = (tag, data, children) => ({ tag, data: data || {}, children: children || [] })
+  const h = (tag, data, children) => ({
+    tag,
+    data: data || {},
+    children: children || []
+  })
   const vnode = UiAppShell.render.call(component, h)
   assert.equal(vnode.children[2].data.attrs['aria-label'], '主导航')
   assert.deepEqual(vnode.children[0].children[0].children, ['brand'])
@@ -89,12 +97,40 @@ test('shell marks overflowing mobile navigation and exposes a stable icon part',
     children: children || []
   })
   const vnode = UiAppShell.render.call(component, h)
+  assert.equal(vnode.data.attrs['data-ui-component'], 'app-shell')
   const mobileNav = vnode.children[2]
   assert.equal(mobileNav.data.class[1]['is-scrollable'], true)
   assert.equal(
     mobileNav.children[0].children[0].data.class,
     'tp-ui-shell__nav-icon'
   )
+})
+
+test('shell delegates smooth scrolling to the public motion token', async () => {
+  let options
+  const nav = {
+    scrollWidth: 500,
+    clientWidth: 200,
+    querySelector: () => ({ offsetLeft: 300, offsetWidth: 60 }),
+    scrollTo: (value) => {
+      options = value
+    }
+  }
+  UiAppShell.methods.revealActiveMobileItem.call({ $refs: { mobileNav: nav } })
+  assert.deepEqual(options, { left: 230 })
+  assert.equal('behavior' in options, false)
+
+  const [source, css] = await Promise.all([
+    import('node:fs/promises').then(({ readFile }) =>
+      readFile(new URL('../../src/index.js', import.meta.url), 'utf8')
+    ),
+    import('node:fs/promises').then(({ readFile }) =>
+      readFile(new URL('../../src/layout.css', import.meta.url), 'utf8')
+    )
+  ])
+  assert.doesNotMatch(source, /behavior:\s*['"]smooth['"]/)
+  assert.match(css, /scroll-behavior: var\(--ui-motion-scroll-behavior, auto\)/)
+  assert.match(css, /box-shadow: var\(--ui-navigation-mobile-selected-shadow\)/)
 })
 
 test('shell source has no business framework imports', async () => {

@@ -1,5 +1,7 @@
 /* eslint-env browser, es2021 */
 
+import { PALETTES } from '@tp-ui/contracts'
+
 export function createFlatTestMaterial({ root } = {}) {
   const target = root || globalThis.document?.documentElement
   return Object.freeze({
@@ -15,7 +17,7 @@ export function createFlatTestMaterial({ root } = {}) {
       return Object.freeze({
         backdropFilter: false,
         colorScheme: true,
-        palettes: Object.freeze(['blue', 'violet', 'emerald', 'amber']),
+        palettes: PALETTES,
         modes: Object.freeze(['light', 'dark'])
       })
     }

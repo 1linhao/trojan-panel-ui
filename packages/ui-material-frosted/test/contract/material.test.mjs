@@ -1,6 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFile } from 'node:fs/promises'
+import { MATERIAL_CUSTOM_PROPERTIES } from '@tp-ui/contracts'
 import { createFrostedMaterial } from '../../src/index.js'
 
 test('applies material through stable root attributes', () => {
@@ -25,6 +26,19 @@ test('applies material through stable root attributes', () => {
     'emerald',
     'amber'
   ])
+})
+
+test('frosted package explicitly implements every public material property', async () => {
+  const css = (
+    await Promise.all(
+      ['material.css', 'production.css', 'overlay.css'].map((file) =>
+        readFile(new URL(`../../src/${file}`, import.meta.url), 'utf8')
+      )
+    )
+  ).join('\n')
+  for (const property of MATERIAL_CUSTOM_PROPERTIES) {
+    assert.match(css, new RegExp(`${property}\\s*:`), property)
+  }
 })
 
 test('defines required material tokens, modes, palettes, surfaces, and fallback', async () => {
@@ -63,12 +77,20 @@ test('defines required material tokens, modes, palettes, surfaces, and fallback'
   assert.doesNotMatch(css, /#app|\.prototype-|\.dashboard-|\.account-/)
 })
 test('overlay material is opt-in and cannot leak glass into flat mode', async () => {
-  const css = await readFile(new URL('../../src/overlay.css', import.meta.url), 'utf8')
-  const rules = [...css.replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/([^{}]+)\{([^{}]+)\}/g)]
+  const css = await readFile(
+    new URL('../../src/overlay.css', import.meta.url),
+    'utf8'
+  )
+  const rules = [
+    ...css.replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/([^{}]+)\{([^{}]+)\}/g)
+  ]
   assert.equal(rules.length, 2)
   for (const [, selector, declarations] of rules) {
     assert.match(selector.trim(), /^:root\[data-ui-material='frosted'\]/)
-    for (const declaration of declarations.split(';').map((part) => part.trim()).filter(Boolean)) {
+    for (const declaration of declarations
+      .split(';')
+      .map((part) => part.trim())
+      .filter(Boolean)) {
       assert.match(declaration, /^--ui-/)
     }
   }

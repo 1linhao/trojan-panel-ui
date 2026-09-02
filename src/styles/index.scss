@@ -1,15 +1,8 @@
-@import '@tp-ui/contracts/base.css';
-@import '@tp-ui/motion-native/motion.css';
-@import '@tp-ui/components-vue2/geometry.css';
-@import '@tp-ui/layout-app-shell-vue2/layout.css';
-@import '@tp-ui/components-vue2/button-interactions.css';
-@import '@tp-ui/material-frosted/production.css';
-@import '@tp-ui/material-frosted/overlay.css';
-@import './frosted-surfaces.scss';
-@import './buttons.scss';
-@import './icons.scss';
-@import './liquid-structural.scss';
-@import './prototype-runtime.scss';
+@use './frosted-surfaces';
+@use './buttons';
+@use './icons';
+@use './liquid-structural';
+@use './prototype-runtime';
 
 body {
   height: 100%;

@@ -39,6 +39,26 @@ test('selective plugin defaults to an empty registration set', () => {
   assert.deepEqual(names, [])
 })
 
+test('Vue prop validators return booleans for valid and invalid public values', () => {
+  for (const [component, props] of [
+    [UiPanel, ['tone', 'density', 'state', 'motionRole']],
+    [UiDialog, ['tone', 'motionRole']],
+    [UiButton, ['tone', 'surface', 'size']],
+    [UiInput, ['tone', 'size']]
+  ]) {
+    for (const prop of props) {
+      assert.equal(
+        component.props[prop].validator(component.props[prop].default),
+        true
+      )
+      assert.equal(
+        component.props[prop].validator('not-a-contract-value'),
+        false
+      )
+    }
+  }
+})
+
 test('panel variants expose stable anatomy and motion identity', () => {
   const vnode = UiPanel.render(
     (tag, data, children) => ({ tag, data, children }),
@@ -58,6 +78,7 @@ test('panel variants expose stable anatomy and motion identity', () => {
   )
   assert.equal(vnode.tag, 'section')
   assert.equal(vnode.data.attrs['data-ui-panel-variant'], 'auth')
+  assert.equal(vnode.data.attrs['data-ui-component'], 'panel')
   assert.equal(vnode.data.attrs['data-ui-motion-role'], 'shared')
   assert.equal(vnode.data.attrs['data-ui-motion-key'], 'auth-primary')
   assert.deepEqual(vnode.data.style[1], {
@@ -85,14 +106,23 @@ test('sheet uses the raised surface recipe', () => {
     }
   )
   assert.equal(vnode.data.attrs['data-ui-surface'], 'raised')
-  assert.deepEqual(vnode.data.style[1], { '--ui-view-transition-name': 'ui-node-1' })
+  assert.equal(vnode.data.attrs['data-ui-component'], 'sheet')
+  assert.deepEqual(vnode.data.style[1], {
+    '--ui-view-transition-name': 'ui-node-1'
+  })
   assert.equal(vnode.children[1].data.attrs['data-ui-part'], 'body')
 })
 
 test('capture is opt-in and mobile dialog geometry stays centered', async () => {
-  const css = await readFile(new URL('../../src/geometry.css', import.meta.url), 'utf8')
+  const css = await readFile(
+    new URL('../../src/geometry.css', import.meta.url),
+    'utf8'
+  )
   assert.match(css, /\[data-ui-view-transitions='active'\] \.tp-ui-panel/)
-  assert.match(css, /view-transition-name: var\(--ui-view-transition-name, none\)/)
+  assert.match(
+    css,
+    /view-transition-name: var\(--ui-view-transition-name, none\)/
+  )
   const mobile = css.slice(css.indexOf('@media (max-width: 760px)'))
   assert.match(css, /\.tp-ui-dialog-layer\s*{[^}]*place-items: center;/)
   assert.doesNotMatch(mobile, /place-items: end|align-items: flex-end/)
@@ -123,11 +153,18 @@ test('dialog exposes overlay anatomy and close events', () => {
   )
   const surface = vnode.children[0]
   assert.equal(surface.data.attrs['data-ui-surface'], 'overlay')
+  assert.equal(surface.data.attrs['data-ui-component'], 'dialog')
   assert.equal(surface.data.style['--ui-view-transition-name'], 'ui-edit-node')
   assert.equal(surface.data.style.viewTransitionName, undefined)
   assert.equal(surface.children[1].data.attrs['data-ui-part'], 'body')
-  assert.equal(surface.children[0].children[1].children[0].data.attrs['data-icon'], 'close')
-  assert.equal(surface.children[0].children[1].data.attrs['aria-label'], '关闭对话框')
+  assert.equal(
+    surface.children[0].children[1].children[0].data.attrs['data-icon'],
+    'close'
+  )
+  assert.equal(
+    surface.children[0].children[1].data.attrs['aria-label'],
+    '关闭对话框'
+  )
   surface.children[0].children[1].data.on.click()
   assert.deepEqual(emitted, ['close'])
 })
@@ -135,8 +172,13 @@ test('dialog exposes overlay anatomy and close events', () => {
 test('composition root can supply one icon renderer without a package dependency', () => {
   const renderIcon = () => {}
   const registered = {}
-  createVue2Components({ include: ['UiDialog', 'UiPanel'], renderIcon }).install({
-    component: (name, component) => { registered[name] = component }
+  createVue2Components({
+    include: ['UiDialog', 'UiPanel'],
+    renderIcon
+  }).install({
+    component: (name, component) => {
+      registered[name] = component
+    }
   })
   assert.equal(registered.UiDialog.props.renderIcon.default, renderIcon)
   assert.equal(registered.UiPanel, UiPanel)
@@ -145,10 +187,17 @@ test('composition root can supply one icon renderer without a package dependency
 
 test('composition root can inject localized dialog accessibility labels', () => {
   const registered = {}
-  createVue2Components({ include: ['UiDialog'], dialogLabels: { close: '关闭对话框' } }).install({
-    component: (name, component) => { registered[name] = component }
+  createVue2Components({
+    include: ['UiDialog'],
+    dialogLabels: { close: '关闭对话框' }
+  }).install({
+    component: (name, component) => {
+      registered[name] = component
+    }
   })
-  assert.deepEqual(registered.UiDialog.props.labels.default(), { close: '关闭对话框' })
+  assert.deepEqual(registered.UiDialog.props.labels.default(), {
+    close: '关闭对话框'
+  })
   assert.deepEqual(UiDialog.props.labels.default(), { close: 'Close dialog' })
 })
 
@@ -300,8 +349,7 @@ test('shared button CSS matches the navigation hover interaction contract', asyn
   const movesHitTargetUp =
     /--ui-button-hover-lift:\s*-\d/.test(css) &&
     /transform:\s*translateY\(var\(--ui-button-hover-lift\)\)/.test(css)
-  const preservesRestingHitArea =
-    /data-ui-hovered/.test(css)
+  const preservesRestingHitArea = /data-ui-hovered/.test(css)
   assert.equal(
     movesHitTargetUp && !preservesRestingHitArea,
     false,

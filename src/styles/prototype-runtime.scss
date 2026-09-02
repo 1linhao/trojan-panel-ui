@@ -28,7 +28,6 @@
   --spring: var(--ui-motion-easing-emphasized);
 }
 
-
 /* ---------- 基础 ---------- */
 
 * {
@@ -292,7 +291,7 @@ h3 {
   background-clip: padding-box;
 }
 
-.tp-ui-panel--content {
+[data-ui-panel-variant='content'] {
   padding: 22px;
 }
 
@@ -346,7 +345,8 @@ h3 {
   background: var(--glass);
   -webkit-backdrop-filter: var(--ui-backdrop-raised);
   backdrop-filter: var(--ui-backdrop-raised);
-  box-shadow: inset 0 1px 0 var(--spec), 0 6px 20px -10px var(--ui-control-shadow-ink);
+  box-shadow: inset 0 1px 0 var(--spec),
+    0 6px 20px -10px var(--ui-control-shadow-ink);
   font-weight: 600;
   white-space: nowrap;
 }
@@ -358,11 +358,7 @@ h3 {
 .cap.primary {
   border-color: color-mix(in srgb, var(--accent) 45%, var(--rim));
   color: var(--ui-opaque-white);
-  background: linear-gradient(
-      160deg,
-      var(--ui-primary-glint),
-      transparent 50%
-    ),
+  background: linear-gradient(160deg, var(--ui-primary-glint), transparent 50%),
     color-mix(in srgb, var(--accent) 86%, transparent);
   box-shadow: inset 0 1px 0 var(--ui-primary-rim),
     0 10px 26px -10px color-mix(in srgb, var(--accent) 70%, transparent);
@@ -446,7 +442,8 @@ h3 {
 .seg button.on {
   color: var(--ink);
   background: var(--glass-strong);
-  box-shadow: inset 0 1px 0 var(--spec), 0 4px 12px -6px var(--ui-control-strong-shadow-ink);
+  box-shadow: inset 0 1px 0 var(--spec),
+    0 4px 12px -6px var(--ui-control-strong-shadow-ink);
 }
 
 .seg button:hover:not(.on) {
@@ -565,8 +562,8 @@ h3 {
 
 /* backdrop-filter 让每张玻璃卡都成为层叠上下文，展开菜单时提升所在容器，
    避免被后续兄弟卡片盖住 */
-.tp-ui-panel:has(.dd.open),
-.tp-ui-sheet:has(.dd.open) {
+[data-ui-component='panel']:has(.dd.open),
+[data-ui-component='sheet']:has(.dd.open) {
   z-index: 70;
 }
 
@@ -962,11 +959,7 @@ h3 {
   height: 42px;
   border-radius: 14px;
   color: var(--on-accent);
-  background: linear-gradient(
-      155deg,
-      var(--ui-metric-glint),
-      transparent 55%
-    ),
+  background: linear-gradient(155deg, var(--ui-metric-glint), transparent 55%),
     linear-gradient(135deg, var(--accent), var(--accent-deep));
   box-shadow: inset 0 1px 0 var(--spec),
     0 8px 20px -8px color-mix(in srgb, var(--accent) 64%, transparent);
@@ -1324,7 +1317,7 @@ h3 {
 }
 
 /* 详情抽屉（页内展开的玻璃薄片） */
-.tp-ui-sheet {
+[data-ui-component='sheet'] {
   padding: 20px 22px;
   border-radius: var(--r-lg);
 }
@@ -1430,7 +1423,7 @@ h3 {
   overflow-x: hidden;
 }
 
-.tp-ui-panel--auth {
+[data-ui-panel-variant='auth'] {
   width: min(420px, 100%);
   max-width: 100%;
   padding: 34px 30px 26px;
@@ -1663,7 +1656,7 @@ h3 {
     0 1px 1px color-mix(in srgb, currentColor 18%, transparent)
   );
 }
-.tp-ui-shell .liquid-theme-toggle {
+[data-ui-component='app-shell'] .liquid-theme-toggle {
   flex: 0 0 auto;
 }
 .prototype-page {
@@ -1671,8 +1664,8 @@ h3 {
   gap: 16px;
   min-width: 0;
 }
-.prototype-page > .tp-ui-panel,
-.prototype-page > .tp-ui-sheet {
+.prototype-page > [data-ui-component='panel'],
+.prototype-page > [data-ui-component='sheet'] {
   min-width: 0;
 }
 .password-field {
@@ -1818,7 +1811,7 @@ h3 {
 }
 
 .dashboard-detail-grid,
-.dashboard-detail-grid > .tp-ui-panel,
+.dashboard-detail-grid > [data-ui-component='panel'],
 .dashboard-table-block .liquid-table,
 .dashboard-table-block .liquid-table__scroll {
   min-width: 0;
@@ -1841,7 +1834,7 @@ h3 {
 /* ---------- 统一的原生 Liquid 控件层 ---------- */
 
 #app .liquid-form-item__label,
-.tp-ui-dialog .liquid-form-item__label {
+[data-ui-component='dialog'] .liquid-form-item__label {
   color: var(--form-label-ink);
   font-size: 12px;
   font-weight: 650;
@@ -1862,16 +1855,16 @@ h3 {
 }
 
 #app .liquid-form-item,
-.tp-ui-dialog .liquid-form-item {
+[data-ui-component='dialog'] .liquid-form-item {
   margin-bottom: 18px;
 }
 
 #app .liquid-select,
 #app .liquid-date-picker,
 #app .liquid-number-input,
-.tp-ui-dialog .liquid-select,
-.tp-ui-dialog .liquid-date-picker,
-.tp-ui-dialog .liquid-number-input {
+[data-ui-component='dialog'] .liquid-select,
+[data-ui-component='dialog'] .liquid-date-picker,
+[data-ui-component='dialog'] .liquid-number-input {
   width: min(100%, var(--control-max-width));
   max-width: var(--control-max-width);
 }
@@ -1933,8 +1926,8 @@ h3 {
   background: var(--hairline);
 }
 
-.tp-ui-dialog input::placeholder,
-.tp-ui-dialog textarea::placeholder {
+[data-ui-component='dialog'] input::placeholder,
+[data-ui-component='dialog'] textarea::placeholder {
   color: var(--ink-3);
   font-size: 13px;
   font-weight: 500;
@@ -2015,7 +2008,9 @@ h3 {
 }
 
 @keyframes liquid-loading-rotate {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 .traffic-label {
   display: flex;
@@ -2080,7 +2075,7 @@ h3 {
     padding-right: 10px;
     padding-left: 10px;
   }
-  .tp-ui-panel--auth {
+  [data-ui-panel-variant='auth'] {
     width: min(420px, calc(100vw - 20px));
     padding: 28px 20px 22px;
   }
@@ -2110,8 +2105,8 @@ h3 {
     height: 30px;
     min-width: 30px;
   }
-  .tp-ui-panel--content,
-  .tp-ui-sheet {
+  [data-ui-panel-variant='content'],
+  [data-ui-component='sheet'] {
     padding: 18px;
   }
   .toolbar .spacer {

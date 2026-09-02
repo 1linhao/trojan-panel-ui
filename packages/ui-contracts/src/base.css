@@ -34,6 +34,7 @@
   --ui-motion-easing-emphasized: ease;
   --ui-motion-distance-sm: 0.25rem;
   --ui-motion-distance-md: 0.75rem;
+  --ui-motion-scroll-behavior: auto;
   --ui-navigation-bg: var(--ui-surface-bg);
   --ui-navigation-border: var(--ui-surface-border);
   --ui-navigation-shadow: var(--ui-surface-shadow);
@@ -45,6 +46,9 @@
   --ui-navigation-mobile-bg: var(--ui-navigation-bg);
   --ui-navigation-mobile-backdrop: var(--ui-navigation-backdrop);
   --ui-navigation-mobile-selected-bg: var(--ui-navigation-item-selected-bg);
+  --ui-navigation-mobile-selected-shadow: var(
+    --ui-navigation-item-selected-shadow
+  );
   --ui-overlay-backdrop-filter: var(--ui-overlay-material-backdrop, none);
   --ui-overlay-z: 2000;
   --ui-view-transition-name: none;
