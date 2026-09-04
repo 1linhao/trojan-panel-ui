@@ -52,6 +52,7 @@ export default defineConfig(({ mode }) => {
       outDir: 'dist',
       assetsDir: 'static',
       sourcemap: false,
+      cssCodeSplit: false,
       rollupOptions: {
         output: {
           manualChunks(id) {

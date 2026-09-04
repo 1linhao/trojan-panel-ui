@@ -38,6 +38,10 @@ const captchaSvg =
     '<svg xmlns="http://www.w3.org/2000/svg" width="236" height="84" viewBox="0 0 236 84"><path d="M4 62C42 7 76 79 118 28s74 39 114-6" fill="none" stroke="#0a7cff" stroke-opacity=".28" stroke-width="3"/><path d="M8 24l218 42M18 72L216 14" stroke="#8d56d9" stroke-opacity=".2" stroke-width="2"/><text x="118" y="57" text-anchor="middle" font-family="ui-monospace,monospace" font-size="39" font-weight="700" font-style="italic" letter-spacing="10" fill="#1767ba">K7M4</text></svg>'
   )
 
+const logoSvg = Buffer.from(
+  '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><rect width="64" height="64" rx="18" fill="#1767ba"/><text x="32" y="39" text-anchor="middle" font-family="Arial,sans-serif" font-size="22" font-weight="700" fill="white">TP</text></svg>'
+)
+
 const node = {
   id: 1,
   nodeServerId: 1,
@@ -152,6 +156,12 @@ const server = http.createServer((req, res) => {
     'http://localhost:'
   )
   res.setHeader('Access-Control-Allow-Origin', '*')
+  if (path === '/image/logo') {
+    res.setHeader('Content-Type', 'image/svg+xml')
+    res.setHeader('Content-Length', logoSvg.length)
+    res.end(logoSvg)
+    return
+  }
   res.setHeader('Content-Type', 'application/json; charset=utf-8')
 
   const responses = {

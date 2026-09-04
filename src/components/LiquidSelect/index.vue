@@ -298,7 +298,6 @@ export default {
 .liquid-select__trigger {
   --ui-button-hover-lift: 0px;
   --ui-select-tail-gap: 8px;
-  --ui-select-tail-width: 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -306,10 +305,6 @@ export default {
   min-width: 0;
   min-height: var(--ui-control-size-height, 42px);
   padding: var(--ui-control-size-padding-y, 0) var(--ui-control-size-padding-x, 14px);
-  padding-right: calc(
-    var(--ui-select-tail-gap) + var(--ui-select-tail-width) +
-      var(--ui-control-size-padding-x, 14px)
-  );
   border: 1px solid var(--control-border);
   border-radius: 14px;
   color: var(--ink);
