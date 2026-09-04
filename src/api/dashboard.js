@@ -33,3 +33,11 @@ export function serverTrafficUsage(data) {
     params: data
   })
 }
+
+export function serverTrafficUserUsage(data) {
+  return request({
+    url: '/dashboard/serverTrafficUserUsage',
+    method: 'get',
+    params: data
+  })
+}

@@ -222,17 +222,43 @@ const server = http.createServer((req, res) => {
     ],
     '/dashboard/serverTrafficUsage': {
       rows: nodeServers.map((item, index) => ({
-          accountId: 2,
-          username: 'glassdemo',
           nodeServerId: item.id,
           nodeServerName: item.name,
-          upload: 4294967296 + index * 1073741824,
-          download: 12884901888 + index * 2147483648,
-          total: 17179869184 + index * 3221225472
-        })),
+          upload: 7516192768 + index * 1073741824,
+          download: 19327352832 + index * 2147483648,
+          total: 26843545600 + index * 3221225472
+      })),
       pageNum: 1,
       pageSize: 20,
       total: nodeServers.length
+    },
+    '/dashboard/serverTrafficUserUsage': {
+      rows: [
+        {
+          accountId: 2,
+          username: 'glassdemo',
+          upload: 4294967296,
+          download: 12884901888,
+          total: 17179869184
+        },
+        {
+          accountId: 3,
+          username: 'aurora',
+          upload: 2147483648,
+          download: 4294967296,
+          total: 6442450944
+        },
+        {
+          accountId: 4,
+          username: 'seaglass',
+          upload: 1073741824,
+          download: 2147483648,
+          total: 3221225472
+        }
+      ],
+      pageNum: 1,
+      pageSize: 20,
+      total: 3
     },
     '/node/selectNodePage': page('nodes', nodes),
     '/node/selectNodeById': Object.assign({}, node, {

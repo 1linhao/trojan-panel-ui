@@ -20,7 +20,7 @@
   --ui-radius-lg: 26px;
   --ui-overlay-z: 5000;
   --ui-overlay-backdrop-bg: color-mix(in srgb, var(--bg-base) 22%, transparent);
-  --ui-dialog-bg: var(--glass-popover);
+  --ui-dialog-bg: var(--ui-surface-bg);
   --ui-dialog-border: var(--rim);
   --ui-dialog-shadow: var(--shadow);
   --ui-dialog-ink: var(--ink);

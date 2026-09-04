@@ -714,9 +714,11 @@ test('logo refresh busts caches and lets failed images retry', () => {
 
 test('production build keeps async component skins in one stylesheet', () => {
   assert.match(read('vite.config.mjs'), /cssCodeSplit:\s*false/)
-  const select = read('src/components/LiquidSelect/index.vue')
-  assert.doesNotMatch(select, /--ui-select-tail-width/)
-  assert.doesNotMatch(select, /padding-right:\s*calc\(/)
+  for (const component of ['LiquidSelect', 'LiquidDatePicker']) {
+    const source = read(`src/components/${component}/index.vue`)
+    assert.doesNotMatch(source, /--ui-select-tail-width/)
+    assert.doesNotMatch(source, /padding-right:\s*calc\(/)
+  }
 })
 
 test('auth and 404 share panels and branding; 404 has a real router action', () => {

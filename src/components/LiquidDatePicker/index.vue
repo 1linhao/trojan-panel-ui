@@ -201,7 +201,7 @@ export default {
 
 <style scoped>
 .liquid-date-picker { position: relative; width: min(100%, var(--control-max-width)); max-width: var(--control-max-width); min-width: 0; }
-.liquid-date-picker__trigger { display: flex; align-items: center; gap: 9px; width: 100%; min-height: var(--ui-control-size-height, 42px); padding: var(--ui-control-size-padding-y, 0) var(--ui-control-size-padding-x, 14px); padding-right: calc(var(--ui-control-size-padding-x, 14px) + var(--ui-select-tail-width, 20px) + var(--ui-select-tail-gap, 8px)); border: 1px solid var(--control-border); border-radius: 14px; color: var(--ink-3); background: var(--control-fill); box-shadow: inset 0 1px 0 var(--spec-soft); font: inherit; text-align: left; }
+.liquid-date-picker__trigger { display: flex; align-items: center; gap: 9px; width: 100%; min-height: var(--ui-control-size-height, 42px); padding: var(--ui-control-size-padding-y, 0) var(--ui-control-size-padding-x, 14px); border: 1px solid var(--control-border); border-radius: 14px; color: var(--ink-3); background: var(--control-fill); box-shadow: inset 0 1px 0 var(--spec-soft); font: inherit; text-align: left; }
 .liquid-date-picker__trigger > span:nth-child(2) { flex: 1; min-width: 0; overflow: hidden; color: var(--ink); text-overflow: ellipsis; white-space: nowrap; }
 .liquid-date-picker__trigger .is-placeholder { color: var(--ink-3); }
 .liquid-date-picker.is-focused .liquid-date-picker__trigger { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent), inset 0 1px 0 var(--spec-soft); }

@@ -95,3 +95,12 @@ test('overlay material is opt-in and cannot leak glass into flat mode', async ()
     }
   }
 })
+
+test('production dialogs reuse the global content surface transparency', async () => {
+  const css = await readFile(
+    new URL('../../src/production.css', import.meta.url),
+    'utf8'
+  )
+  assert.match(css, /--ui-dialog-bg:\s*var\(--ui-surface-bg\)/)
+  assert.doesNotMatch(css, /--ui-dialog-bg:\s*var\(--glass-popover\)/)
+})
